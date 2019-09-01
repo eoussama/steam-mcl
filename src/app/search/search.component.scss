@@ -5,15 +5,23 @@
 	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
 	box-sizing: border-box;
 	border-radius: 5px;
-	height: 60vh;
+	display: flex;
+	flex-direction: column;
+	height: 70vh;
 	margin: auto;
 	max-width: 1000px;
 	padding: 50px;
 	width: 100%;
 
+	a {
+		color: $text-primary-color;
+		font-weight: 500;
+		text-decoration: none;
+	}
+
 	&__header {
 		display: flex;
-		height: 70%;
+		flex-basis: 50%;
 		width: 100%;
 	}
 
@@ -48,8 +56,28 @@
 		width: 250px;
 	}
 
+	&__feature {
+		display: flex;
+		flex-basis: 50%;
+		flex-direction: row;
+		justify-content: space-between;
+		padding: 50px 0;
+
+		.feature-card {
+			background-color: #f1f1f1;
+			color: $text-primary-color;
+			cursor: pointer;
+			transition-duration: 0.3s;
+			transition-property: background-color;
+			width: 25%;
+
+			&:hover {
+				background-color: #ebebeb;
+			}
+		}
+	}
+
 	&__content {
-		height: 40%;
 		position: relative;
 	}
 
@@ -57,7 +85,7 @@
 		background-color: #f1f1f1;
 		border: 1px solid #cfcfcf;
 		border-radius: 5px;
-		bottom: -50px;
+		bottom: -100px;
 		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
 		position: absolute;
 		width: 100%;
