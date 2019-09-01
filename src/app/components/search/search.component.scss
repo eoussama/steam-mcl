@@ -53,7 +53,7 @@
 	}
 
 	&__logo {
-		width: 250px;
+		width: 200px;
 	}
 
 	&__feature {
@@ -61,7 +61,7 @@
 		flex-basis: 50%;
 		flex-direction: row;
 		justify-content: space-between;
-		padding: 50px 0;
+		padding: 80px 0;
 
 		.feature-card {
 			background-color: #f1f1f1;
@@ -85,7 +85,7 @@
 		background-color: #f1f1f1;
 		border: 1px solid #cfcfcf;
 		border-radius: 5px;
-		bottom: -100px;
+		bottom: -93px;
 		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
 		position: absolute;
 		width: 100%;

@@ -7,7 +7,6 @@ import { MatCardModule } from '@angular/material/card';
 
 import { SearchComponent } from './search.component';
 
-
 @NgModule({
   declarations: [SearchComponent],
   imports: [

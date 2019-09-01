@@ -42,6 +42,7 @@
         <input
           matInput
           placeholder="Enter your Steam ID here..."
+          (change)="onSearchChanged($event)"
         >
         <mat-icon matSuffix>search</mat-icon>
         <mat-hint>
