@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as SteamAPI from 'steamapi';
+import { HttpClient } from '@angular/common/http';
 
 import { environment } from './../../environments/environment';
 
@@ -8,18 +8,18 @@ import { environment } from './../../environments/environment';
 })
 export class SearchService {
 
-  steam: any;
-
-  constructor() {
-    this.steam = new SteamAPI(environment.apiKey);
-  }
+  constructor(private http: HttpClient) { }
 
   /**
    * Gets the Steam ID from a search term
    *
    * @param searchTerm The search term
    */
-  async getSteamID(searchTerm: string): Promise<number> {
-    return await this.steam.resolve(`https://steamcommunity.com/id/${searchTerm}`);
+  async getSteamID(searchTerm: string): Promise<any> {
+    return this.http
+      .get(
+        `${environment.cors}${environment.apiEndpoint}ISteamUser/ResolveVanityURL/v0001/?key=${environment.apiKey}&vanityurl=${searchTerm}`
+      )
+      .toPromise();
   }
 }

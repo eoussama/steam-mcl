@@ -45,8 +45,12 @@ export class SearchComponent implements OnInit {
 
     this.search
       .getSteamID(searchTerm)
-      .then((id: number) => {
-        console.log({ steamID: id });
+      .then((data: any) => {
+        if (data.response.success === 1) {
+          console.log(data.response.steamid);
+        } else {
+          console.log('failed');
+        }
       });
   }
 }
