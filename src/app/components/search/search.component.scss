@@ -31,8 +31,8 @@
 		max-width: 1600px;
 		overflow: hidden;
 		padding: 150px 0 200px 0;
-		transition-property: padding width;
 		transition-duration: 0.5s;
+		transition-property: padding width;
 		width: 70%;
 
 		@media screen and (max-width: 1100px) {
@@ -55,8 +55,8 @@
 		flex: 1;
 		flex-direction: column;
 		position: relative;
-		transition-property: padding;
 		transition-duration: 0.5s;
+		transition-property: padding;
 
 		@media screen and (max-width: 1000px) {
 			padding: 0 50px;
@@ -84,8 +84,8 @@
 		opacity: 0.2;
 		position: absolute;
 		top: -100%;
-		transition-property: width;
 		transition-duration: 0.5s;
+		transition-property: width;
 		right: 0;
 		width: 60%;
 		z-index: -1;
@@ -111,8 +111,8 @@
 		box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
 		margin: -40px auto 0 auto;
 		max-width: 1600px;
-		transition-property: width;
 		transition-duration: 0.5s;
+		transition-property: width;
 		width: 70%;
 
 		@media screen and (max-width: 1000px) {
@@ -127,6 +127,32 @@
 	&__control {
 		background-color: white;
 		padding: 0 20px 20px 20px;
+		transition-duration: 0.5s;
+		transition-property: padding;
+
+		@media screen and (max-width: 625px) {
+			padding: 0 20px 25px 20px;
+		}
+
+		@media screen and (max-width: 345px) {
+			padding: 0 20px 40px 20px;
+		}
+
+		@media screen and (max-width: 263px) {
+			padding: 0 20px 50px 20px;
+		}
+
+		@media screen and (max-width: 199px) {
+			padding: 0 20px 65px 20px;
+		}
+
+		@media screen and (max-width: 170px) {
+			padding: 0 20px 80px 20px;
+		}
+
+		@media screen and (max-width: 162px) {
+			padding: 0 20px 90px 20px;
+		}
 	}
 
 	&__field {
