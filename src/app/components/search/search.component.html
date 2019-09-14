@@ -29,7 +29,43 @@
     </div>
 
     <!-- The body section -->
-    <div class="search__content"></div>
+    <div class="search__content">
+
+      <!-- The search control -->
+      <div class="search__control">
+
+        <!-- The search field -->
+        <mat-form-field
+          class="search__field"
+          appearance="standard"
+        >
+
+          <!-- The search label -->
+          <mat-label>Steam profile</mat-label>
+
+          <!-- The search input -->
+          <input
+            matInput
+            placeholder="Enter your Steam ID here..."
+            (change)="onSearchChanged($event)"
+          >
+
+          <!-- The search icon -->
+          <mat-icon matSuffix>search</mat-icon>
+
+          <!-- The search hints -->
+          <mat-hint>
+            You can also input
+            <a href="javascript:void(0)">Steam ID3</a>,
+            <a href="javascript:void(0)">Steam32 ID</a>,
+            <a href="javascript:void(0)">Steam64 ID</a>,
+            <a href="javascript:void(0)">Steam nickname</a>,
+            <a href="javascript:void(0)">Profile URL</a> and
+            <a href="javascript:void(0)">Profile permalink</a>.
+          </mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
   </div>
 
   <!-- The feature section -->
@@ -49,32 +85,5 @@
         <p>{{ card.description }}</p>
       </mat-card-content>
     </mat-card>
-  </div> -->
-
-  <!-- The content section -->
-  <!-- <div class="search__content">
-    <div class="search__control">
-      <mat-form-field
-        class="search__field"
-        appearance="standard"
-      >
-        <mat-label>Steam profile</mat-label>
-        <input
-          matInput
-          placeholder="Enter your Steam ID here..."
-          (change)="onSearchChanged($event)"
-        >
-        <mat-icon matSuffix>search</mat-icon>
-        <mat-hint>
-          You can also input
-          <a href="javascript:void(0)">Steam ID3</a>,
-          <a href="javascript:void(0)">Steam32 ID</a>,
-          <a href="javascript:void(0)">Steam64 ID</a>,
-          <a href="javascript:void(0)">Steam nickname</a>,
-          <a href="javascript:void(0)">Profile URL</a> and
-          <a href="javascript:void(0)">Profile permalink</a>.
-        </mat-hint>
-      </mat-form-field>
-    </div>
   </div> -->
 </div>

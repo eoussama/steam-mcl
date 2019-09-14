@@ -1,9 +1,6 @@
 .search {
 	$text-primary-color: #1f3c53;
 
-	margin: auto;
-	max-width: 1600px;
-
 	a {
 		color: $text-primary-color;
 		font-weight: 500;
@@ -13,13 +10,25 @@
 	// #region Header
 
 	&__header {
-		border: 1px dashed blue;
+		position: relative;
+
+		&::before {
+			content: '';
+			height: calc(100% - 50px);
+			left: 0;
+			position: absolute;
+			top: 0;
+			width: 100%;
+			background-color: #f2f4f5;
+			z-index: -2;
+		}
 	}
 
 	&__head {
 		display: flex;
 		flex-direction: row;
 		margin: auto;
+		max-width: 1600px;
 		overflow: hidden;
 		padding: 150px 0 200px 0;
 		transition-property: padding width;
@@ -31,12 +40,13 @@
 		}
 
 		@media screen and (max-width: 1000px) {
-			padding: 120px 0;
+			padding: 120px 0 150px 0;
 			width: 750px;
 		}
 
 		@media screen and (max-width: 800px) {
-			padding: 100px 0;
+			padding: 100px 0 120px 0;
+			width: 100%;
 		}
 	}
 
@@ -78,6 +88,7 @@
 		transition-duration: 0.5s;
 		right: 0;
 		width: 60%;
+		z-index: -1;
 
 		@media screen and (max-width: 1299px) {
 			width: 70%;
@@ -86,6 +97,10 @@
 		@media screen and (max-width: 1100px) {
 			width: 80%;
 		}
+
+		@media screen and (max-width: 800px) {
+			width: 750px;
+		}
 	}
 
 	// #endregion
@@ -93,7 +108,29 @@
 	// #region Content
 
 	&__content {
-		border: 1px dashed red;
+		box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
+		margin: -40px auto 0 auto;
+		max-width: 1600px;
+		transition-property: width;
+		transition-duration: 0.5s;
+		width: 70%;
+
+		@media screen and (max-width: 1000px) {
+			width: 750px;
+		}
+
+		@media screen and (max-width: 750px) {
+			width: 100%;
+		}
+	}
+
+	&__control {
+		background-color: white;
+		padding: 0 20px 20px 20px;
+	}
+
+	&__field {
+		width: 100%;
 	}
 
 	// #endregion
