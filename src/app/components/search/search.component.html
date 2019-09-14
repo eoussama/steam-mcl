@@ -1,21 +1,39 @@
 <div class="search">
+
+  <!-- The header section -->
   <div class="search__header">
-    <div class="search__container">
-      <h1 class="search__title">Steam</h1>
-      <h2 class="search__subtitle">Missing Content Lookup</h2>
-      <p class="search__description">
-        Easily lookup up missing DLC, Sequels, Prequesl, Spin-Offs... etc from your
-        <a href="https://store.steampowered.com/">Steam </a> library. </p>
+
+    <!-- The head section -->
+    <div class="search__head">
+
+      <!-- The left side of the head -->
+      <div class="search__container">
+
+        <!-- The title -->
+        <h1 class="search__title">Steam</h1>
+        <h2 class="search__subtitle">Missing Content Lookup</h2>
+
+        <!-- The description -->
+        <p class="search__description">
+          Easily lookup up missing DLC, Sequels, Prequesl, Spin-Offs... etc from your
+          <a href="https://store.steampowered.com/">Steam </a> library.
+        </p>
+
+        <!-- SteamMCL logo -->
+        <img
+          class="search__logo"
+          src="assets/logo.png"
+          alt="Steam Missing Content Lookup Logo"
+        >
+      </div>
     </div>
-    <div class="search__container search__container--right">
-      <img
-        class="search__logo"
-        src="assets/logo.png"
-        alt="Steam Missing Content Lookup Logo"
-      >
-    </div>
+
+    <!-- The body section -->
+    <div class="search__content"></div>
   </div>
-  <div class="search__feature">
+
+  <!-- The feature section -->
+  <!-- <div class="search__feature">
     <mat-card
       *ngFor="let card of cards"
       class="feature-card"
@@ -31,8 +49,10 @@
         <p>{{ card.description }}</p>
       </mat-card-content>
     </mat-card>
-  </div>
-  <div class="search__content">
+  </div> -->
+
+  <!-- The content section -->
+  <!-- <div class="search__content">
     <div class="search__control">
       <mat-form-field
         class="search__field"
@@ -56,5 +76,5 @@
         </mat-hint>
       </mat-form-field>
     </div>
-  </div>
+  </div> -->
 </div>

@@ -1,17 +1,8 @@
 .search {
 	$text-primary-color: #1f3c53;
 
-	background-color: #1f3b5309;
-	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
-	box-sizing: border-box;
-	border-radius: 5px;
-	display: flex;
-	flex-direction: column;
-	height: 70vh;
 	margin: auto;
-	max-width: 1000px;
-	padding: 50px;
-	width: 100%;
+	max-width: 1600px;
 
 	a {
 		color: $text-primary-color;
@@ -19,20 +10,46 @@
 		text-decoration: none;
 	}
 
+	// #region Header
+
 	&__header {
+		border: 1px dashed blue;
+	}
+
+	&__head {
 		display: flex;
-		flex-basis: 50%;
-		width: 100%;
+		flex-direction: row;
+		margin: auto;
+		overflow: hidden;
+		padding: 150px 0 200px 0;
+		transition-property: padding width;
+		transition-duration: 0.5s;
+		width: 70%;
+
+		@media screen and (max-width: 1100px) {
+			padding: 150px 0;
+		}
+
+		@media screen and (max-width: 1000px) {
+			padding: 120px 0;
+			width: 750px;
+		}
+
+		@media screen and (max-width: 800px) {
+			padding: 100px 0;
+		}
 	}
 
 	&__container {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
-		justify-content: center;
+		position: relative;
+		transition-property: padding;
+		transition-duration: 0.5s;
 
-		&--right {
-			align-items: flex-end;
+		@media screen and (max-width: 1000px) {
+			padding: 0 50px;
 		}
 	}
 
@@ -45,55 +62,39 @@
 	&__subtitle {
 		color: $text-primary-color;
 		font-size: 2rem;
-		margin: 0;
+		margin: 0 0 20px 0;
 	}
 
 	&__description {
 		color: $text-primary-color;
+		margin: 0;
 	}
 
 	&__logo {
-		width: 200px;
-	}
+		opacity: 0.2;
+		position: absolute;
+		top: -100%;
+		transition-property: width;
+		transition-duration: 0.5s;
+		right: 0;
+		width: 60%;
 
-	&__feature {
-		display: flex;
-		flex-basis: 50%;
-		flex-direction: row;
-		justify-content: space-between;
-		padding: 80px 0;
+		@media screen and (max-width: 1299px) {
+			width: 70%;
+		}
 
-		.feature-card {
-			background-color: #f1f1f1;
-			color: $text-primary-color;
-			cursor: pointer;
-			transition-duration: 0.3s;
-			transition-property: background-color;
-			width: 25%;
-
-			&:hover {
-				background-color: #ebebeb;
-			}
+		@media screen and (max-width: 1100px) {
+			width: 80%;
 		}
 	}
+
+	// #endregion
+
+	// #region Content
 
 	&__content {
-		position: relative;
+		border: 1px dashed red;
 	}
 
-	&__control {
-		background-color: #f1f1f1;
-		border: 1px solid #cfcfcf;
-		border-radius: 5px;
-		bottom: -93px;
-		box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
-		position: absolute;
-		width: 100%;
-
-		.search__field {
-			box-sizing: border-box;
-			padding: 0 20px 5px 20px;
-			width: 100%;
-		}
-	}
+	// #endregion
 }
