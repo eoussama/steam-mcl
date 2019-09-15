@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
+import { AppRoutingModule } from './app.routing.module';
 import { SearchModule } from './components/search/search.module';
-import { DisplayModule } from './components/display/display.module';
 
 import { AppComponent } from './app.component';
 
@@ -14,8 +14,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    SearchModule,
-    DisplayModule
+    AppRoutingModule,
+    SearchModule
   ],
   providers: [],
   bootstrap: [AppComponent]
