@@ -1,0 +1,53 @@
+.landing {
+	$text-primary-color: #1f3c53;
+
+	margin: 80px auto 0 auto;
+	max-width: 1600px;
+	transition-duration: 0.5s;
+	transition-property: width margin;
+	width: 70%;
+
+	@media screen and (max-width: 1000px) {
+		width: 80%;
+	}
+
+	@media screen and (max-width: 1000px) {
+		margin: 30px auto 0 auto;
+	}
+
+	// #region Features
+
+	&__features {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		position: relative;
+
+		@media screen and (max-width: 800px) {
+			flex-direction: column;
+		}
+
+		.feature-card {
+			background-color: #f2f4f5;
+			color: $text-primary-color;
+			height: 120px;
+			transition-duration: 0.5s;
+			transition-property: width margin height;
+			width: 25%;
+
+			@media screen and (max-width: 800px) {
+				height: auto;
+				margin-bottom: 20px;
+				width: 100%;
+			}
+
+			&__body {
+				// bottom: 15px;
+				// padding-right: 15px;
+				// position: absolute;
+			}
+		}
+	}
+
+	// #endregion
+}

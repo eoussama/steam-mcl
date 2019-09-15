@@ -1,17 +1,23 @@
-<div class="search__feature">
-  <mat-card
-    *ngFor="let card of cards"
-    class="feature-card"
-  >
-    <mat-card-header class="card-header">
-      <div mat-card-avatar>
-        <mat-icon>{{ card.icon }}</mat-icon>
-      </div>
-      <mat-card-title>{{ card.title }}</mat-card-title>
-    </mat-card-header>
+<div class="landing">
 
-    <mat-card-content>
-      <p>{{ card.description }}</p>
-    </mat-card-content>
-  </mat-card>
+  <!-- The features section -->
+  <div class="landing__features">
+
+    <!-- The feature cards -->
+    <mat-card
+      *ngFor="let card of cards"
+      class="feature-card"
+    >
+      <mat-card-header>
+        <div mat-card-avatar>
+          <mat-icon>{{ card.icon }}</mat-icon>
+        </div>
+        <mat-card-title>{{ card.title }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content class="feature-card__body">
+        <p>{{ card.description }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
