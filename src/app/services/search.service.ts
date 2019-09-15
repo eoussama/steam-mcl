@@ -23,8 +23,11 @@ export class SearchService {
     // Checking of the input is numeric
     if (Validator.isNumeric(searchTerm)) {
 
-      // Checking if the Steam ID si valid
-      if (Validator.isValidID(searchTerm)) {
+      // Getting the Steam ID validity
+      const validity = await this.isValidID(searchTerm);
+
+      // Checking if the Steam ID is valid
+      if (validity.response.players.length > 0) {
 
         return {
           id: searchTerm,
@@ -78,8 +81,11 @@ export class SearchService {
             // Checking if URL is pointing at profiles
           } else if (route[0] === 'profiles') {
 
+            // Getting the Steam ID validity
+            const validity = await this.isValidID(route[1]);
+
             // Checking if the Steam ID is valid
-            if (Validator.isValidID(route[1])) {
+            if (validity.response.players.length > 0) {
 
               return {
                 id: route[1],
@@ -123,6 +129,19 @@ export class SearchService {
     return this.http
       .get(
         `${environment.cors}${environment.apiEndpoint}ISteamUser/ResolveVanityURL/v0001/?key=${environment.apiKey}&vanityurl=${input}`
+      )
+      .toPromise();
+  }
+
+  /**
+   * Checkings if a Steam ID is valid
+   *
+   * @param id The Steam ID to verify
+   */
+  async isValidID(id: string): Promise<any> {
+    return this.http
+      .get(
+        `${environment.cors}${environment.apiEndpoint}ISteamUser/GetPlayerSummaries/v0002/?key=${environment.apiKey}&steamids=${id}`
       )
       .toPromise();
   }

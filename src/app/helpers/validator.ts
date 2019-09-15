@@ -24,8 +24,4 @@ export class Validator {
 
     return true;
   }
-
-  static isValidID = (id: string): boolean => {
-    return true;
-  }
 }
