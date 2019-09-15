@@ -12,7 +12,7 @@ export class LandingComponent {
     {
       icon: 'games',
       title: 'Games',
-      description: 'Lookup prequesl, sequels, spin-offs and all games that are related to what you already own.'
+      description: 'Lookup prequels, sequels, spin-offs and all games that are related to what you already own.'
     },
     {
       icon: 'widgets',
