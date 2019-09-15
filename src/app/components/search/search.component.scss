@@ -156,28 +156,20 @@
 		transition-duration: 0.5s;
 		transition-property: padding;
 
-		@media screen and (max-width: 625px) {
+		@media screen and (max-width: 496px) {
 			padding: 0 20px 25px 20px;
 		}
 
-		@media screen and (max-width: 345px) {
+		@media screen and (max-width: 290px) {
 			padding: 0 20px 40px 20px;
 		}
 
-		@media screen and (max-width: 263px) {
+		@media screen and (max-width: 202px) {
 			padding: 0 20px 50px 20px;
 		}
 
-		@media screen and (max-width: 199px) {
-			padding: 0 20px 65px 20px;
-		}
-
 		@media screen and (max-width: 170px) {
-			padding: 0 20px 80px 20px;
-		}
-
-		@media screen and (max-width: 162px) {
-			padding: 0 20px 90px 20px;
+			padding: 0 20px 65px 20px;
 		}
 	}
 

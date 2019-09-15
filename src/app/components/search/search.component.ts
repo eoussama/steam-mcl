@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from 'src/app/services/search.service';
+import { ISteamIDResult } from 'src/app/models/steamidresult';
 
 @Component({
   selector: 'app-search',
@@ -27,12 +28,11 @@ export class SearchComponent implements OnInit {
 
     this.search
       .getSteamID(searchTerm)
-      .then((data: any) => {
-        if (data.response.success === 1) {
-          console.log(data.response.steamid);
-        } else {
-          console.log('failed');
-        }
+      .then((res: ISteamIDResult) => {
+        console.log(res);
+      })
+      .catch((err: string) => {
+        console.error(err);
       });
   }
 }
