@@ -8,38 +8,29 @@
 	width: 70%;
 
 	@media screen and (max-width: 1000px) {
-		width: 80%;
+		width: 90%;
 	}
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 800px) {
 		margin: 30px auto 0 auto;
 	}
 
 	// #region Features
 
 	&__features {
-		align-items: center;
-		display: flex;
-		justify-content: space-between;
+		display: grid;
+		grid-gap: 20px;
+		grid-template-columns: repeat(3, 1fr);
 		position: relative;
 
 		@media screen and (max-width: 800px) {
-			flex-direction: column;
+			grid-template-columns: 1fr;
 		}
 
 		.feature-card {
 			background-color: #f2f4f5;
 			color: $text-primary-color;
-			height: 120px;
-			transition-duration: 0.5s;
-			transition-property: width margin height;
-			width: 25%;
-
-			@media screen and (max-width: 800px) {
-				height: auto;
-				margin-bottom: 20px;
-				width: 100%;
-			}
+			height: auto;
 		}
 	}
 
