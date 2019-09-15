@@ -35,22 +35,17 @@
 		transition-property: padding width;
 		width: 70%;
 
-		@media screen and (max-width: 1100px) {
-			padding: 150px 0;
-		}
-
 		@media screen and (max-width: 1000px) {
-			padding: 120px 0 150px 0;
 			width: 750px;
 		}
 
 		@media screen and (max-width: 800px) {
-			padding: 100px 0 120px 0;
+			padding: 80px 0 200px 0;
 			width: 100%;
 		}
 
-		@media screen and (max-width: 400px) {
-			padding: 50px 0 100px 0;
+		@media screen and (max-width: 500px) {
+			padding: 50px 0 160px 0;
 		}
 	}
 
@@ -135,7 +130,7 @@
 
 	&__content {
 		box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
-		margin: -40px auto 0 auto;
+		margin: -100px auto 0 auto;
 		max-width: 1600px;
 		transition-duration: 0.5s;
 		transition-property: width;
