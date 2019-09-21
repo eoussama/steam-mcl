@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'steam-mcl';
+
+  /**
+   * The loading event listener
+   *
+   * @param loading The loading state
+   */
+  loadingEventListener(loading: boolean): void {
+    console.log({ loading });
+  }
 }
