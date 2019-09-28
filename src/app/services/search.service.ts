@@ -1,17 +1,42 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
-import { ISteamIDResult } from '../models/steamidresult';
 
 import { environment } from './../../environments/environment';
+import { ISteamIDResult } from '../models/steamidresult';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
+import { ISearchResult } from '../models/searchresult';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
 
-  constructor(private http: HttpClient) { }
+  //#region Events
+
+  /**
+   * The search event
+   */
+  searchEvent: EventEmitter<ISearchResult>;
+
+  //#endregion
+
+  //#region Constructor
+
+  /**
+   * The constructor of the search ID service
+   * 
+   * @param http The HTTP object
+   */
+  constructor(private http: HttpClient) {
+
+    // Initializing the search event
+    this.searchEvent = new EventEmitter<ISearchResult>();
+  }
+
+  //#endregion
+
+  //#region Functions 
 
   /**
    * Gets the Steam ID from a search term
@@ -149,4 +174,6 @@ export class SearchService {
       )
       .toPromise();
   }
+
+  //#endregion
 }

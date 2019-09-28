@@ -6,6 +6,6 @@ import { ESearchResultTypes } from '../enums/searchresulttypes.enum';
  */
 export interface ISearchResult {
     state: ESearchResultTypes,
-    error?: string,
+    error?: any,
     data?: ISteamIDResult
 }

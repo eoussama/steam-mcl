@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISteamIDResult } from 'src/app/models/steamidresult';
-import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
@@ -13,16 +13,7 @@ import { collapseAnimation } from 'src/app/animations/searchcollapse';
   styleUrls: ['./search.component.scss'],
   animations: collapseAnimation
 })
-export class SearchComponent {
-
-  //#region Output
-
-  /**
-   * The loading state event emitter
-   */
-  @Output() searchEvent: EventEmitter<ISearchResult> = new EventEmitter<ISearchResult>();
-
-  //#endregion
+export class SearchComponent implements OnInit {
 
   //#region Properties
 
@@ -39,7 +30,11 @@ export class SearchComponent {
    * The search component constructor
    * @param search The search service
    */
-  constructor(private search: SearchService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private search: SearchService
+  ) { }
 
   //#endregion
 
@@ -49,6 +44,18 @@ export class SearchComponent {
    * Gets the proper state of the collapse trigger
    */
   getState = () => this.collapse ? 'closed' : 'opened';
+
+  //#endregion
+
+  //#region Lifecycle
+
+  ngOnInit(): void {
+    this.route.url.subscribe((x) => {
+      console.log({ x });
+    });
+    // Updating the collapse state
+    this.collapse = window.location.href.includes('lookup');
+  }
 
   //#endregion
 
@@ -68,12 +75,15 @@ export class SearchComponent {
     if (searchTerm && searchTerm.length > 0) {
 
       // Emitting the loading event
-      this.searchEvent.emit({
+      this.search.searchEvent.emit({
         state: ESearchResultTypes.Loading
       });
 
       // Updating the collapse state
       this.collapse = true;
+
+      // Navigating to the lookup page
+      this.router.navigate(['lookup']);
 
       // Invoking the search function
       this.search
@@ -81,7 +91,7 @@ export class SearchComponent {
         .then((res: ISteamIDResult) => {
 
           // Emitting the loading-success event
-          this.searchEvent.emit({
+          this.search.searchEvent.emit({
             state: ESearchResultTypes.Success,
             data: res
           });
@@ -89,7 +99,7 @@ export class SearchComponent {
         .catch((err: string) => {
 
           // Emitting the loading-fail event
-          this.searchEvent.emit({
+          this.search.searchEvent.emit({
             state: ESearchResultTypes.Fail,
             error: err
           });

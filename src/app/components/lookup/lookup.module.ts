@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LookupComponent } from './lookup.component';
 
 const routes: Routes = [
-  { path: '', component: LookupComponent }
+  { path: '**', component: LookupComponent }
 ];
 
 @NgModule({
