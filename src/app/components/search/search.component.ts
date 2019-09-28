@@ -75,6 +75,7 @@ export class SearchComponent {
       // Updating the collapse state
       this.collapse = true;
 
+      // Invoking the search function
       this.search
         .getSteamID(searchTerm)
         .then((res: ISteamIDResult) => {
