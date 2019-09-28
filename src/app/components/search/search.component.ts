@@ -61,35 +61,39 @@ export class SearchComponent {
    */
   onSearchChanged(e: Event) {
 
-    // Emitting the loading event
-    this.searchEvent.emit({
-      state: ESearchResultTypes.Loading
-    });
-
     // Getting the input
-    const searchInput = e.target as HTMLInputElement;
+    const searchTerm = (<HTMLInputElement>e.target).value.trim();
 
-    // Getting the value
-    const searchTerm = searchInput.value;
+    // Checking if the search term is valid
+    if (searchTerm && searchTerm.length > 0) {
 
-    this.search
-      .getSteamID(searchTerm)
-      .then((res: ISteamIDResult) => {
-
-        // Emitting the loading-success event
-        this.searchEvent.emit({
-          state: ESearchResultTypes.Success,
-          data: res
-        });
-      })
-      .catch((err: string) => {
-
-        // Emitting the loading-fail event
-        this.searchEvent.emit({
-          state: ESearchResultTypes.Fail,
-          error: err
-        });
+      // Emitting the loading event
+      this.searchEvent.emit({
+        state: ESearchResultTypes.Loading
       });
+
+      // Updating the collapse state
+      this.collapse = true;
+
+      this.search
+        .getSteamID(searchTerm)
+        .then((res: ISteamIDResult) => {
+
+          // Emitting the loading-success event
+          this.searchEvent.emit({
+            state: ESearchResultTypes.Success,
+            data: res
+          });
+        })
+        .catch((err: string) => {
+
+          // Emitting the loading-fail event
+          this.searchEvent.emit({
+            state: ESearchResultTypes.Fail,
+            error: err
+          });
+        });
+    }
   }
 
   //#endregion
