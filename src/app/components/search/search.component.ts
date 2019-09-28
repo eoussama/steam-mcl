@@ -5,23 +5,57 @@ import { SearchService } from 'src/app/services/search.service';
 import { ISteamIDResult } from 'src/app/models/steamidresult';
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
+import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
+  animations: collapseAnimation
 })
 export class SearchComponent {
+
+  //#region Output
 
   /**
    * The loading state event emitter
    */
   @Output() searchEvent: EventEmitter<ISearchResult> = new EventEmitter<ISearchResult>();
 
-  constructor(private search: SearchService) { }
+  //#endregion
+
+  //#region Properties
 
   /**
-   * The event of the search input
+   * The search component collapse state
+   */
+  collapse: boolean = false;
+
+  //#endregion
+
+  //#region Constructor
+
+  /**
+   * The search component constructor
+   * @param search The search service
+   */
+  constructor(private search: SearchService) { }
+
+  //#endregion
+
+  //#region Functions
+
+  /**
+   * Gets the proper state of the collapse trigger
+   */
+  getState = () => this.collapse ? 'closed' : 'opened';
+
+  //#endregion
+
+  //#region Event listeners
+
+  /**
+   * The event listener of the search input
    *
    * @param e The event object
    */
@@ -57,4 +91,6 @@ export class SearchComponent {
         });
       });
   }
+
+  //#endregion
 }

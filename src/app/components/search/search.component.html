@@ -4,20 +4,24 @@
   <div class="search__header">
 
     <!-- The head section -->
-    <div class="search__head">
+    <div [@collapseHeader]="getState()"
+         class="search__head">
 
       <!-- The left side of the head -->
       <div class="search__container">
 
         <!-- The title -->
-        <h1 class="search__title">Steam</h1>
-        <h2 class="search__subtitle">Missing Content Lookup</h2>
+        <h1 [@collapseTitle]="getState()"
+            class="search__title">Steam</h1>
+        <h2 [@collapseSubtitle]="getState()"
+            class="search__subtitle">Missing Content Lookup</h2>
 
         <!-- The description -->
-        <p class="search__description">
+        <p [@collapseDescription]="getState()"
+           class="search__description">
           Easily lookup up missing DLC, Sequels, Prequesl, Spin-Offs... etc from your
           <a href="https://store.steampowered.com/"
-            target="_blank">
+             target="_blank">
             Steam
           </a>
           library.
@@ -25,8 +29,8 @@
 
         <!-- SteamMCL logo -->
         <img class="search__logo"
-          src="assets/logo-large.png"
-          alt="Steam Missing Content Lookup Logo">
+             src="assets/logo-large.png"
+             alt="Steam Missing Content Lookup Logo">
       </div>
     </div>
   </div>
@@ -39,15 +43,15 @@
 
       <!-- The search field -->
       <mat-form-field class="search__field"
-        appearance="standard">
+                      appearance="standard">
 
         <!-- The search label -->
         <mat-label>Steam profile</mat-label>
 
         <!-- The search input -->
         <input matInput
-          placeholder="Enter your Steam ID here..."
-          (change)="onSearchChanged($event)">
+               placeholder="Enter your Steam ID here..."
+               (change)="onSearchChanged($event)">
 
         <!-- The search icon -->
         <mat-icon matSuffix>search</mat-icon>
@@ -56,21 +60,21 @@
         <mat-hint>
           You can also input
           <a href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID-"
-            target="_blank">
+             target="_blank">
             Steam ID64</a>
           ,
           <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-            target="_blank">
+             target="_blank">
             Steam nickname
           </a>
           ,
           <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-            target="_blank">
+             target="_blank">
             Profile URL
           </a>
           and
           <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-            target="_blank">
+             target="_blank">
             Profile permalink
           </a>
           .
@@ -79,3 +83,4 @@
     </div>
   </div>
 </div>
+<button (click)="collapse = !collapse">{{ collapse }}</button>
