@@ -1,7 +1,10 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 import { SearchService } from 'src/app/services/search.service';
+
 import { ISteamIDResult } from 'src/app/models/steamidresult';
+import { ISearchResult } from 'src/app/models/searchresult';
+import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
 
 @Component({
   selector: 'app-search',
@@ -13,7 +16,7 @@ export class SearchComponent {
   /**
    * The loading state event emitter
    */
-  @Output() loadingChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() searchEvent: EventEmitter<ISearchResult> = new EventEmitter<ISearchResult>();
 
   constructor(private search: SearchService) { }
 
@@ -25,7 +28,9 @@ export class SearchComponent {
   onSearchChanged(e: Event) {
 
     // Emitting the loading event
-    this.loadingChanged.emit(true);
+    this.searchEvent.emit({
+      state: ESearchResultTypes.Loading
+    });
 
     // Getting the input
     const searchInput = e.target as HTMLInputElement;
@@ -36,15 +41,20 @@ export class SearchComponent {
     this.search
       .getSteamID(searchTerm)
       .then((res: ISteamIDResult) => {
-        console.log(res);
+
+        // Emitting the loading-success event
+        this.searchEvent.emit({
+          state: ESearchResultTypes.Success,
+          data: res
+        });
       })
       .catch((err: string) => {
-        console.error(err);
-      })
-      .finally(() => {
 
-        // Emitting the loading event
-        this.loadingChanged.emit(false);
+        // Emitting the loading-fail event
+        this.searchEvent.emit({
+          state: ESearchResultTypes.Fail,
+          error: err
+        });
       });
   }
 }

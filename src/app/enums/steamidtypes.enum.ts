@@ -1,7 +1,7 @@
 /**
  * Steam ID types
  */
-export enum SteamIDTypes {
+export enum ESteamIDTypes {
   ID64,
   Nickname,
   ProfileURL,

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { ISearchResult } from './models/searchresult';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,9 +12,9 @@ export class AppComponent {
   /**
    * The loading event listener
    *
-   * @param loading The loading state
+   * @param loading The loading event object
    */
-  loadingEventListener(loading: boolean): void {
+  seachEventListener(loading: ISearchResult): void {
     console.log({ loading });
   }
 }

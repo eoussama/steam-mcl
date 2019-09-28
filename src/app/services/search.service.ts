@@ -4,7 +4,7 @@ import { Validator } from './../helpers/validator';
 import { ISteamIDResult } from '../models/steamidresult';
 
 import { environment } from './../../environments/environment';
-import { SteamIDTypes } from '../enums/steamidtypes.enum';
+import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,7 @@ export class SearchService {
           return {
             id: searchTerm,
             input: searchTerm,
-            type: SteamIDTypes.ID64
+            type: ESteamIDTypes.ID64
           };
         } else {
           throw new Error();
@@ -75,7 +75,7 @@ export class SearchService {
                 return {
                   id: steamid,
                   input: searchTerm,
-                  type: SteamIDTypes.ProfileURL
+                  type: ESteamIDTypes.ProfileURL
                 };
               } else {
                 throw new Error();
@@ -93,7 +93,7 @@ export class SearchService {
                 return {
                   id: route[1],
                   input: searchTerm,
-                  type: SteamIDTypes.ProfilePermalink
+                  type: ESteamIDTypes.ProfilePermalink
                 };
               } else {
                 throw new Error();
@@ -114,7 +114,7 @@ export class SearchService {
             return {
               id: steamid,
               input: searchTerm,
-              type: SteamIDTypes.Nickname
+              type: ESteamIDTypes.Nickname
             };
           } else {
             throw new Error();
