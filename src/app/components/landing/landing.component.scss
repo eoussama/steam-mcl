@@ -2,14 +2,10 @@
 	$text-primary-color: #1f3c53;
 
 	margin: 80px auto 0 auto;
-	max-width: 1600px;
+	max-width: 1000px;
 	transition-duration: 0.5s;
 	transition-property: width margin;
 	width: 70%;
-
-	@media screen and (max-width: 1000px) {
-		width: 90%;
-	}
 
 	@media screen and (max-width: 800px) {
 		margin: 30px auto 0 auto;
