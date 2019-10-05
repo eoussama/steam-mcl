@@ -29,7 +29,6 @@ export class AppComponent implements OnInit {
     // Subscribing to the search service
     this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
 
-      console.log({ searchResult });
       // Navigating to the lookup page
       this.router.navigate(['lookup', searchResult.input], { state: { searchResult } });
     });

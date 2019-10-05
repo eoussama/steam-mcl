@@ -3,9 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
-import { ISteamIDResult } from '../models/steamidresult';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 import { ISearchResult } from '../models/searchresult';
+import { ISteamIDResult } from '../models/steamidresult';
 
 @Injectable({
   providedIn: 'root'
