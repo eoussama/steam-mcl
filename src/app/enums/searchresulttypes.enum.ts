@@ -2,7 +2,7 @@
  * Search result types
  */
 export enum ESearchResultTypes {
-    Fail,
+    Failure,
     Success,
     Loading
 }

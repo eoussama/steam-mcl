@@ -49,7 +49,8 @@
         <mat-label>Steam profile</mat-label>
 
         <!-- The search input -->
-        <input matInput
+        <input #searchInputRef
+               matInput
                placeholder="Enter your Steam ID here..."
                (change)="onSearchChanged($event)">
 

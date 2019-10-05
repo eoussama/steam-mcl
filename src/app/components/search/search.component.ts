@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISteamIDResult } from 'src/app/models/steamidresult';
 import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
+
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
 @Component({
@@ -24,6 +24,15 @@ export class SearchComponent implements OnInit {
 
   //#endregion
 
+  //#region View children
+
+  /**
+   * The search input's reference
+   */
+  @ViewChild('searchInputRef', { static: true }) searchInputRef: ElementRef;
+
+  //#endregion
+
   //#region Constructor
 
   /**
@@ -31,8 +40,6 @@ export class SearchComponent implements OnInit {
    * @param search The search service
    */
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private search: SearchService
   ) { }
 
@@ -50,11 +57,31 @@ export class SearchComponent implements OnInit {
   //#region Lifecycle
 
   ngOnInit(): void {
-    this.route.url.subscribe((x) => {
-      console.log({ x });
-    });
-    // Updating the collapse state
-    this.collapse = window.location.href.includes('lookup');
+
+    // Getting the search input
+    const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;
+
+    // Getting the current URL
+    const url: string = document.location.pathname;
+
+    // Extracting URL fragments
+    const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
+
+    // Extracting the route name
+    const route: string = urlFragments[0] || null;
+
+    // Extracting the Steam ID
+    const steamID: string = urlFragments[1] || null;
+
+    // Checking if the route is pointing to the lookup page
+    if (route === 'lookup') {
+
+      // Populating the search input
+      searchInput.value = steamID;
+
+      // Firing the change event
+      searchInput.dispatchEvent(new Event('change'));
+    }
   }
 
   //#endregion
@@ -69,21 +96,22 @@ export class SearchComponent implements OnInit {
   onSearchChanged(e: Event) {
 
     // Getting the input
-    const searchTerm = (<HTMLInputElement>e.target).value.trim();
+    const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;
+
+    // Getting the search term
+    const searchTerm = searchInput.value;
 
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
 
       // Emitting the loading event
       this.search.searchEvent.emit({
-        state: ESearchResultTypes.Loading
+        state: ESearchResultTypes.Loading,
+        input: searchTerm
       });
 
       // Updating the collapse state
       this.collapse = true;
-
-      // Navigating to the lookup page
-      this.router.navigate(['lookup']);
 
       // Invoking the search function
       this.search
@@ -93,6 +121,7 @@ export class SearchComponent implements OnInit {
           // Emitting the loading-success event
           this.search.searchEvent.emit({
             state: ESearchResultTypes.Success,
+            input: searchTerm,
             data: res
           });
         })
@@ -100,7 +129,8 @@ export class SearchComponent implements OnInit {
 
           // Emitting the loading-fail event
           this.search.searchEvent.emit({
-            state: ESearchResultTypes.Fail,
+            state: ESearchResultTypes.Failure,
+            input: searchTerm,
             error: err
           });
         });

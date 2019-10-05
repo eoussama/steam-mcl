@@ -59,7 +59,6 @@ export class SearchService {
 
           return {
             id: searchTerm,
-            input: searchTerm,
             type: ESteamIDTypes.ID64
           };
         } else {
@@ -99,7 +98,6 @@ export class SearchService {
 
                 return {
                   id: steamid,
-                  input: searchTerm,
                   type: ESteamIDTypes.ProfileURL
                 };
               } else {
@@ -117,7 +115,6 @@ export class SearchService {
 
                 return {
                   id: route[1],
-                  input: searchTerm,
                   type: ESteamIDTypes.ProfilePermalink
                 };
               } else {
@@ -138,7 +135,6 @@ export class SearchService {
 
             return {
               id: steamid,
-              input: searchTerm,
               type: ESteamIDTypes.Nickname
             };
           } else {

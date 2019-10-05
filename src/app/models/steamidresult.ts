@@ -5,6 +5,5 @@ import { ESteamIDTypes } from '../enums/steamidtypes.enum';
  */
 export interface ISteamIDResult {
   id: string;
-  input: string;
   type: ESteamIDTypes;
 }
