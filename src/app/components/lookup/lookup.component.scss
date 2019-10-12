@@ -15,15 +15,21 @@
     min-height: 300px;
   }
 
-  &__loader {
+  &__loader, &__error {
     align-items: center;
     display: flex;
     flex-direction: column;
     min-height: 300px;
     width: 100%;
 
-    .loader {
+    .loader, .icon {
       margin-top: 80px;
+    }
+
+    .icon {
+      color: #1f3c53;
+      margin-bottom: 10px;
+      transform: scale(2.5);
     }
 
     .message {

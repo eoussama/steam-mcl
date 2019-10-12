@@ -17,10 +17,7 @@ export class LookupComponent implements OnInit {
   /**
    * The loaded content 
    */
-  content: {
-    state: ESearchResultTypes,
-    input: string
-  };
+  content: ISearchResult;
 
   //#endregion
 
@@ -33,14 +30,7 @@ export class LookupComponent implements OnInit {
    */
   constructor(
     private searchService: SearchService
-  ) {
-
-    // Initializing the content
-    this.content = {
-      state: ESearchResultTypes.Loading,
-      input: ''
-    };
-  }
+  ) { }
 
   //#endregion
 
@@ -53,16 +43,12 @@ export class LookupComponent implements OnInit {
 
     // Checking if the search result object is valid
     if (searchResult) {
-      console.log({ searchResult });
-      this.content.state = searchResult.state;
-      this.content.input = searchResult.input;
+      this.content = searchResult;
     }
 
     // Subscribing to the search event
     this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
-      console.log({ searchResult });
-      // this.content.state = searchResult.state;
-      this.content.input = searchResult.input;
+      this.content = searchResult;
     });
   }
 

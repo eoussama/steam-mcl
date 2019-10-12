@@ -1,5 +1,5 @@
 <div class="lookup">
-
+  {{ content | json }}
   <!-- The main container -->
   <mat-card class="lookup__main">
     <ng-container [ngSwitch]="content.state">
@@ -7,13 +7,17 @@
       <!-- The content -->
       <div *ngSwitchCase="1"
            class="lookup__content">
-        Success
+        Success: <b>{{ content.data.id }}</b> loaded
       </div>
 
       <!-- The error -->
       <div *ngSwitchCase="0"
            class="lookup__error">
-        Error
+        <mat-icon class="icon"
+                  size="large"
+                  aria-hidden="false"
+                  aria-label="Error icon">warning</mat-icon>
+        <span class="message">{{ content.error }}</span>
       </div>
 
       <!-- The loader -->
