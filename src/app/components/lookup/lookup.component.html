@@ -2,7 +2,7 @@
 
   <!-- The main container -->
   <mat-card class="lookup__main">
-    <ng-container [ngSwitch]="state">
+    <ng-container [ngSwitch]="content.state">
 
       <!-- The content -->
       <div *ngSwitchCase="1"
@@ -19,8 +19,9 @@
       <!-- The loader -->
       <div *ngSwitchDefault
            class="lookup__loader">
-        <mat-spinner></mat-spinner>
-        Loading
+        <mat-spinner class="loader"
+                     diameter="50"></mat-spinner>
+        <span class="message">Loading <b>{{ content.input }}</b>'s account...</span>
       </div>
     </ng-container>
   </mat-card>

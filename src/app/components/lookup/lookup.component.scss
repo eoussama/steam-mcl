@@ -13,4 +13,22 @@
     background-color: #f2f4f5;
     min-height: 300px;
   }
+
+  &__loader {
+    border: 1px dashed red;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 300px;
+    width: 100%;
+
+    .loader {
+
+    }
+
+    .message {
+      margin-top: 20px;
+    }
+  }
 }
