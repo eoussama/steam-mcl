@@ -61,7 +61,7 @@ export class LookupComponent implements OnInit {
     // Subscribing to the search event
     this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
       console.log({ searchResult });
-      this.content.state = searchResult.state;
+      // this.content.state = searchResult.state;
       this.content.input = searchResult.input;
     });
   }

@@ -6,6 +6,7 @@
   width: 70%;
 
   @media screen and (max-width: 750px) {
+    margin: 8px auto;
     width: 100%;
   }
 
@@ -15,20 +16,19 @@
   }
 
   &__loader {
-    border: 1px dashed red;
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     min-height: 300px;
     width: 100%;
 
     .loader {
-
+      margin-top: 80px;
     }
 
     .message {
       margin-top: 20px;
+      text-align: center;
     }
   }
 }
