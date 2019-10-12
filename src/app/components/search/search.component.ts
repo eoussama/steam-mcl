@@ -66,12 +66,11 @@ export class SearchComponent implements OnInit {
 
     // Extracting URL fragments
     const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
-
     // Extracting the route name
     const route: string = urlFragments[0] || null;
 
     // Extracting the Steam ID
-    const steamID: string = urlFragments[1] || null;
+    const steamID: string = decodeURIComponent(urlFragments[1]) || null;
 
     // Checking if the route is pointing to the lookup page
     if (route === 'lookup') {
