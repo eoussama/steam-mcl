@@ -1,0 +1,16 @@
+.lookup {
+  margin: 50px auto;
+  max-width: 1000px;
+  transition-duration: 0.5s;
+  transition-property: width;
+  width: 70%;
+
+  @media screen and (max-width: 750px) {
+    width: 100%;
+  }
+
+  &__main {
+    background-color: #f2f4f5;
+    min-height: 300px;
+  }
+}

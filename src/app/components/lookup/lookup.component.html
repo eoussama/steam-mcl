@@ -1,1 +1,26 @@
-<p>lookup works!</p>
+<div class="lookup">
+
+  <!-- The main container -->
+  <mat-card class="lookup__main">
+    <ng-container [ngSwitch]="state">
+
+      <!-- The content -->
+      <div *ngSwitchCase="1"
+           class="lookup__content">
+        Success
+      </div>
+
+      <!-- The error -->
+      <div *ngSwitchCase="0"
+           class="lookup__error">
+        Error
+      </div>
+
+      <!-- The loader -->
+      <div *ngSwitchDefault
+           class="lookup__loader">
+        Loading
+      </div>
+    </ng-container>
+  </mat-card>
+</div>
