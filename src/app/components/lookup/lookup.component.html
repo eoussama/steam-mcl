@@ -1,5 +1,5 @@
 <div class="lookup">
-  {{ content | json }}
+
   <!-- The main container -->
   <mat-card class="lookup__main">
     <ng-container [ngSwitch]="content.state">
@@ -17,7 +17,7 @@
                   size="large"
                   aria-hidden="false"
                   aria-label="Error icon">warning</mat-icon>
-        <span class="message">{{ content.error }}</span>
+        <span class="message">{{ content.error.message }}</span>
       </div>
 
       <!-- The loader -->

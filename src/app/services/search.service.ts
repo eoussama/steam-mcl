@@ -7,6 +7,11 @@ import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 import { ISearchResult } from '../models/searchresult';
 import { ISteamIDResult } from '../models/steamidresult';
 
+import InvalidSteamID64Error from '../errors/invalid_id64.error';
+import InvalidNicknameError from '../errors/invalid_nickname.error';
+import InvalidProfileURLError from '../errors/invalid_url.error';
+import InvalidPermalinkError from '../errors/invalid_permalink.error';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -62,7 +67,7 @@ export class SearchService {
             type: ESteamIDTypes.ID64
           };
         } else {
-          throw new Error();
+          throw new InvalidSteamID64Error(`Steam ID64 "${searchTerm}" is invalid`);
         }
       } else {
 
@@ -101,7 +106,7 @@ export class SearchService {
                   type: ESteamIDTypes.ProfileURL
                 };
               } else {
-                throw new Error();
+                throw new InvalidProfileURLError(`Profile URL ${searchTerm} is invalid`);
               }
 
               // Checking if URL is pointing at profiles
@@ -118,7 +123,7 @@ export class SearchService {
                   type: ESteamIDTypes.ProfilePermalink
                 };
               } else {
-                throw new Error();
+                throw new InvalidPermalinkError(`Permalink ${searchTerm} is invalid`);
               }
             }
           }
@@ -138,7 +143,7 @@ export class SearchService {
               type: ESteamIDTypes.Nickname
             };
           } else {
-            throw new Error();
+            throw new InvalidNicknameError(`The nickname ${searchTerm} is invalid`);
           }
         }
       }

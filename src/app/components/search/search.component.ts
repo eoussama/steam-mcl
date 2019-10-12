@@ -7,6 +7,8 @@ import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
+import BaseError from 'src/app/errors/base.error';
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -124,7 +126,7 @@ export class SearchComponent implements OnInit {
             data: res
           });
         })
-        .catch((err: string) => {
+        .catch((err: BaseError) => {
 
           // Emitting the loading-fail event
           this.search.searchEvent.emit({
