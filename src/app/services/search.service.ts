@@ -67,7 +67,7 @@ export class SearchService {
             type: ESteamIDTypes.ID64
           };
         } else {
-          throw new InvalidSteamID64Error(`Steam ID64 "${searchTerm}" is invalid`);
+          throw new InvalidSteamID64Error(`Steam ID64 “${searchTerm}” is invalid`);
         }
       } else {
 
@@ -106,7 +106,7 @@ export class SearchService {
                   type: ESteamIDTypes.ProfileURL
                 };
               } else {
-                throw new InvalidProfileURLError(`Profile URL ${searchTerm} is invalid`);
+                throw new InvalidProfileURLError(`Profile URL “${searchTerm}” is invalid`);
               }
 
               // Checking if URL is pointing at profiles
@@ -123,7 +123,7 @@ export class SearchService {
                   type: ESteamIDTypes.ProfilePermalink
                 };
               } else {
-                throw new InvalidPermalinkError(`Permalink ${searchTerm} is invalid`);
+                throw new InvalidPermalinkError(`Permalink “${searchTerm}” is invalid`);
               }
             }
           }
@@ -143,7 +143,7 @@ export class SearchService {
               type: ESteamIDTypes.Nickname
             };
           } else {
-            throw new InvalidNicknameError(`The nickname ${searchTerm} is invalid`);
+            throw new InvalidNicknameError(`The nickname “${searchTerm}” is invalid`);
           }
         }
       }
