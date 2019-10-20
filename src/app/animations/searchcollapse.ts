@@ -53,7 +53,7 @@ export const collapseAnimation = [
 		...transitionConst
 	]),
 
-	// The header collapse
+	// The header collapse that includes
 	// padding-related animations
 	trigger('collapseHeader', [
 		state('opened', style({
@@ -62,5 +62,18 @@ export const collapseAnimation = [
 		state('closed', style({
 			padding: '20px 0 80px 0'
 		}))
+	]),
+
+	// The back button animations
+	trigger('toggleBackBtn', [
+		state('opened', style({
+			marginRight: '-25px',
+			opacity: '0'
+		})),
+		state('closed', style({
+			marginRight: '25px',
+			opacity: '1'
+		})),
+		...transitionConst
 	])
 ];

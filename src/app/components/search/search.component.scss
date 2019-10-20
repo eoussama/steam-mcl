@@ -74,6 +74,28 @@
 		}
 	}
 
+	&__back {
+		color: #1f3c53;
+		cursor: pointer;
+		font-size: 3rem;
+    font-weight: bold;
+    left: -8px;
+    margin-right: 25px;
+		opacity: 0.6;
+    position: relative;
+		top: 8px;
+		transition-duration: .3s;
+		transition-property: margin-right opacity;
+
+		&:hover {
+			opacity: 1;
+		}
+
+		&:active, &:focus {
+			outline: none;
+		}
+	}
+
 	&__subtitle {
 		color: $text-primary-color;
 		font-size: 2rem;

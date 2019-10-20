@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
+import BaseError from 'src/app/errors/base.error';
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISteamIDResult } from 'src/app/models/steamidresult';
 import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
-
-import BaseError from 'src/app/errors/base.error';
 
 @Component({
   selector: 'app-search',
@@ -23,6 +23,11 @@ export class SearchComponent implements OnInit {
    * The search component collapse state
    */
   collapse: boolean = false;
+
+  /**
+   * The loading state
+   */
+  loading: boolean = false;
 
   //#endregion
 
@@ -42,7 +47,8 @@ export class SearchComponent implements OnInit {
    * @param search The search service
    */
   constructor(
-    private search: SearchService
+    private search: SearchService,
+    private router: Router
   ) { }
 
   //#endregion
@@ -68,6 +74,7 @@ export class SearchComponent implements OnInit {
 
     // Extracting URL fragments
     const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
+
     // Extracting the route name
     const route: string = urlFragments[0] || null;
 
@@ -83,6 +90,26 @@ export class SearchComponent implements OnInit {
       // Firing the change event
       searchInput.dispatchEvent(new Event('change'));
     }
+
+    // Subscribing to the URL change event
+    this.router.events.subscribe((e) => {
+
+      // Checking if the navigation has ended
+      if (e instanceof NavigationEnd) {
+
+        // Getting the current URL
+        const url: string = document.location.pathname;
+
+        // Extracting URL fragments
+        const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
+
+        // Extracting the route name
+        const route: string = urlFragments[0] || null;
+
+        // Updating the collapse state
+        this.collapse = route === 'lookup';
+      }
+    });
   }
 
   //#endregion
@@ -102,6 +129,9 @@ export class SearchComponent implements OnInit {
     // Getting the search term
     const searchTerm = searchInput.value;
 
+    // Updating the loading state
+    this.loading = true;
+
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
 
@@ -111,31 +141,56 @@ export class SearchComponent implements OnInit {
         input: searchTerm
       });
 
-      // Updating the collapse state
-      this.collapse = true;
-
       // Invoking the search function
       this.search
         .getSteamID(searchTerm)
         .then((res: ISteamIDResult) => {
 
-          // Emitting the loading-success event
-          this.search.searchEvent.emit({
-            state: ESearchResultTypes.Success,
-            input: searchTerm,
-            data: res
-          });
+          // Checking if the search mode is on
+          if (this.collapse) {
+
+            // Emitting the loading-success event
+            this.search.searchEvent.emit({
+              state: ESearchResultTypes.Success,
+              input: searchTerm,
+              data: res
+            });
+          }
         })
         .catch((err: BaseError) => {
 
-          // Emitting the loading-fail event
-          this.search.searchEvent.emit({
-            state: ESearchResultTypes.Failure,
-            input: searchTerm,
-            error: err
-          });
+          // Checking if the search mode is on
+          if (this.collapse) {
+
+            // Emitting the loading-fail event
+            this.search.searchEvent.emit({
+              state: ESearchResultTypes.Failure,
+              input: searchTerm,
+              error: err
+            });
+          }
+        })
+        .finally(() => {
+
+          // Updating the loading state
+          this.loading = false;
         });
     }
+  }
+
+  /**
+   * The event listener of the back button click
+   */
+  onBackClicked(): void {
+
+    // Getting the input
+    const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;
+
+    // Clearing the input
+    searchInput.value = "";
+
+    // Updating the loading state
+    this.loading = false;
   }
 
   //#endregion

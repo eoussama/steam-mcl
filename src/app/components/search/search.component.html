@@ -12,7 +12,17 @@
 
         <!-- The title -->
         <h1 [@collapseTitle]="getState()"
-            class="search__title">Steam</h1>
+            class="search__title">
+
+          <!-- The back button -->
+          <mat-icon class="search__back"
+                    [@toggleBackBtn]="getState()"
+                    [routerLink]="['/']"
+                    (click)="onBackClicked()">arrow_back</mat-icon>
+
+          <span>Steam</span>
+        </h1>
+
         <h2 [@collapseSubtitle]="getState()"
             class="search__subtitle">Missing Content Lookup</h2>
 
@@ -52,6 +62,7 @@
         <input #searchInputRef
                matInput
                placeholder="Enter your Steam ID here..."
+               [disabled]="loading"
                (change)="onSearchChanged($event)">
 
         <!-- The search icon -->
