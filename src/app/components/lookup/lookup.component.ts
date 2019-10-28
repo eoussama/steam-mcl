@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-lookup',
   templateUrl: './lookup.component.html',
   styleUrls: ['./lookup.component.scss']
 })
-export class LookupComponent implements OnInit {
+export class LookupComponent implements OnInit, OnDestroy {
 
   //#region Properties
 
@@ -18,6 +19,11 @@ export class LookupComponent implements OnInit {
    * The loaded content 
    */
   content: ISearchResult;
+
+  /**
+   * The active search subscription
+   */
+  searchSubscription: Subscription;
 
   //#endregion
 
@@ -47,10 +53,16 @@ export class LookupComponent implements OnInit {
     }
 
     // Subscribing to the search event
-    this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
+    this.searchSubscription = this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
       this.content = searchResult;
       console.log({ content: this.content });
     });
+  }
+
+  ngOnDestroy(): void {
+
+    // Unsubscribing from the search event
+    this.searchSubscription.unsubscribe();
   }
 
   //#endregion

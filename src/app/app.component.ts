@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { SearchService } from './services/search.service';
 
 import { ISearchResult } from './models/searchresult';
-import { ESearchResultTypes } from './enums/searchresulttypes.enum';
 
 @Component({
   selector: 'app-root',

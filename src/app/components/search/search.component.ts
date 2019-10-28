@@ -187,7 +187,7 @@ export class SearchComponent implements OnInit {
     const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;
 
     // Clearing the input
-    searchInput.value = "";
+    searchInput.value = '';
 
     // Updating the loading state
     this.loading = false;
