@@ -176,5 +176,18 @@ export class SearchService {
       .toPromise();
   }
 
+  /**
+   * Gets a list of owned games 
+   * for a specific Steam user
+   * 
+   * @param steamId The Steam ID of the owner
+   */
+  async getOwnedGames(steamId: string): Promise<any> {
+    return this.http
+      .get(
+        `${environment.cors}${environment.apiEndpoint}IPlayerService/GetOwnedGames/v0001/?key=${environment.apiKey}&steamid=${steamId}&format=json`)
+      .toPromise();
+  }
+
   //#endregion
 }

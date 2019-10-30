@@ -55,7 +55,14 @@ export class LookupComponent implements OnInit, OnDestroy {
     // Subscribing to the search event
     this.searchSubscription = this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
       this.content = searchResult;
-      console.log({ content: this.content });
+
+      if (searchResult.state === ESearchResultTypes.Success) {
+        this.searchService
+          .getOwnedGames(searchResult.data['id'])
+          .then((games: any) => {
+            console.log({ games });
+          });
+      }
     });
   }
 
