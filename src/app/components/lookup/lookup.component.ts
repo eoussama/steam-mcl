@@ -16,9 +16,14 @@ export class LookupComponent implements OnInit, OnDestroy {
   //#region Properties
 
   /**
-   * The loaded content 
+   * The Steam user
    */
-  content: ISearchResult;
+  user: any = {};
+
+  /**
+   * The loading progress
+   */
+  progress: any;
 
   /**
    * The active search subscription
@@ -49,19 +54,61 @@ export class LookupComponent implements OnInit, OnDestroy {
 
     // Checking if the search result object is valid
     if (searchResult) {
-      this.content = searchResult;
+
+      // Updating the progress object
+      this.progress = {
+        state: searchResult.state,
+        error: searchResult.error
+      };
+
+      // Checking if the search was successful
+      if (searchResult.state === ESearchResultTypes.Success) {
+
+        // Updating the loader user ID
+        this.user.id = searchResult.data['id'];
+      }
     }
 
     // Subscribing to the search event
     this.searchSubscription = this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
-      this.content = searchResult;
 
+      // Checking if the search was successful
       if (searchResult.state === ESearchResultTypes.Success) {
+
+        // Updating the loader user ID
+        this.user.id = searchResult.data['id'];
+
+        // Updating the progress object
+        this.progress = {
+          state: ESearchResultTypes.Loading
+        };
+
+        // Getting the owned games list
         this.searchService
-          .getOwnedGames(searchResult.data['id'])
+          .getOwnedGames(this.user.id)
           .then((games: any) => {
             console.log({ games });
+
+            // Updating the progress object
+            this.progress = {
+              state: ESearchResultTypes.Success
+            };
+          })
+          .catch(() => {
+
+            // Updating the progress object
+            this.progress = {
+              state: ESearchResultTypes.Failure,
+              error: 'err'
+            };
           });
+      } else {
+
+        // Updating the progress object
+        this.progress = {
+          state: searchResult.state,
+          error: searchResult.error
+        };
       }
     });
   }

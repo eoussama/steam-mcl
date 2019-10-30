@@ -2,12 +2,12 @@
 
   <!-- The main container -->
   <mat-card class="lookup__main">
-    <ng-container [ngSwitch]="content.state">
+    <ng-container [ngSwitch]="progress.state">
 
       <!-- The content -->
       <div *ngSwitchCase="1"
            class="lookup__content">
-        Success: <b>{{ content.data.id }}</b> loaded
+        Success: <b>{{ user.id }}</b> loaded
       </div>
 
       <!-- The error -->
@@ -17,7 +17,7 @@
                   size="large"
                   aria-hidden="false"
                   aria-label="Error icon">warning</mat-icon>
-        <span class="message">{{ content.error.message }}</span>
+        <span class="message">{{ progress.error.message }}</span>
       </div>
 
       <!-- The loader -->
