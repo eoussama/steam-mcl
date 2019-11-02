@@ -58,14 +58,14 @@ export class LookupComponent implements OnInit, OnDestroy {
       // Updating the progress object
       this.progress = {
         state: searchResult.state,
-        error: searchResult.details.error
+        error: searchResult['details']['error']
       };
 
       // Checking if the search was successful
       if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
-        this.user.id = searchResult.details.result;
+        this.user.id = searchResult['details']['result'];
       }
     }
 
@@ -76,7 +76,7 @@ export class LookupComponent implements OnInit, OnDestroy {
       if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
-        this.user.id = searchResult.details.result;
+        this.user.id = searchResult['details']['result'];
 
         // Updating the progress object
         this.progress = {
@@ -107,7 +107,7 @@ export class LookupComponent implements OnInit, OnDestroy {
         // Updating the progress object
         this.progress = {
           state: searchResult.state,
-          error: searchResult.error
+          error: searchResult['details']['error']
         };
       }
     });

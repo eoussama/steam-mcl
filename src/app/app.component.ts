@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
 
       // Getting the search input 
-      const input = searchResult.details.meta.input;
+      const input = searchResult.details['meta']['input'];
 
       // Navigating to the lookup page
       this.router.navigate(['lookup', input], { state: { searchResult } });
