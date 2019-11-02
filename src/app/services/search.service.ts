@@ -11,6 +11,7 @@ import InvalidSteamID64Error from '../errors/invalid_id64.error';
 import InvalidNicknameError from '../errors/invalid_nickname.error';
 import InvalidProfileURLError from '../errors/invalid_url.error';
 import InvalidPermalinkError from '../errors/invalid_permalink.error';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class SearchService {
   /**
    * The search event
    */
-  searchEvent: EventEmitter<ISearchResult>;
+  searchEvent: Observable<ISearchResult>;
 
   //#endregion
 
@@ -36,12 +37,21 @@ export class SearchService {
   constructor(private http: HttpClient) {
 
     // Initializing the search event
-    this.searchEvent = new EventEmitter<ISearchResult>();
+    this.searchEvent = new Observable<ISearchResult>();
   }
 
   //#endregion
 
   //#region Functions 
+
+  /**
+   * Starts the core search
+   *
+   * @param searchTerm The search term
+   */
+  start(searchTerm: string): void {
+
+  }
 
   /**
    * Gets the Steam ID from a search term

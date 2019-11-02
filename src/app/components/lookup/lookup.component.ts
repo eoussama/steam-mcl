@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISearchResult } from 'src/app/models/searchresult';
-import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
+import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -62,7 +62,7 @@ export class LookupComponent implements OnInit, OnDestroy {
       };
 
       // Checking if the search was successful
-      if (searchResult.state === ESearchResultTypes.Success) {
+      if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
         this.user.id = searchResult.data['id'];
@@ -73,14 +73,14 @@ export class LookupComponent implements OnInit, OnDestroy {
     this.searchSubscription = this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
 
       // Checking if the search was successful
-      if (searchResult.state === ESearchResultTypes.Success) {
+      if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
         this.user.id = searchResult.data['id'];
 
         // Updating the progress object
         this.progress = {
-          state: ESearchResultTypes.Loading
+          state: ESearchStates.Loading
         };
 
         // Getting the owned games list
@@ -91,14 +91,14 @@ export class LookupComponent implements OnInit, OnDestroy {
 
             // Updating the progress object
             this.progress = {
-              state: ESearchResultTypes.Success
+              state: ESearchStates.Success
             };
           })
           .catch(() => {
 
             // Updating the progress object
             this.progress = {
-              state: ESearchResultTypes.Failure,
+              state: ESearchStates.Failure,
               error: 'err'
             };
           });

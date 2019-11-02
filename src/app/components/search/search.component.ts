@@ -5,7 +5,7 @@ import BaseError from 'src/app/errors/base.error';
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISteamIDResult } from 'src/app/models/steamidresult';
-import { ESearchResultTypes } from 'src/app/enums/searchresulttypes.enum';
+import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
@@ -135,46 +135,47 @@ export class SearchComponent implements OnInit {
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
 
-      // Emitting the loading event
-      this.search.searchEvent.emit({
-        state: ESearchResultTypes.Loading,
-        input: searchTerm
-      });
+      this.search.start
+      // // Emitting the loading event
+      // this.search.searchEvent.emit({
+      //   state: ESearchResultTypes.Loading,
+      //   input: searchTerm
+      // });
 
-      // Invoking the search function
-      this.search
-        .getSteamID(searchTerm)
-        .then((res: ISteamIDResult) => {
+      // // Invoking the search function
+      // this.search
+      //   .getSteamID(searchTerm)
+      //   .then((res: ISteamIDResult) => {
 
-          // Checking if the search mode is on
-          if (this.collapse) {
+      //     // Checking if the search mode is on
+      //     if (this.collapse) {
 
-            // Emitting the loading-success event
-            this.search.searchEvent.emit({
-              state: ESearchResultTypes.Success,
-              input: searchTerm,
-              data: res
-            });
-          }
-        })
-        .catch((err: BaseError) => {
+      //       // Emitting the loading-success event
+      //       this.search.searchEvent.emit({
+      //         state: ESearchResultTypes.Success,
+      //         input: searchTerm,
+      //         data: res
+      //       });
+      //     }
+      //   })
+      //   .catch((err: BaseError) => {
 
-          // Checking if the search mode is on
-          if (this.collapse) {
+      //     // Checking if the search mode is on
+      //     if (this.collapse) {
 
-            // Emitting the loading-fail event
-            this.search.searchEvent.emit({
-              state: ESearchResultTypes.Failure,
-              input: searchTerm,
-              error: err
-            });
-          }
-        })
-        .finally(() => {
+      //       // Emitting the loading-fail event
+      //       this.search.searchEvent.emit({
+      //         state: ESearchResultTypes.Failure,
+      //         input: searchTerm,
+      //         error: err
+      //       });
+      //     }
+      //   })
+      //   .finally(() => {
 
-          // Updating the loading state
-          this.loading = false;
-        });
+      //     // Updating the loading state
+      //     this.loading = false;
+      //   });
     }
   }
 

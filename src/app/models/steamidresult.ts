@@ -1,7 +1,7 @@
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 
 /**
- * The seam ID result type
+ * The Steam ID result type
  */
 export interface ISteamIDResult {
   id: string;

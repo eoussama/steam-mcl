@@ -1,13 +1,13 @@
-import { ESearchResultTypes } from '../enums/searchresulttypes.enum';
+import { ESearchStates } from '../enums/searchresulttypes.enum';
+import { ESearchTypes } from '../enums/searchtypestype.enum';
 
-import BaseError from '../errors/base.error';
+import { ISearchDetails } from './searchdetail';
 
 /**
  * The search result type
  */
 export interface ISearchResult {
-    state: ESearchResultTypes,
-    input: string,
-    error?: BaseError,
-    data?: any
+    type: ESearchTypes,
+    state: ESearchStates,
+    details?: ISearchDetails
 }

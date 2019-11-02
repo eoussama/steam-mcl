@@ -1,7 +1,7 @@
 /**
  * Search result types
  */
-export enum ESearchResultTypes {
+export enum ESearchStates {
     Failure,
     Success,
     Loading
