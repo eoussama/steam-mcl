@@ -1,17 +1,16 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
-import { ISearchResult } from '../models/searchresult';
 import { ISteamIDResult } from '../models/steamidresult';
 
 import InvalidSteamID64Error from '../errors/invalid_id64.error';
 import InvalidNicknameError from '../errors/invalid_nickname.error';
 import InvalidProfileURLError from '../errors/invalid_url.error';
 import InvalidPermalinkError from '../errors/invalid_permalink.error';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +19,7 @@ export class SearchService {
 
   //#region Events
 
-  /**
-   * The search event
-   */
-  searchEvent: Observable<ISearchResult>;
+  searchEvent: EventEmitter<string>;
 
   //#endregion
 
@@ -37,7 +33,7 @@ export class SearchService {
   constructor(private http: HttpClient) {
 
     // Initializing the search event
-    this.searchEvent = new Observable<ISearchResult>();
+    this.searchEvent = new EventEmitter<string>();
   }
 
   //#endregion
@@ -49,8 +45,8 @@ export class SearchService {
    *
    * @param searchTerm The search term
    */
-  start(searchTerm: string): void {
-
+  async start(searchTerm: string): Promise<any> {
+    this.searchEvent.emit(searchTerm);
   }
 
   /**

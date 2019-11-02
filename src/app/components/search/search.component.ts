@@ -135,7 +135,7 @@ export class SearchComponent implements OnInit {
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
 
-      this.search.start
+      this.search.start(searchTerm);
       // // Emitting the loading event
       // this.search.searchEvent.emit({
       //   state: ESearchResultTypes.Loading,
