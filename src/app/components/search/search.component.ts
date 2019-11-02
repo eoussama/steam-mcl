@@ -125,11 +125,11 @@ export class SearchComponent implements OnInit {
     // Getting the search term
     const searchTerm = searchInput.value;
 
-    // Updating the loading state
-    this.search.searchActivated = this.loading = true;
-
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
+
+      // Updating the loading state
+      this.search.searchActivated = this.loading = true;
 
       // Starting the search event
       this.search

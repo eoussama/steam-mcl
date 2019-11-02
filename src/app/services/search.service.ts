@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
+import { ISearchResult } from '../models/searchresult';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 import { ESearchStates } from '../enums/searchresulttypes.enum';
 import { ESearchTypes } from '../enums/searchtypestype.enum';
-import { ISearchResult } from '../models/searchresult';
 
 import InvalidSteamID64Error from '../errors/invalid_id64.error';
 import InvalidNicknameError from '../errors/invalid_nickname.error';
@@ -78,8 +78,32 @@ export class SearchService {
               });
             }
 
-            // Resolving the promise
-            resolve();
+            this.getOwnedGames(result)
+              .then((games: any) => {
+
+                // Emitting the Steam ID search failure
+                this.searchEvent.emit({
+                  state: ESearchStates.Success,
+                  type: ESearchTypes.SteamLibraryFetch,
+                  details: { result: games }
+                });
+
+                // Resolving the promise
+                resolve();
+              })
+              .catch((error: BaseError) => {
+
+                // Emitting the Steam ID search failure
+                this.searchEvent.emit({
+                  state: ESearchStates.Failure,
+                  type: ESearchTypes.SteamLibraryFetch,
+                  details: { error }
+                });
+
+                // Rejecting the promise
+                reject();
+              });
+
           })
           .catch((error: BaseError) => {
 

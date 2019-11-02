@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { SearchService } from 'src/app/services/search.service';
 
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
-import { Subscription } from 'rxjs';
+import { ESearchTypes } from 'src/app/enums/searchtypestype.enum';
 
 @Component({
   selector: 'app-lookup',
@@ -23,7 +24,7 @@ export class LookupComponent implements OnInit, OnDestroy {
   /**
    * The loading progress
    */
-  progress: any;
+  currentSearch: ISearchResult;
 
   /**
    * The active search subscription
@@ -56,10 +57,7 @@ export class LookupComponent implements OnInit, OnDestroy {
     if (searchResult) {
 
       // Updating the progress object
-      this.progress = {
-        state: searchResult.state,
-        error: searchResult['details']['error']
-      };
+      this.currentSearch = searchResult;
 
       // Checking if the search was successful
       if (searchResult.state === ESearchStates.Success) {
@@ -72,43 +70,30 @@ export class LookupComponent implements OnInit, OnDestroy {
     // Subscribing to the search event
     this.searchSubscription = this.search.searchEvent.subscribe((searchResult: ISearchResult) => {
 
-      // Checking if the search was successful
-      if (searchResult.state === ESearchStates.Success) {
+      // Updating the progress object
+      this.currentSearch = searchResult;
 
-        // Updating the loader user ID
-        this.user.id = searchResult['details']['result'];
+      // Checking the search type
+      switch (searchResult.type) {
 
-        // Updating the progress object
-        this.progress = {
-          state: ESearchStates.Loading
-        };
+        // Steam ID retrieval
+        case ESearchTypes.SteamIDRetrieval: {
 
-        // Getting the owned games list
-        this.search
-          .getOwnedGames(this.user.id)
-          .then((games: any) => {
-            console.log({ games });
+          // Checking if the search was successful
+          if (searchResult.state === ESearchStates.Success) {
 
-            // Updating the progress object
-            this.progress = {
-              state: ESearchStates.Success
-            };
-          })
-          .catch(() => {
+            // Storing the user's ID
+            this.user.id = searchResult.details['result'];
+          }
 
-            // Updating the progress object
-            this.progress = {
-              state: ESearchStates.Failure,
-              error: 'err'
-            };
-          });
-      } else {
+          break;
+        }
 
-        // Updating the progress object
-        this.progress = {
-          state: searchResult.state,
-          error: searchResult['details']['error']
-        };
+        // Steam library  fetch
+        case ESearchTypes.SteamLibraryFetch: {
+          console.log('SteamLibraryFetch');
+          break;
+        }
       }
     });
   }
@@ -117,6 +102,18 @@ export class LookupComponent implements OnInit, OnDestroy {
 
     // Unsubscribing from the search event
     this.searchSubscription.unsubscribe();
+  }
+
+  //#endregion
+
+  //#region Methods
+
+  getLoadingMessage(type: ESearchTypes = this.currentSearch.type): string {
+    return [
+      'aaa',
+      'bbb',
+      'ccc'
+    ][type];
   }
 
   //#endregion

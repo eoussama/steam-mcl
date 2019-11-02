@@ -2,7 +2,7 @@
 
   <!-- The main container -->
   <mat-card class="lookup__main">
-    <ng-container [ngSwitch]="progress.state">
+    <ng-container [ngSwitch]="currentSearch.state">
 
       <!-- The content -->
       <div *ngSwitchCase="1"
@@ -17,7 +17,7 @@
                   size="large"
                   aria-hidden="false"
                   aria-label="Error icon">warning</mat-icon>
-        <span class="message">{{ progress.error.message }}</span>
+        <span class="message">{{ currentSearch.details.error.message }}</span>
       </div>
 
       <!-- The loader -->
@@ -25,7 +25,7 @@
            class="lookup__loader">
         <mat-spinner class="loader"
                      diameter="50"></mat-spinner>
-        <span class="message">Loading steam account...</span>
+        <span class="message">{{ getLoadingMessage() }}...</span>
       </div>
     </ng-container>
   </mat-card>
