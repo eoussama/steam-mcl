@@ -11,14 +11,6 @@
 
         <hr>
 
-        <label>
-          Game:
-          <input type="text"
-                 placeholder="Search...">
-        </label>
-
-        <hr>
-
         <ul *ngIf="user && user.games">
           <li *ngFor="let game of user.games">{{ game.appid }}</li>
         </ul>

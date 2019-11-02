@@ -97,7 +97,7 @@ export class LookupComponent implements OnInit, OnDestroy {
 
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
-            this.user.games = this.currentSearch.details['result']['games'];
+            this.user.games = this.currentSearch.details['result']['response']['games'];
             console.log(this.user);
           }
 
@@ -117,6 +117,12 @@ export class LookupComponent implements OnInit, OnDestroy {
 
   //#region Methods
 
+  /**
+   * Gets the appropriate loading message
+   * given the type of the search
+   *
+   * @param type The search's type
+   */
   getLoadingMessage(type: ESearchTypes = this.currentSearch.type): string {
     return [
       'Retrieving the Steam ID',
@@ -124,6 +130,14 @@ export class LookupComponent implements OnInit, OnDestroy {
       'Fetching the Steam library'
     ][type];
   }
+
+  /**
+   * Gets information about
+   * the input app ID
+   *
+   * @param appId The app ID
+   */
+  getApp = async (appId: string): Promise<any> => await this.search.getApp(appId);
 
   //#endregion
 }

@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
@@ -83,7 +83,7 @@ export class SearchService {
                 type: ESearchTypes.SteamLibraryFetch
               });
 
-              this.getOwnedGames(result)
+              this.getOwnedApps(result)
                 .then((games: any) => {
 
                   // Emitting the Steam library fetch success
@@ -276,10 +276,23 @@ export class SearchService {
    * 
    * @param steamId The Steam ID of the owner
    */
-  async getOwnedGames(steamId: string): Promise<any> {
+  async getOwnedApps(steamId: string): Promise<any> {
     return this.http
       .get(
         `${environment.cors}${environment.apiEndpoint}IPlayerService/GetOwnedGames/v0001/?key=${environment.apiKey}&steamid=${steamId}&format=json`)
+      .toPromise();
+  }
+
+  /**
+   * Gets information about
+   * a specified app ID
+   * 
+   * @param appId The app ID of the game
+   */
+  async getApp(appid: string): Promise<any> {
+    return this.http
+      .get(
+        `${environment.cors}//store.steampowered.com/api/appdetails/?appids=${appid}`)
       .toPromise();
   }
 
