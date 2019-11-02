@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
     // Subscribing to the search service
-    this.searchService.searchEvent.subscribe((searchResult: string) => {
+    this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
 
       console.log({ searchResult });
       // Navigating to the lookup page

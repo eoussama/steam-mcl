@@ -1,11 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
-import BaseError from 'src/app/errors/base.error';
 import { SearchService } from 'src/app/services/search.service';
-
-import { ISteamIDResult } from 'src/app/models/steamidresult';
-import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
@@ -135,7 +131,9 @@ export class SearchComponent implements OnInit {
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
 
+      // Starting the search event
       this.search.start(searchTerm);
+
       // // Emitting the loading event
       // this.search.searchEvent.emit({
       //   state: ESearchResultTypes.Loading,

@@ -5,12 +5,16 @@ import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
-import { ISteamIDResult } from '../models/steamidresult';
+import { ESearchStates } from '../enums/searchresulttypes.enum';
+import { ESearchTypes } from '../enums/searchtypestype.enum';
+import { ISearchResult } from '../models/searchresult';
 
 import InvalidSteamID64Error from '../errors/invalid_id64.error';
 import InvalidNicknameError from '../errors/invalid_nickname.error';
 import InvalidProfileURLError from '../errors/invalid_url.error';
 import InvalidPermalinkError from '../errors/invalid_permalink.error';
+
+import BaseError from '../errors/base.error';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +23,7 @@ export class SearchService {
 
   //#region Events
 
-  searchEvent: EventEmitter<string>;
+  searchEvent: EventEmitter<ISearchResult>;
 
   //#endregion
 
@@ -33,7 +37,7 @@ export class SearchService {
   constructor(private http: HttpClient) {
 
     // Initializing the search event
-    this.searchEvent = new EventEmitter<string>();
+    this.searchEvent = new EventEmitter<ISearchResult>();
   }
 
   //#endregion
@@ -45,8 +49,34 @@ export class SearchService {
    *
    * @param searchTerm The search term
    */
-  async start(searchTerm: string): Promise<any> {
-    this.searchEvent.emit(searchTerm);
+  start(searchTerm: string): void {
+
+    // Getting the Steam ID
+    this.getSteamID(searchTerm)
+      .then((result: string) => {
+
+        // Emitting the Steam ID search result
+        this.searchEvent.emit({
+          state: ESearchStates.Success,
+          type: ESearchTypes.SteamIDRetrieval,
+          details: {
+            result,
+            meta: { input: searchTerm }
+          }
+        });
+      })
+      .catch((error: BaseError) => {
+
+        // Emitting the Steam ID search failure
+        this.searchEvent.emit({
+          state: ESearchStates.Failure,
+          type: ESearchTypes.SteamIDRetrieval,
+          details: {
+            error,
+            meta: { input: searchTerm }
+          }
+        });
+      });
   }
 
   /**
@@ -54,7 +84,7 @@ export class SearchService {
    *
    * @param searchTerm The search term
    */
-  async getSteamID(searchTerm: string): Promise<ISteamIDResult> {
+  async getSteamID(searchTerm: string): Promise<string> {
 
     // Checking of the input is available
     if (searchTerm.length > 0) {
@@ -63,15 +93,11 @@ export class SearchService {
       if (Validator.isNumeric(searchTerm)) {
 
         // Getting the Steam ID validity
-        const validity = await this.isValidID(searchTerm);
+        const validity = await this.isValidID(searchTerm, ESteamIDTypes.ID64);
 
         // Checking if the Steam ID is valid
         if (validity.response.players.length > 0) {
-
-          return {
-            id: searchTerm,
-            type: ESteamIDTypes.ID64
-          };
+          return searchTerm;
         } else {
           throw new InvalidSteamID64Error(`Steam ID64 “${searchTerm}” is invalid`);
         }
@@ -99,18 +125,14 @@ export class SearchService {
             if (route[0] === 'id') {
 
               // Getting the Steam results
-              const res: any = await this.getSteamIDFromName(route[1]);
+              const res: any = await this.getSteamIDFromName(route[1], ESteamIDTypes.ProfileURL);
 
               // Getting the Steam ID
               const steamid: string = res.response.steamid;
 
               // Checking if the Steam ID is valid
               if (steamid) {
-
-                return {
-                  id: steamid,
-                  type: ESteamIDTypes.ProfileURL
-                };
+                return steamid
               } else {
                 throw new InvalidProfileURLError(`Profile URL “${searchTerm}” is invalid`);
               }
@@ -119,15 +141,11 @@ export class SearchService {
             } else if (route[0] === 'profiles') {
 
               // Getting the Steam ID validity
-              const validity = await this.isValidID(route[1]);
+              const validity = await this.isValidID(route[1], ESteamIDTypes.ProfilePermalink);
 
               // Checking if the Steam ID is valid
               if (validity.response.players.length > 0) {
-
-                return {
-                  id: route[1],
-                  type: ESteamIDTypes.ProfilePermalink
-                };
+                return route[1];
               } else {
                 throw new InvalidPermalinkError(`Permalink “${searchTerm}” is invalid`);
               }
@@ -136,18 +154,14 @@ export class SearchService {
         } else {
 
           // Getting the Steam results
-          const res: any = await this.getSteamIDFromName(searchTerm);
+          const res: any = await this.getSteamIDFromName(searchTerm, ESteamIDTypes.Nickname);
 
           // Getting the Steam ID
           const steamid: string = res.response.steamid;
 
           // Checking if the Steam ID is valid
           if (steamid) {
-
-            return {
-              id: steamid,
-              type: ESteamIDTypes.Nickname
-            };
+            return steamid;
           } else {
             throw new InvalidNicknameError(`The nickname “${searchTerm}” is invalid`);
           }
@@ -157,11 +171,21 @@ export class SearchService {
   }
 
   /**
-   * Gets the steam ID 64
+   * Gets the Steam ID 64
    *
    * @param input The input to get the steam ID off of
    */
-  async getSteamIDFromName(input: number | string): Promise<any> {
+  async getSteamIDFromName(input: number | string, type: ESteamIDTypes): Promise<any> {
+
+    // Emitting the Steam ID search event
+    this.searchEvent.emit({
+      state: ESearchStates.Loading,
+      type: ESearchTypes.SteamIDRetrieval,
+      details: {
+        meta: { input, type }
+      }
+    });
+
     return this.http
       .get(
         `${environment.cors}${environment.apiEndpoint}ISteamUser/ResolveVanityURL/v0001/?key=${environment.apiKey}&vanityurl=${input}`
@@ -174,7 +198,17 @@ export class SearchService {
    *
    * @param id The Steam ID to verify
    */
-  async isValidID(id: string): Promise<any> {
+  async isValidID(id: string, type: ESteamIDTypes): Promise<any> {
+
+    // Emitting the Steam ID validation event
+    this.searchEvent.emit({
+      state: ESearchStates.Loading,
+      type: ESearchTypes.SteamIDValidation,
+      details: {
+        meta: { input: id, type }
+      }
+    });
+
     return this.http
       .get(
         `${environment.cors}${environment.apiEndpoint}ISteamUser/GetPlayerSummaries/v0002/?key=${environment.apiKey}&steamids=${id}`
