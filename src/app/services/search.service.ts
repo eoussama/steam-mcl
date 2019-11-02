@@ -76,33 +76,39 @@ export class SearchService {
                   meta: { input: searchTerm }
                 }
               });
-            }
 
-            this.getOwnedGames(result)
-              .then((games: any) => {
-
-                // Emitting the Steam ID search failure
-                this.searchEvent.emit({
-                  state: ESearchStates.Success,
-                  type: ESearchTypes.SteamLibraryFetch,
-                  details: { result: games }
-                });
-
-                // Resolving the promise
-                resolve();
-              })
-              .catch((error: BaseError) => {
-
-                // Emitting the Steam ID search failure
-                this.searchEvent.emit({
-                  state: ESearchStates.Failure,
-                  type: ESearchTypes.SteamLibraryFetch,
-                  details: { error }
-                });
-
-                // Rejecting the promise
-                reject();
+              // Emitting the Steam library fetch
+              this.searchEvent.emit({
+                state: ESearchStates.Loading,
+                type: ESearchTypes.SteamLibraryFetch
               });
+
+              this.getOwnedGames(result)
+                .then((games: any) => {
+
+                  // Emitting the Steam library fetch success
+                  this.searchEvent.emit({
+                    state: ESearchStates.Success,
+                    type: ESearchTypes.SteamLibraryFetch,
+                    details: { result: games }
+                  });
+
+                  // Resolving the promise
+                  resolve();
+                })
+                .catch((error: BaseError) => {
+
+                  // Emitting the Steam library fetch failure
+                  this.searchEvent.emit({
+                    state: ESearchStates.Failure,
+                    type: ESearchTypes.SteamLibraryFetch,
+                    details: { error }
+                  });
+
+                  // Rejecting the promise
+                  reject();
+                });
+            }
 
           })
           .catch((error: BaseError) => {

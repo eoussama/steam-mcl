@@ -82,6 +82,9 @@ export class LookupComponent implements OnInit, OnDestroy {
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
 
+            // Updating the loading status
+            this.currentSearch.state = ESearchStates.Loading;
+
             // Storing the user's ID
             this.user.id = searchResult.details['result'];
           }
@@ -91,7 +94,12 @@ export class LookupComponent implements OnInit, OnDestroy {
 
         // Steam library  fetch
         case ESearchTypes.SteamLibraryFetch: {
-          console.log('SteamLibraryFetch');
+
+          // Checking if the search was successful
+          if (searchResult.state === ESearchStates.Success) {
+            console.log(this.currentSearch.details['result']);
+          }
+
           break;
         }
       }
@@ -110,9 +118,9 @@ export class LookupComponent implements OnInit, OnDestroy {
 
   getLoadingMessage(type: ESearchTypes = this.currentSearch.type): string {
     return [
-      'aaa',
-      'bbb',
-      'ccc'
+      'Retrieving the Steam ID',
+      'Validating the Steam ID',
+      'Fetching the Steam library'
     ][type];
   }
 
