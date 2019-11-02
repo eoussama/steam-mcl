@@ -116,7 +116,7 @@ export class LookupComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
 
     // Unsubscribing from the search event
-    // this.searchSubscription.unsubscribe();
+    this.searchSubscription.unsubscribe();
   }
 
   //#endregion

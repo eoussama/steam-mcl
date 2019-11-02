@@ -22,7 +22,15 @@ export class SearchService {
 
   //#region Events
 
+  /**
+   * The search event
+   */
   searchEvent: EventEmitter<ISearchResult>;
+
+  /**
+   * The state of the search
+   */
+  searchActivated: boolean;
 
   //#endregion
 
@@ -56,34 +64,42 @@ export class SearchService {
         this.getSteamID(searchTerm)
           .then((result: string) => {
 
-            // Emitting the Steam ID search result
-            this.searchEvent.emit({
-              state: ESearchStates.Success,
-              type: ESearchTypes.SteamIDRetrieval,
-              details: {
-                result,
-                meta: { input: searchTerm }
-              }
-            });
+            // Checking if the search is active or not
+            if (this.searchActivated) {
+
+              // Emitting the Steam ID search result
+              this.searchEvent.emit({
+                state: ESearchStates.Success,
+                type: ESearchTypes.SteamIDRetrieval,
+                details: {
+                  result,
+                  meta: { input: searchTerm }
+                }
+              });
+            }
 
             // Resolving the promise
             resolve();
           })
           .catch((error: BaseError) => {
 
-            // Emitting the Steam ID search failure
-            this.searchEvent.emit({
-              state: ESearchStates.Failure,
-              type: ESearchTypes.SteamIDRetrieval,
-              details: {
-                error,
-                meta: { input: searchTerm }
-              }
-            });
-          });
+            // Checking if the search is active or not
+            if (this.searchActivated) {
 
-        // Rejecting the promise
-        reject();
+              // Emitting the Steam ID search failure
+              this.searchEvent.emit({
+                state: ESearchStates.Failure,
+                type: ESearchTypes.SteamIDRetrieval,
+                details: {
+                  error,
+                  meta: { input: searchTerm }
+                }
+              });
+            }
+
+            // Rejecting the promise
+            reject();
+          });
       });
   }
 

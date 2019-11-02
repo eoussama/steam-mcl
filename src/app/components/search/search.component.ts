@@ -126,7 +126,7 @@ export class SearchComponent implements OnInit {
     const searchTerm = searchInput.value;
 
     // Updating the loading state
-    this.loading = true;
+    this.search.searchActivated = this.loading = true;
 
     // Checking if the search term is valid
     if (searchTerm && searchTerm.length > 0) {
@@ -154,7 +154,7 @@ export class SearchComponent implements OnInit {
     searchInput.value = '';
 
     // Updating the loading state
-    this.loading = false;
+    this.search.searchActivated = this.loading = false;
   }
 
   //#endregion
