@@ -4,5 +4,6 @@
 export enum ESearchTypes {
   SteamIDRetrieval,
   SteamIDValidation,
-  SteamLibraryFetch
+  SteamLibraryFetch,
+  SteamLibraryProcess
 }

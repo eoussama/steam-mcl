@@ -77,28 +77,59 @@ export class SearchService {
                 }
               });
 
-              // Emitting the Steam library fetch
+              // Emitting the Steam library fetch event
               this.searchEvent.emit({
                 state: ESearchStates.Loading,
                 type: ESearchTypes.SteamLibraryFetch
               });
 
+              // Getting the owned apps
               this.getOwnedApps(result)
-                .then((games: any) => {
+                .then((rawApps: any) => {
 
-                  // Emitting the Steam library fetch success
+                  // Emitting the Steam library fetch success event
                   this.searchEvent.emit({
                     state: ESearchStates.Success,
                     type: ESearchTypes.SteamLibraryFetch,
-                    details: { result: games }
+                    details: { result: rawApps }
                   });
 
-                  // Resolving the promise
-                  resolve();
+                  // Emitting the Steam library process event
+                  this.searchEvent.emit({
+                    state: ESearchStates.Loading,
+                    type: ESearchTypes.SteamLibraryProcess
+                  });
+
+                  // Processing the retrieved apps
+                  this.processApps(rawApps['response']['games'])
+                    .then((processedApps: any) => {
+
+                      // Emitting the Steam library process success event
+                      this.searchEvent.emit({
+                        state: ESearchStates.Success,
+                        type: ESearchTypes.SteamLibraryProcess,
+                        details: { result: processedApps }
+                      });
+
+                      // Resolving the promise
+                      resolve();
+                    })
+                    .catch((error: BaseError) => {
+
+                      // Emitting the Steam library process failure event
+                      this.searchEvent.emit({
+                        state: ESearchStates.Failure,
+                        type: ESearchTypes.SteamLibraryProcess,
+                        details: { error }
+                      });
+
+                      // Rejecting the promise
+                      reject();
+                    });
                 })
                 .catch((error: BaseError) => {
 
-                  // Emitting the Steam library fetch failure
+                  // Emitting the Steam library fetch failure event
                   this.searchEvent.emit({
                     state: ESearchStates.Failure,
                     type: ESearchTypes.SteamLibraryFetch,
@@ -281,6 +312,25 @@ export class SearchService {
       .get(
         `${environment.cors}${environment.apiEndpoint}IPlayerService/GetOwnedGames/v0001/?key=${environment.apiKey}&steamid=${steamId}&format=json`)
       .toPromise();
+  }
+
+  /**
+   * Loops through a list of app IDs
+   * and retrieves all of their data
+   *
+   * @param rawApps The list of app IDs to process
+   */
+  async processApps(rawApps: any[]): Promise<any> {
+
+    // Preparing the data list
+    const apps = [];
+
+    rawApps.forEach((app: string) => {
+      console.log(app);
+      apps.push(app);
+    });
+
+    return apps;
   }
 
   /**

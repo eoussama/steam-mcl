@@ -93,12 +93,12 @@ export class LookupComponent implements OnInit, OnDestroy {
         }
 
         // Steam library  fetch
-        case ESearchTypes.SteamLibraryFetch: {
+        case ESearchTypes.SteamLibraryProcess: {
 
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
-            this.user.games = this.currentSearch.details['result']['response']['games'];
-            console.log(this.user);
+            this.user.games = this.currentSearch.details['result'];
+            console.log(this.currentSearch, this.user);
           }
 
           break;
@@ -130,14 +130,6 @@ export class LookupComponent implements OnInit, OnDestroy {
       'Fetching the Steam library'
     ][type];
   }
-
-  /**
-   * Gets information about
-   * the input app ID
-   *
-   * @param appId The app ID
-   */
-  getApp = async (appId: string): Promise<any> => await this.search.getApp(appId);
 
   //#endregion
 }
