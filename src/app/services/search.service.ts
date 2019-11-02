@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
@@ -91,7 +91,10 @@ export class SearchService {
                   this.searchEvent.emit({
                     state: ESearchStates.Success,
                     type: ESearchTypes.SteamLibraryFetch,
-                    details: { result: rawApps }
+                    details: {
+                      result: rawApps,
+                      meta: { input: searchTerm }
+                    },
                   });
 
                   // Emitting the Steam library process event
@@ -108,7 +111,10 @@ export class SearchService {
                       this.searchEvent.emit({
                         state: ESearchStates.Success,
                         type: ESearchTypes.SteamLibraryProcess,
-                        details: { result: processedApps }
+                        details: {
+                          result: processedApps,
+                          meta: { input: searchTerm }
+                        }
                       });
 
                       // Resolving the promise
@@ -120,7 +126,10 @@ export class SearchService {
                       this.searchEvent.emit({
                         state: ESearchStates.Failure,
                         type: ESearchTypes.SteamLibraryProcess,
-                        details: { error }
+                        details: {
+                          error,
+                          meta: { input: searchTerm }
+                        }
                       });
 
                       // Rejecting the promise
@@ -133,7 +142,10 @@ export class SearchService {
                   this.searchEvent.emit({
                     state: ESearchStates.Failure,
                     type: ESearchTypes.SteamLibraryFetch,
-                    details: { error }
+                    details: {
+                      error,
+                      meta: { input: searchTerm }
+                    }
                   });
 
                   // Rejecting the promise
@@ -325,11 +337,24 @@ export class SearchService {
     // Preparing the data list
     const apps = [];
 
-    rawApps.forEach((app: string) => {
-      console.log(app);
-      apps.push(app);
+    // Looping through the apps list
+    (rawApps || []).forEach(async (app: string) => {
+
+      // Getting the result
+      const result = await this.getApp(app['appid']);
+
+      // Getting the current app's info
+      const appInfo = result[app['appid']]['data'];
+
+      // Checking the validity of the app
+      if (appInfo) {
+
+        // Adding the processed app to the list
+        apps.push(appInfo);
+      }
     });
 
+    // Returning the processed list
     return apps;
   }
 

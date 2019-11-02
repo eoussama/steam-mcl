@@ -98,7 +98,7 @@ export class LookupComponent implements OnInit, OnDestroy {
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
             this.user.games = this.currentSearch.details['result'];
-            console.log(this.currentSearch, this.user);
+            console.log(this.user);
           }
 
           break;
@@ -127,7 +127,8 @@ export class LookupComponent implements OnInit, OnDestroy {
     return [
       'Retrieving the Steam ID',
       'Validating the Steam ID',
-      'Fetching the Steam library'
+      'Fetching the Steam library',
+      'Processing the Steam library'
     ][type];
   }
 
