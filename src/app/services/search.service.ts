@@ -77,12 +77,6 @@ export class SearchService {
                 }
               });
 
-              // Emitting the Steam library fetch event
-              this.searchEvent.emit({
-                state: ESearchStates.Loading,
-                type: ESearchTypes.SteamLibraryFetch
-              });
-
               // Getting the owned apps
               this.getOwnedApps(result)
                 .then((rawApps: any) => {
@@ -95,12 +89,6 @@ export class SearchService {
                       result: rawApps,
                       meta: { input: searchTerm }
                     },
-                  });
-
-                  // Emitting the Steam library process event
-                  this.searchEvent.emit({
-                    state: ESearchStates.Loading,
-                    type: ESearchTypes.SteamLibraryProcess
                   });
 
                   // Processing the retrieved apps
@@ -320,6 +308,13 @@ export class SearchService {
    * @param steamId The Steam ID of the owner
    */
   async getOwnedApps(steamId: string): Promise<any> {
+
+    // Emitting the Steam library fetch event
+    this.searchEvent.emit({
+      state: ESearchStates.Loading,
+      type: ESearchTypes.SteamLibraryFetch
+    });
+
     return this.http
       .get(
         `${environment.cors}${environment.apiEndpoint}IPlayerService/GetOwnedGames/v0001/?key=${environment.apiKey}&steamid=${steamId}&format=json`)
@@ -333,6 +328,12 @@ export class SearchService {
    * @param rawApps The list of app IDs to process
    */
   async processApps(rawApps: any[]): Promise<any> {
+
+    // Emitting the Steam library process event
+    this.searchEvent.emit({
+      state: ESearchStates.Loading,
+      type: ESearchTypes.SteamLibraryProcess
+    });
 
     // Preparing the data list
     const apps = [];
