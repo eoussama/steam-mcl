@@ -48,33 +48,42 @@ export class SearchService {
    *
    * @param searchTerm The search term
    */
-  start(searchTerm: string): void {
+  start(searchTerm: string): Promise<any> {
 
     // Getting the Steam ID
-    this.getSteamID(searchTerm)
-      .then((result: string) => {
+    return new Promise(
+      (resolve, reject) => {
+        this.getSteamID(searchTerm)
+          .then((result: string) => {
 
-        // Emitting the Steam ID search result
-        this.searchEvent.emit({
-          state: ESearchStates.Success,
-          type: ESearchTypes.SteamIDRetrieval,
-          details: {
-            result,
-            meta: { input: searchTerm }
-          }
-        });
-      })
-      .catch((error: BaseError) => {
+            // Emitting the Steam ID search result
+            this.searchEvent.emit({
+              state: ESearchStates.Success,
+              type: ESearchTypes.SteamIDRetrieval,
+              details: {
+                result,
+                meta: { input: searchTerm }
+              }
+            });
 
-        // Emitting the Steam ID search failure
-        this.searchEvent.emit({
-          state: ESearchStates.Failure,
-          type: ESearchTypes.SteamIDRetrieval,
-          details: {
-            error,
-            meta: { input: searchTerm }
-          }
-        });
+            // Resolving the promise
+            resolve();
+          })
+          .catch((error: BaseError) => {
+
+            // Emitting the Steam ID search failure
+            this.searchEvent.emit({
+              state: ESearchStates.Failure,
+              type: ESearchTypes.SteamIDRetrieval,
+              details: {
+                error,
+                meta: { input: searchTerm }
+              }
+            });
+          });
+
+        // Rejecting the promise
+        reject();
       });
   }
 

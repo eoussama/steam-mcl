@@ -132,48 +132,13 @@ export class SearchComponent implements OnInit {
     if (searchTerm && searchTerm.length > 0) {
 
       // Starting the search event
-      this.search.start(searchTerm);
+      this.search
+        .start(searchTerm)
+        .finally(() => {
 
-      // // Emitting the loading event
-      // this.search.searchEvent.emit({
-      //   state: ESearchResultTypes.Loading,
-      //   input: searchTerm
-      // });
-
-      // // Invoking the search function
-      // this.search
-      //   .getSteamID(searchTerm)
-      //   .then((res: ISteamIDResult) => {
-
-      //     // Checking if the search mode is on
-      //     if (this.collapse) {
-
-      //       // Emitting the loading-success event
-      //       this.search.searchEvent.emit({
-      //         state: ESearchResultTypes.Success,
-      //         input: searchTerm,
-      //         data: res
-      //       });
-      //     }
-      //   })
-      //   .catch((err: BaseError) => {
-
-      //     // Checking if the search mode is on
-      //     if (this.collapse) {
-
-      //       // Emitting the loading-fail event
-      //       this.search.searchEvent.emit({
-      //         state: ESearchResultTypes.Failure,
-      //         input: searchTerm,
-      //         error: err
-      //       });
-      //     }
-      //   })
-      //   .finally(() => {
-
-      //     // Updating the loading state
-      //     this.loading = false;
-      //   });
+          // Updating the loading state
+          this.loading = false;
+        });
     }
   }
 
