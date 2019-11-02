@@ -40,7 +40,7 @@ export class LookupComponent implements OnInit, OnDestroy {
    * @param route The route injector
    */
   constructor(
-    private searchService: SearchService
+    private search: SearchService
   ) { }
 
   //#endregion
@@ -50,67 +50,67 @@ export class LookupComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     // Getting the search results
-    // const searchResult: ISearchResult = window.history.state['searchResult'] || null;
+    const searchResult: ISearchResult = window.history.state['searchResult'] || null;
 
-    // // Checking if the search result object is valid
-    // if (searchResult) {
+    // Checking if the search result object is valid
+    if (searchResult) {
 
-    //   // Updating the progress object
-    //   this.progress = {
-    //     state: searchResult.state,
-    //     error: searchResult.error
-    //   };
+      // Updating the progress object
+      this.progress = {
+        state: searchResult.state,
+        error: searchResult.details.error
+      };
 
-    //   // Checking if the search was successful
-    //   if (searchResult.state === ESearchStates.Success) {
+      // Checking if the search was successful
+      if (searchResult.state === ESearchStates.Success) {
 
-    //     // Updating the loader user ID
-    //     this.user.id = searchResult.data['id'];
-    //   }
-    // }
+        // Updating the loader user ID
+        this.user.id = searchResult.details.result;
+      }
+    }
 
-    // // Subscribing to the search event
-    // this.searchSubscription = this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {
+    // Subscribing to the search event
+    this.searchSubscription = this.search.searchEvent.subscribe((searchResult: ISearchResult) => {
 
-    //   // Checking if the search was successful
-    //   if (searchResult.state === ESearchStates.Success) {
+      // Checking if the search was successful
+      if (searchResult.state === ESearchStates.Success) {
 
-    //     // Updating the loader user ID
-    //     this.user.id = searchResult.data['id'];
+        // Updating the loader user ID
+        this.user.id = searchResult.details.result;
 
-    //     // Updating the progress object
-    //     this.progress = {
-    //       state: ESearchStates.Loading
-    //     };
+        // Updating the progress object
+        this.progress = {
+          state: ESearchStates.Loading
+        };
 
-    //     // Getting the owned games list
-    //     this.searchService
-    //       .getOwnedGames(this.user.id)
-    //       .then((games: any) => {
-    //         console.log({ games });
+        // Getting the owned games list
+        this.search
+          .getOwnedGames(this.user.id)
+          .then((games: any) => {
+            console.log({ games });
 
-    //         // Updating the progress object
-    //         this.progress = {
-    //           state: ESearchStates.Success
-    //         };
-    //       })
-    //       .catch(() => {
+            // Updating the progress object
+            this.progress = {
+              state: ESearchStates.Success
+            };
+          })
+          .catch(() => {
 
-    //         // Updating the progress object
-    //         this.progress = {
-    //           state: ESearchStates.Failure,
-    //           error: 'err'
-    //         };
-    //       });
-    //   } else {
+            // Updating the progress object
+            this.progress = {
+              state: ESearchStates.Failure,
+              error: 'err'
+            };
+          });
+      } else {
 
-    //     // Updating the progress object
-    //     this.progress = {
-    //       state: searchResult.state,
-    //       error: searchResult.error
-    //     };
-    //   }
-    // });
+        // Updating the progress object
+        this.progress = {
+          state: searchResult.state,
+          error: searchResult.error
+        };
+      }
+    });
   }
 
   ngOnDestroy(): void {
