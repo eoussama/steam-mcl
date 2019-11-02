@@ -97,7 +97,8 @@ export class LookupComponent implements OnInit, OnDestroy {
 
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
-            console.log(this.currentSearch.details['result']);
+            this.user.games = this.currentSearch.details['result']['games'];
+            console.log(this.user);
           }
 
           break;
