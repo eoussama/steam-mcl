@@ -218,9 +218,15 @@ export class SearchService {
               // Getting the Steam ID
               const steamid: string = res.response.steamid;
 
+              // Validating the steamid
+              const result = await this.isValidID(steamid, ESteamIDTypes.ProfileURL);
+
+              // Getting the user's info
+              const user = result.response.players[0];
+
               // Checking if the Steam ID is valid
-              if (steamid) {
-                return steamid
+              if (user) {
+                return user
               } else {
                 throw new InvalidProfileURLError(`Profile URL “${searchTerm}” is invalid`);
               }
@@ -250,9 +256,15 @@ export class SearchService {
           // Getting the Steam ID
           const steamid: string = res.response.steamid;
 
+          // Validating the steamid
+          const result = await this.isValidID(steamid, ESteamIDTypes.Nickname);
+
+          // Getting the user's info
+          const user = result.response.players[0];
+
           // Checking if the Steam ID is valid
-          if (steamid) {
-            return steamid;
+          if (user) {
+            return user;
           } else {
             throw new InvalidNicknameError(`The nickname “${searchTerm}” is invalid`);
           }
