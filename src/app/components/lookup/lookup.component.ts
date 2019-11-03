@@ -63,7 +63,7 @@ export class LookupComponent implements OnInit, OnDestroy {
       if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
-        this.user.id = searchResult['details']['result'];
+        this.user = searchResult['details']['result'];
       }
     }
 
@@ -86,7 +86,7 @@ export class LookupComponent implements OnInit, OnDestroy {
             this.currentSearch.state = ESearchStates.Loading;
 
             // Storing the user's ID
-            this.user.id = searchResult.details['result'];
+            this.user = searchResult.details['result'];
           }
 
           break;

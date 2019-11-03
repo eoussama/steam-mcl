@@ -78,7 +78,7 @@ export class SearchService {
               });
 
               // Getting the owned apps
-              this.getOwnedApps(result)
+              this.getOwnedApps(result['steamid'])
                 .then((rawApps: any) => {
 
                   // Emitting the Steam library fetch success event
