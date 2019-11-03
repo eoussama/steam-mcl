@@ -178,11 +178,14 @@ export class SearchService {
       if (Validator.isNumeric(searchTerm)) {
 
         // Getting the Steam ID validity
-        const validity = await this.isValidID(searchTerm, ESteamIDTypes.ID64);
+        const result = await this.isValidID(searchTerm, ESteamIDTypes.ID64);
+
+        // Getting the user's info
+        const user = result.response.players[0];
 
         // Checking if the Steam ID is valid
-        if (validity.response.players.length > 0) {
-          return searchTerm;
+        if (user) {
+          return user;
         } else {
           throw new InvalidSteamID64Error(`Steam ID64 “${searchTerm}” is invalid`);
         }
@@ -226,11 +229,14 @@ export class SearchService {
             } else if (route[0] === 'profiles') {
 
               // Getting the Steam ID validity
-              const validity = await this.isValidID(route[1], ESteamIDTypes.ProfilePermalink);
+              const result = await this.isValidID(route[1], ESteamIDTypes.ProfilePermalink);
+
+              // Getting the user's info
+              const user = result.response.players[0];
 
               // Checking if the Steam ID is valid
-              if (validity.response.players.length > 0) {
-                return route[1];
+              if (user) {
+                return user;
               } else {
                 throw new InvalidPermalinkError(`Permalink “${searchTerm}” is invalid`);
               }
