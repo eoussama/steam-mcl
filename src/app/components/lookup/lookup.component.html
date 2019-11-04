@@ -12,7 +12,9 @@
         <hr>
 
         <ul *ngIf="user && user.games">
-          <li *ngFor="let game of user.games; let i = index"> {{ i + 1 }} - {{ game.name }} </li>
+          <li *ngFor="let game of user.games; let i = index">
+            {{ i + 1 }} - <app-steam-app [app]="game"></app-steam-app>
+          </li>
         </ul>
       </div>
 

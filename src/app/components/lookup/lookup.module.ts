@@ -7,13 +7,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LookupComponent } from './lookup.component';
+import { SteamAppComponent } from '../steam-app/steam-app.component';
 
 const routes: Routes = [
   { path: '**', component: LookupComponent }
 ];
 
 @NgModule({
-  declarations: [LookupComponent],
+  declarations: [LookupComponent, SteamAppComponent],
   imports: [
     CommonModule,
     MatCardModule,
