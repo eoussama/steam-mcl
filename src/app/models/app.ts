@@ -1,17 +1,19 @@
+import { EAppTypes } from '../enums/apptypes';
+
 /**
  * The app's interface
  */
 export interface IApp {
 
   /**
-   * The app's ID
+   * The app's Steam ID
    */
   id: number;
 
   /**
    * The app's title
    */
-  title: string;
+  name: string;
 
   /**
    * The app's description
@@ -21,7 +23,7 @@ export interface IApp {
   /**
    * The app's type
    */
-  type: string;
+  type: EAppTypes;
 
   /**
    * The app's genres
