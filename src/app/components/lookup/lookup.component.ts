@@ -6,6 +6,7 @@ import { SearchService } from 'src/app/services/search.service';
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 import { ESearchTypes } from 'src/app/enums/searchtypestype.enum';
+import { IUser } from 'src/app/models/user';
 
 @Component({
   selector: 'app-lookup',
@@ -19,7 +20,7 @@ export class LookupComponent implements OnInit, OnDestroy {
   /**
    * The Steam user
    */
-  user: any = {};
+  user: Partial<IUser>;
 
   /**
    * The loading progress
