@@ -29,4 +29,20 @@ export interface IApp {
    * The app's genres
    */
   genres: string[];
+
+  /**
+   * Media links
+   */
+  media: {
+
+    /**
+     * The header's picture link
+     */
+    header: string,
+
+    /**
+     * The background's picture link
+     */
+    background: string
+  }
 }
