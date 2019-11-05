@@ -98,6 +98,11 @@ export class User {
 
   //#region The constructor
 
+  /**
+   * Instantiates a new user object
+   *
+   * @param user The user object
+   */
   constructor(user: IUser) {
     this.id = user.steamid;
     this.username = user.personaname;

@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
+
+import { IUser } from '../models/user';
+import { IApp } from '../models/app';
 import { ISearchResult } from '../models/searchresult';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 import { ESearchStates } from '../enums/searchresulttypes.enum';
@@ -62,7 +65,7 @@ export class SearchService {
     return new Promise(
       (resolve, reject) => {
         this.getSteamID(searchTerm)
-          .then((result: string) => {
+          .then((result: IUser) => {
 
             // Checking if the search is active or not
             if (this.searchActivated) {
@@ -93,7 +96,7 @@ export class SearchService {
 
                   // Processing the retrieved apps
                   this.processApps(rawApps['response']['games'])
-                    .then((processedApps: any) => {
+                    .then((processedApps: IApp[]) => {
 
                       // Emitting the Steam library process success event
                       this.searchEvent.emit({
@@ -169,7 +172,7 @@ export class SearchService {
    *
    * @param searchTerm The search term
    */
-  async getSteamID(searchTerm: string): Promise<string> {
+  async getSteamID(searchTerm: string): Promise<IUser> {
 
     // Checking of the input is available
     if (searchTerm.length > 0) {
@@ -181,7 +184,7 @@ export class SearchService {
         const result = await this.isValidID(searchTerm, ESteamIDTypes.ID64);
 
         // Getting the user's info
-        const user = result.response.players[0];
+        const user = result.response.players[0] as IUser;
 
         // Checking if the Steam ID is valid
         if (user) {
@@ -222,7 +225,7 @@ export class SearchService {
               const result = await this.isValidID(steamid, ESteamIDTypes.ProfileURL);
 
               // Getting the user's info
-              const user = result.response.players[0];
+              const user = result.response.players[0] as IUser;
 
               // Checking if the Steam ID is valid
               if (user) {
@@ -238,7 +241,7 @@ export class SearchService {
               const result = await this.isValidID(route[1], ESteamIDTypes.ProfilePermalink);
 
               // Getting the user's info
-              const user = result.response.players[0];
+              const user = result.response.players[0] as IUser;
 
               // Checking if the Steam ID is valid
               if (user) {
@@ -260,7 +263,7 @@ export class SearchService {
           const result = await this.isValidID(steamid, ESteamIDTypes.Nickname);
 
           // Getting the user's info
-          const user = result.response.players[0];
+          const user = result.response.players[0] as IUser;
 
           // Checking if the Steam ID is valid
           if (user) {
@@ -345,7 +348,7 @@ export class SearchService {
    *
    * @param rawApps The list of app IDs to process
    */
-  async processApps(rawApps: any[]): Promise<any> {
+  async processApps(rawApps: any[]): Promise<IApp[]> {
 
     // Emitting the Steam library process event
     this.searchEvent.emit({
