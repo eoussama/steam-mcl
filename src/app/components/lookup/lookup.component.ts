@@ -3,10 +3,10 @@ import { Subscription } from 'rxjs';
 
 import { SearchService } from 'src/app/services/search.service';
 
+import { User } from 'src/app/models/user';
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 import { ESearchTypes } from 'src/app/enums/searchtypestype.enum';
-import { IUser } from 'src/app/models/user';
 
 @Component({
   selector: 'app-lookup',
@@ -20,7 +20,7 @@ export class LookupComponent implements OnInit, OnDestroy {
   /**
    * The Steam user
    */
-  user: Partial<IUser>;
+  user: User;
 
   /**
    * The loading progress
@@ -64,7 +64,7 @@ export class LookupComponent implements OnInit, OnDestroy {
       if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
-        this.user = searchResult['details']['result'];
+        this.user = new User(searchResult['details']['result']);
       }
     }
 
@@ -87,7 +87,8 @@ export class LookupComponent implements OnInit, OnDestroy {
             this.currentSearch.state = ESearchStates.Loading;
 
             // Storing the user's ID
-            this.user = searchResult.details['result'];
+            this.user = new User(searchResult.details['result']);
+            console.log(searchResult.details['result']);
           }
 
           break;
