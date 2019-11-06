@@ -362,17 +362,23 @@ export class SearchService {
     // Looping through the apps list
     (rawApps || []).forEach(async (app: string) => {
 
+      // Getting the app's ID
+      const appId: number = app['appid'];
+
       // Getting the result
-      const result = await this.getApp(app['appid']);
+      const result = await this.getApp(appId);
 
-      // Getting the current app's info
-      const appInfo: App = new App(result[app['appid']]['data']);
+      if (result && result[appId]['success']) {
 
-      // Checking the validity of the app
-      if (appInfo) {
+        // Getting the current app's info
+        const appInfo: App = new App(result[appId]['data']);
 
-        // Adding the processed app to the list
-        apps.push(appInfo);
+        // Checking the validity of the app
+        if (appInfo) {
+
+          // Adding the processed app to the list
+          apps.push(appInfo);
+        }
       }
     });
 
@@ -386,7 +392,7 @@ export class SearchService {
    * 
    * @param appId The app ID of the game
    */
-  async getApp(appid: string): Promise<any> {
+  async getApp(appid: number): Promise<any> {
     return this.http
       .get(
         `${environment.cors}//store.steampowered.com/api/appdetails/?appids=${appid}`)
