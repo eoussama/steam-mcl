@@ -4,8 +4,8 @@ import { Validator } from './../helpers/validator';
 
 import { environment } from './../../environments/environment';
 
+import { App } from '../models/app';
 import { IUser } from '../models/user';
-import { IApp } from '../models/app';
 import { ISearchResult } from '../models/searchresult';
 import { ESteamIDTypes } from '../enums/steamidtypes.enum';
 import { ESearchStates } from '../enums/searchresulttypes.enum';
@@ -96,7 +96,7 @@ export class SearchService {
 
                   // Processing the retrieved apps
                   this.processApps(rawApps['response']['games'])
-                    .then((processedApps: IApp[]) => {
+                    .then((processedApps: App[]) => {
 
                       // Emitting the Steam library process success event
                       this.searchEvent.emit({
@@ -348,7 +348,7 @@ export class SearchService {
    *
    * @param rawApps The list of app IDs to process
    */
-  async processApps(rawApps: any[]): Promise<IApp[]> {
+  async processApps(rawApps: any[]): Promise<App[]> {
 
     // Emitting the Steam library process event
     this.searchEvent.emit({
@@ -357,7 +357,7 @@ export class SearchService {
     });
 
     // Preparing the data list
-    const apps = [];
+    const apps: App[] = [];
 
     // Looping through the apps list
     (rawApps || []).forEach(async (app: string) => {
@@ -366,7 +366,7 @@ export class SearchService {
       const result = await this.getApp(app['appid']);
 
       // Getting the current app's info
-      const appInfo = result[app['appid']]['data'];
+      const appInfo: App = new App(result[app['appid']]['data']);
 
       // Checking the validity of the app
       if (appInfo) {

@@ -1,4 +1,4 @@
-import { IApp } from './app';
+import { App } from './app';
 
 /**
  * The user's interface
@@ -43,9 +43,8 @@ export interface IUser {
   /**
    * The apps list
    */
-  apps?: IApp[];
+  apps?: App[];
 }
-
 
 /**
  * The user's class
@@ -92,7 +91,7 @@ export class User {
   /**
    * The apps list
    */
-  apps: IApp[];
+  apps: App[];
 
   //#endregion
 
