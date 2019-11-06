@@ -86,9 +86,8 @@ export class LookupComponent implements OnInit, OnDestroy {
             // Updating the loading status
             this.currentSearch.state = ESearchStates.Loading;
 
-            // Storing the user's ID
+            // Storing the user's data
             this.user = new User(searchResult.details['result']);
-            console.log(searchResult.details['result']);
           }
 
           break;
@@ -133,6 +132,13 @@ export class LookupComponent implements OnInit, OnDestroy {
       'Processing the Steam library'
     ][type];
   }
+
+  /**
+   * Checks if the loading is finished
+   */
+  loadingFinished = (): boolean =>
+    this.currentSearch.type === ESearchTypes.SteamLibraryProcess
+    && this.currentSearch.state !== ESearchStates.Loading;
 
   //#endregion
 }
