@@ -1,3 +1,5 @@
+import { IApp } from './app';
+
 /**
  * The package's interface
  */

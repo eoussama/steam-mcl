@@ -1,4 +1,5 @@
 import { EAppTypes } from '../enums/apptypes';
+import { IGenre } from './genre';
 
 /**
  * The app's interface
@@ -28,7 +29,7 @@ export interface IApp {
   /**
    * The app's genres
    */
-  genres: string[];
+  genres: IGenre[];
 
   /**
    * The header's picture link
@@ -71,7 +72,7 @@ export class App {
   /**
    * The app's genres
    */
-  genres: string[];
+  genres: IGenre[];
 
   /**
    * Media links
