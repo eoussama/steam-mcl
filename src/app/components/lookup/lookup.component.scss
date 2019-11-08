@@ -35,6 +35,30 @@
     .message {
       margin-top: 20px;
       text-align: center;
+
+      &--loader {
+        &::after {
+          animation-duration: 3s;
+          animation-iteration-count: infinite;
+          animation-name: loadingDots;
+          animation-timing-function: linear;
+          content: '';
+        }
+
+        @keyframes loadingDots {
+          25% {
+              content: '.';
+          }
+
+          50% {
+              content: '..';
+          }
+
+          75% {
+              content: '...';
+          }
+        }
+      }
     }
   }
 
