@@ -2,9 +2,9 @@
  * App types
  */
 export enum EAppTypes {
-  Game,
-  DLC,
-  Mod,
-  Series,
-  Episode
+  Game = 'game',
+  DLC = 'dlc',
+  Mod = 'mod',
+  Series = 'series',
+  Episode = 'episode'
 }
