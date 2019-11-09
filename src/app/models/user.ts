@@ -11,14 +11,14 @@ export interface IUser {
   steamid: string;
 
   /**
+   * The state of the profile
+   */
+  personastate: number;
+
+  /**
    * The name of the user
    */
   personaname: string;
-
-  /**
-   * The real name of the user
-   */
-  realname: string;
 
   /**
    * The profile's url
@@ -31,14 +31,19 @@ export interface IUser {
   avatar: string;
 
   /**
-   * Creation timestamp
-   */
-  timecreated: number | Date;
-
-  /**
    * Last log-off timestamp
    */
   lastlogoff: number | Date;
+
+  /**
+   * The real name of the user
+   */
+  realname?: string;
+
+  /**
+   * Creation timestamp
+   */
+  timecreated?: number | Date;
 
   /**
    * The apps list
