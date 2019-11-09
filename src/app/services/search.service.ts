@@ -65,23 +65,32 @@ export class SearchService {
     return new Promise(
       (resolve, reject) => {
         this.getSteamID(searchTerm)
-          .then((result: IUser) => {
+          .then(async (user: IUser) => {
 
             // Checking if the search is active or not
             if (this.searchActivated) {
+
+              // Getting the result
+              const result: any = await this.getSteamLevel(user.steamid);
+
+              // Getting the Steam level
+              const steamLvl: number = result['response']['player_level'];
+
+              // Setting the Steam level
+              user.level = steamLvl;
 
               // Emitting the Steam ID search result
               this.searchEvent.emit({
                 state: ESearchStates.Success,
                 type: ESearchTypes.SteamIDRetrieval,
                 details: {
-                  result,
+                  result: user,
                   meta: { input: searchTerm }
                 }
               });
 
               // Getting the owned apps
-              this.getOwnedApps(result['steamid'])
+              this.getOwnedApps(user.steamid)
                 .then((rawApps: any) => {
 
                   // Emitting the Steam library fetch success event

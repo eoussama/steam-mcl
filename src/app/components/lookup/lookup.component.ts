@@ -88,7 +88,6 @@ export class LookupComponent implements OnInit, OnDestroy {
 
             // Storing the user's data
             this.user = new User(searchResult.details['result']);
-            console.log(searchResult.details['result']);
           }
 
           break;

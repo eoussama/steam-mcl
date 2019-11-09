@@ -126,7 +126,7 @@ export class User {
   constructor(user: IUser) {
     this.id = user.steamid;
     this.state = user.personastate;
-    this.level = user.level;
+    this.level = user.level || 0;
     this.username = user.personaname;
     this.realname = user.realname;
     this.profileurl = user.profileurl;
