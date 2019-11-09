@@ -1,4 +1,5 @@
 import { App } from './app';
+import { EPersonStates } from '../enums/personstates.enum';
 
 /**
  * The user's interface
@@ -13,7 +14,7 @@ export interface IUser {
   /**
    * The state of the profile
    */
-  personastate: number;
+  personastate: EPersonStates;
 
   /**
    * The name of the user
@@ -64,14 +65,19 @@ export class User {
   id: string;
 
   /**
+   * The state of the profile
+   */
+  state: EPersonStates;
+
+  /**
+   * The Steam level
+   */
+  level: number;
+
+  /**
    * The name of the user
    */
   username: string;
-
-  /**
-   * The real name of the user
-   */
-  realname: string;
 
   /**
    * The profile's url
@@ -84,14 +90,19 @@ export class User {
   avatar: string;
 
   /**
-   * Creation timestamp
-   */
-  timecreated: Date;
-
-  /**
    * Last log-off timestamp
    */
-  lastlogoff: Date;
+  lastOnline: Date;
+
+  /**
+   * The real name of the user
+   */
+  realname?: string;
+
+  /**
+   * Creation timestamp
+   */
+  creationTime?: Date;
 
   /**
    * The apps list
@@ -109,12 +120,13 @@ export class User {
    */
   constructor(user: IUser) {
     this.id = user.steamid;
+    this.state = user.personastate;
     this.username = user.personaname;
     this.realname = user.realname;
     this.profileurl = user.profileurl;
     this.avatar = user.avatar;
-    this.timecreated = new Date(user.timecreated);
-    this.lastlogoff = new Date(user.lastlogoff);
+    this.creationTime = new Date(user.timecreated);
+    this.lastOnline = new Date(user.lastlogoff);
     this.apps = user.apps;
   }
 
