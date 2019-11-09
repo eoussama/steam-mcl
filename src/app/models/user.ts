@@ -17,6 +17,11 @@ export interface IUser {
   personastate: EPersonStates;
 
   /**
+   * The user' Steam level
+   */
+  level: number;
+
+  /**
    * The name of the user
    */
   personaname: string;
@@ -70,7 +75,7 @@ export class User {
   state: EPersonStates;
 
   /**
-   * The Steam level
+   * The user' Steam level
    */
   level: number;
 
@@ -121,6 +126,7 @@ export class User {
   constructor(user: IUser) {
     this.id = user.steamid;
     this.state = user.personastate;
+    this.level = user.level;
     this.username = user.personaname;
     this.realname = user.realname;
     this.profileurl = user.profileurl;
