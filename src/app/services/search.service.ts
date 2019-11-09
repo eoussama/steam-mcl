@@ -399,5 +399,17 @@ export class SearchService {
       .toPromise();
   }
 
+  /**
+   * Gets a user's Steam ID
+   * 
+   * @param steamId The Steam ID
+   */
+  async getSteamLevel(steamId: string): Promise<any> {
+    return this.http
+      .get(
+        `${environment.cors}${environment.apiEndpoint}IPlayerService/GetSteamLevel/v1?key=${environment.apiKey}&steamid=${steamId}`)
+      .toPromise();
+  }
+
   //#endregion
 }
