@@ -12,7 +12,6 @@
 
   &__head, &__main {
     background-color: #f2f4f5;
-    min-height: 300px;
   }
 
   &__loader, &__error {
@@ -64,5 +63,42 @@
 
   &__main {
     margin-top: 20px;
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: row;
+
+    .col {
+
+      &:first-of-type {
+        max-height: 180px;
+        max-width: 180px;
+        position: relative;
+
+        .level {
+          background-color: #1f3c53;
+          border: 2px #dde2e5 solid;
+          border-radius: 50%;
+          box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+          color: #dde2e5;
+          font-weight: bold;
+          left: 0;
+          padding: 10px;
+          position: absolute;
+          top: 0;
+          transform: translate(-50%, -50%);
+        }
+
+        .avatar {
+          height: 100%;
+          width: 100%;
+        }
+      }
+
+      &:last-of-type {
+        margin-left: auto;
+      }
+    }
   }
 }

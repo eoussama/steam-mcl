@@ -4,14 +4,17 @@
   <mat-card class="lookup__head">
     <ng-container [ngSwitch]="currentSearch.state">
 
-      <!-- The content -->
+      <!-- The user's info -->
       <div *ngSwitchCase="1"
-           class="lookup__content">
-        Success: <b>{{ user.realname }}</b> loaded
-        <hr>
+           class="lookup__user">
 
         <div class="col">
-          <span class="level">{{ user.level }}</span>
+
+          <!-- The Steam level -->
+          <span class="level"
+                [title]="user.username + ' \' Steam level'">{{ user.level }}</span>
+
+          <!-- The user's avatar -->
           <img class="avatar"
                [src]="user.avatar"
                [alt]="user.username + ' \' avatar'">
@@ -20,6 +23,7 @@
         <div class="col">
 
         </div>
+
         <div class="col">
 
         </div>
