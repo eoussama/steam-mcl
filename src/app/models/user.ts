@@ -34,7 +34,7 @@ export interface IUser {
   /**
    * The avatar's link
    */
-  avatar: string;
+  avatarfull: string;
 
   /**
    * Last log-off timestamp
@@ -130,7 +130,7 @@ export class User {
     this.username = user.personaname;
     this.realname = user.realname;
     this.profileurl = user.profileurl;
-    this.avatar = user.avatar;
+    this.avatar = user.avatarfull;
     this.creationTime = new Date(user.timecreated);
     this.lastOnline = new Date(user.lastlogoff);
     this.apps = user.apps;
