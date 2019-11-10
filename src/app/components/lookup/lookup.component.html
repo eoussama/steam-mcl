@@ -37,6 +37,11 @@
 
         <div class="col">
 
+          <!-- The Steam state -->
+          <span class="state">{{ getSteamState(user.state) }}</span>
+
+          <!-- The time in which the user was last online -->
+          <span class="lastlogoff">Last seen on {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
         </div>
       </div>
 

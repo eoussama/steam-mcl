@@ -7,6 +7,7 @@ import { User } from 'src/app/models/user';
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 import { ESearchTypes } from 'src/app/enums/searchtypestype.enum';
+import { EPersonStates } from 'src/app/enums/personstates.enum';
 
 @Component({
   selector: 'app-lookup',
@@ -124,14 +125,12 @@ export class LookupComponent implements OnInit, OnDestroy {
    *
    * @param type The search's type
    */
-  getLoadingMessage(type: ESearchTypes = this.currentSearch.type): string {
-    return [
-      'Retrieving the Steam ID',
-      'Validating the Steam ID',
-      'Fetching the Steam library',
-      'Processing the Steam library'
-    ][type];
-  }
+  getLoadingMessage = (type: ESearchTypes = this.currentSearch.type): string => [
+    'Retrieving the Steam ID',
+    'Validating the Steam ID',
+    'Fetching the Steam library',
+    'Processing the Steam library'
+  ][type];
 
   /**
    * Checks if the loading is finished
@@ -139,6 +138,19 @@ export class LookupComponent implements OnInit, OnDestroy {
   loadingFinished = (): boolean =>
     this.currentSearch.type === ESearchTypes.SteamLibraryProcess
     && this.currentSearch.state !== ESearchStates.Loading;
+
+  /**
+   * Gets the Steam state for the loaded user
+   */
+  getSteamState = (state: EPersonStates) => [
+    'offline',
+    'online',
+    'busy',
+    'away',
+    'snooze',
+    'toTrade',
+    'toPlay'
+  ][state];
 
   //#endregion
 }
