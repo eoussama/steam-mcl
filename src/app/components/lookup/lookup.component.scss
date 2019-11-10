@@ -126,7 +126,55 @@
         }
 
         .state {
+          background-color: #1f3c53;
+          border-radius: 2px;
+          border: 2px solid #dce1e4;
+          color: #dce1e4;
+          margin-bottom: 5px;
+          margin-left: auto;
+          padding: 5px 10px 5px 20px;
+          position: relative;
           text-transform: capitalize;
+          width: fit-content;
+
+          @mixin stateCircle($color) {
+            background-color: $color;
+            border-radius: 50%;
+            height: 5px;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 5px;
+          }
+
+          &--offline::before {
+            @include stateCircle(red);
+          }
+
+          &--online::before {
+            @include stateCircle(green);
+          }
+
+          &--busy::before {
+            @include stateCircle(blue);
+          }
+
+          &--away::before {
+            @include stateCircle(yellow);
+          }
+
+          &--snooze::before {
+            @include stateCircle(orange);
+          }
+
+          &--toTrade::before {
+            @include stateCircle(violet);
+          }
+
+          &--toPlay::before {
+            @include stateCircle(brown);
+          }
+
         }
       }
     }
