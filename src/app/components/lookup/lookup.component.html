@@ -12,7 +12,7 @@
 
           <!-- The Steam level -->
           <span class="level"
-                [title]="user.username + ' \' Steam level'">{{ user.level }}</span>
+                [title]="user.username + '\' Steam level'">{{ user.level }}</span>
 
           <!-- The user's avatar -->
           <img class="avatar"
@@ -22,6 +22,17 @@
 
         <div class="col">
 
+          <!-- The username -->
+          <span title="The username"
+                class="username">{{ user.username }}</span>
+
+          <!-- The real name -->
+          <span title="The real name"
+                class="realname">{{ user.realname }}</span>
+
+          <!-- The Steam ID -->
+          <span title="The Steam ID"
+                class="steamid">{{ user.id }}</span>
         </div>
 
         <div class="col">

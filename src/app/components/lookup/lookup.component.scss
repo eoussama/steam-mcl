@@ -99,6 +99,23 @@
         }
       }
 
+      &:nth-of-type(2) {
+        margin-left: 15px;
+
+        span {
+          display: block;
+        }
+
+        .username {
+          font-weight: bold;
+        }
+
+        .realname, .steamid {
+          color: #949494;
+          font-size: 12px;
+        }
+      }
+
       &:last-of-type {
         margin-left: auto;
       }
