@@ -140,6 +140,7 @@
           @mixin stateCircle($color) {
             background-color: $color;
             border-radius: 50%;
+            content: '';
             height: 5px;
             left: 0;
             position: absolute;

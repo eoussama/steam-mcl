@@ -39,7 +39,7 @@
 
           <!-- The Steam state -->
           <span class="state"
-                [ngClass]="'state--' + user.state">{{ getSteamState(user.state) }}</span>
+                [ngClass]="'state--' + getSteamState(user.state)">{{ getSteamState(user.state) }}</span>
 
           <!-- The time in which the user was last online -->
           <span class="lastlogoff">Last seen on {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
