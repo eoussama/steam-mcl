@@ -8,6 +8,21 @@
       <div *ngSwitchCase="1"
            class="lookup__content">
         Success: <b>{{ user.realname }}</b> loaded
+        <hr>
+
+        <div class="col">
+          <span class="level">{{ user.level }}</span>
+          <img class="avatar"
+               [src]="user.avatar"
+               [alt]="user.username + ' \' avatar'">
+        </div>
+
+        <div class="col">
+
+        </div>
+        <div class="col">
+
+        </div>
       </div>
 
       <!-- The error -->
