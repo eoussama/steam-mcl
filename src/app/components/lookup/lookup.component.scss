@@ -149,11 +149,11 @@
           }
 
           &--offline::before {
-            @include stateCircle(#ff0000);
+            @include stateCircle(#808080);
           }
 
           &--online::before {
-            @include stateCircle(#808080);
+            @include stateCircle(#008000);
           }
 
           &--busy::before {

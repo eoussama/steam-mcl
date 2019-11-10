@@ -42,7 +42,8 @@
                 [ngClass]="'state--' + getSteamState(user.state)">{{ getSteamState(user.state) }}</span>
 
           <!-- The time in which the user was last online -->
-          <span class="lastlogoff">Last seen on {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
+          <span *ngIf="user.state === 0"
+                class="lastlogoff">Last seen on {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
         </div>
       </div>
 
