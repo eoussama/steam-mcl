@@ -126,10 +126,9 @@
         }
 
         .state {
-          background-color: #1f3c53;
+          background-color: #dce1e4;
           border-radius: 2px;
-          border: 2px solid #dce1e4;
-          color: #dce1e4;
+          color: #1f3c53;
           margin-bottom: 5px;
           margin-left: auto;
           padding: 5px 10px 5px 20px;
@@ -140,40 +139,41 @@
           @mixin stateCircle($color) {
             background-color: $color;
             border-radius: 50%;
-            content: '';
-            height: 5px;
-            left: 0;
+            content: "";
+            height: 8px;
+            left: 6px;
             position: absolute;
-            top: 0;
-            width: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
           }
 
           &--offline::before {
-            @include stateCircle(red);
+            @include stateCircle(#ff0000);
           }
 
           &--online::before {
-            @include stateCircle(green);
+            @include stateCircle(#808080);
           }
 
           &--busy::before {
-            @include stateCircle(blue);
+            @include stateCircle(#ff0000);
           }
 
           &--away::before {
-            @include stateCircle(yellow);
+            @include stateCircle(#f5ba26);
           }
 
           &--snooze::before {
-            @include stateCircle(orange);
+            @include stateCircle(#2690f5);
           }
 
           &--toTrade::before {
-            @include stateCircle(violet);
+            @include stateCircle(#875bff);
           }
 
           &--toPlay::before {
-            @include stateCircle(brown);
+            @include stateCircle(#59c5ce);
           }
 
         }
