@@ -39,7 +39,7 @@ export interface IUser {
   /**
    * Last log-off timestamp
    */
-  lastlogoff: number | Date;
+  lastlogoff: number;
 
   /**
    * The real name of the user
@@ -49,7 +49,7 @@ export interface IUser {
   /**
    * Creation timestamp
    */
-  timecreated?: number | Date;
+  timecreated?: number;
 
   /**
    * The apps list
@@ -131,8 +131,8 @@ export class User {
     this.realname = user.realname;
     this.profileurl = user.profileurl;
     this.avatar = user.avatarfull;
-    this.creationTime = new Date(user.timecreated);
-    this.lastOnline = new Date(user.lastlogoff);
+    this.creationTime = new Date(user.timecreated * 1000);
+    this.lastOnline = new Date(user.lastlogoff * 1000);
     this.apps = user.apps;
   }
 
