@@ -70,10 +70,17 @@
   <!-- The main container -->
   <mat-card *ngIf="loadingFinished()"
             class="lookup__main">
-    <ul *ngIf="user && user.apps">
-      <li *ngFor="let app of user.apps; let i = index">
-        {{ i + 1 }} - <app-steam-app [app]="app"></app-steam-app>
-      </li>
-    </ul>
+
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Missing content">Missing content</mat-tab>
+      <mat-tab label="Packages">Packages</mat-tab>
+      <mat-tab label="Owned">
+        <ul *ngIf="user && user.apps">
+          <li *ngFor="let app of user.apps; let i = index">
+            {{ i + 1 }} - <app-steam-app [app]="app"></app-steam-app>
+          </li>
+        </ul>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card>
 </div>

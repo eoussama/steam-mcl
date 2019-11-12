@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LookupComponent } from './lookup.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
     CommonModule,
     MatCardModule,
     MatIconModule,
+    MatTabsModule,
     MatProgressSpinnerModule,
     RouterModule.forChild(routes)
   ]
