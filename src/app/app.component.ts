@@ -21,17 +21,16 @@ export class AppComponent implements OnInit {
     private router: Router,
     private searchService: SearchService,
     private translate: TranslateService
-  ) {
-
-    // Initializing the translation service
-    TranslateHelper.init(translate);
-  }
+  ) { }
 
   //#endregion
 
   //#region Lifecycle
 
   ngOnInit(): void {
+
+    // Initializing the translation service
+    TranslateHelper.init(this.translate);
 
     // Subscribing to the search service
     this.searchService.searchEvent.subscribe((searchResult: ISearchResult) => {

@@ -48,11 +48,7 @@ export class SearchComponent implements OnInit {
     private search: SearchService,
     private router: Router,
     private translate: TranslateService
-  ) {
-
-    // Initializing the translation service
-    TranslateHelper.init(translate);
-  }
+  ) { }
 
   //#endregion
 
@@ -68,6 +64,8 @@ export class SearchComponent implements OnInit {
   //#region Lifecycle
 
   ngOnInit(): void {
+    // Initializing the translation service
+    TranslateHelper.init(this.translate);
 
     // Getting the search input
     const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;

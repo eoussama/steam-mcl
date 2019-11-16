@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent {
+export class LandingComponent implements OnInit {
 
-  // The cards
+  //#region Properties
+
   cards = [
     {
       icon: 'games',
@@ -30,4 +34,24 @@ export class LandingComponent {
        Have them all reported to you with no more hassle.'
     }
   ];
+
+  //#endregion
+
+  //#region Constructor
+
+  constructor(
+    private translate: TranslateService
+  ) { }
+
+  //#endregion
+
+  //#region Lifecycle
+
+  ngOnInit(): void {
+
+    // Initializing the translation service
+    TranslateHelper.init(this.translate);
+  }
+
+  //#endregion
 }
