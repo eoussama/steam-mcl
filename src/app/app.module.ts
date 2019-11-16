@@ -13,9 +13,7 @@ import { TranslateHelper } from './helpers/translate/translate.helper';
 import { Scopes } from './enums/scopes.enum';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
