@@ -19,8 +19,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private searchService: SearchService
-  ) { }
+    private searchService: SearchService,
+    private translate: TranslateService
+  ) {
+
+    // Initializing the translation service
+    TranslateHelper.init(translate);
+  }
 
   //#endregion
 
