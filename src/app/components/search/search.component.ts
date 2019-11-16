@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { SearchService } from 'src/app/services/search/search.service';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
-import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 @Component({
   selector: 'app-search',
@@ -46,8 +44,7 @@ export class SearchComponent implements OnInit {
    */
   constructor(
     private search: SearchService,
-    private router: Router,
-    private translate: TranslateService
+    private router: Router
   ) { }
 
   //#endregion
@@ -64,9 +61,6 @@ export class SearchComponent implements OnInit {
   //#region Lifecycle
 
   ngOnInit(): void {
-
-    // Initializing the translation service
-    TranslateHelper.init(this.translate);
 
     // Getting the search input
     const searchInput: HTMLInputElement = this.searchInputRef.nativeElement;

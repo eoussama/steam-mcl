@@ -1,5 +1,7 @@
 {
   "app": {
-    "test": "app"
+    "search": {
+      "test": "search"
+    }
   }
 }

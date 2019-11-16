@@ -4,6 +4,5 @@
 export enum Scopes {
   App = 'app',
   Landing = 'landing',
-  Lookup = 'lookup',
-  Search = 'search'
+  Lookup = 'lookup'
 }
