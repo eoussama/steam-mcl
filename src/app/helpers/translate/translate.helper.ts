@@ -9,6 +9,17 @@ import { Scopes } from 'src/app/enums/scopes.enum';
  */
 export class TranslateHelper {
 
+  //#region Properties
+
+  /**
+   * The current language
+   */
+  static currentLanguage: string = '';
+
+  //#endregion
+
+  //#region Methods
+
   /**
    * Initializes the translation service
    */
@@ -16,6 +27,8 @@ export class TranslateHelper {
     translate.addLangs(['en']);
     translate.setDefaultLang('en');
     translate.use('en');
+
+    TranslateHelper.currentLanguage = translate.currentLang;
   }
 
   /**
@@ -26,4 +39,6 @@ export class TranslateHelper {
   static loader(scope: Scopes): any {
     return (http: HttpClient) => new TranslateHttpLoader(http, `./../assets/i18n/${scope}/`, '.json');
   }
+
+  //#endregion
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { SearchService } from 'src/app/services/search/search.service';
+import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
@@ -156,6 +157,12 @@ export class SearchComponent implements OnInit {
     // Updating the loading state
     this.search.searchActivated = this.loading = false;
   }
+
+  //#endregion
+
+  //#region Methods
+
+  getLanguage = () => TranslateHelper.currentLanguage;
 
   //#endregion
 }

@@ -1,7 +1,9 @@
 {
   "app": {
     "search": {
-      "test": "search"
+      "sub-title": "Missing Content Lookup",
+      "label": "Steam profile",
+      "placeholder": "Enter your Steam ID here..."
     }
   }
 }
