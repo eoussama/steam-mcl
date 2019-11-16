@@ -6,10 +6,10 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 import { AppRoutingModule } from './app.routing.module';
 import { SearchModule } from './components/search/search.module';
-import { createTranslateLoader } from './utils/translate.util';
 
 import { AppComponent } from './app.component';
 
+import { TranslateHelper } from './helpers/translate/translate.helper';
 import { Scopes } from './enums/scopes.enum';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { Scopes } from './enums/scopes.enum';
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: createTranslateLoader(Scopes.Global),
+        useFactory: TranslateHelper.loader(Scopes.Global),
         deps: [HttpClient]
       }
     }),
