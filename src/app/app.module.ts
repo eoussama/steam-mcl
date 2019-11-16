@@ -10,6 +10,8 @@ import { createTranslateLoader } from './utils/translate.util';
 
 import { AppComponent } from './app.component';
 
+import { Scopes } from './enums/scopes.enum';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -20,7 +22,7 @@ import { AppComponent } from './app.component';
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: createTranslateLoader('global'),
+        useFactory: createTranslateLoader(Scopes.Global),
         deps: [HttpClient]
       }
     }),
