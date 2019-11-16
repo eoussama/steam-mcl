@@ -49,8 +49,9 @@ export class SearchComponent implements OnInit {
     private router: Router,
     private translate: TranslateService
   ) {
-    this.translate.use('en');
-    // TranslateHelper.init(translate);
+
+    // Initializing the translation service
+    TranslateHelper.init(translate);
   }
 
   //#endregion
