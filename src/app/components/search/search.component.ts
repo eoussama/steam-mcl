@@ -64,6 +64,7 @@ export class SearchComponent implements OnInit {
   //#region Lifecycle
 
   ngOnInit(): void {
+
     // Initializing the translation service
     TranslateHelper.init(this.translate);
 
