@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { TranslateService } from '@ngx-translate/core';
 import { SearchService } from './services/search.service';
 
 import { ISearchResult } from './models/searchresult';
@@ -17,8 +18,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private searchService: SearchService
-  ) { }
+    private searchService: SearchService,
+    private translate: TranslateService
+  ) {
+    this.translate.addLangs(['en'])
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+  }
 
   //#endregion
 
