@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
-import { SearchService } from 'src/app/services/search.service';
+import { SearchService } from 'src/app/services/search/search.service';
+import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
 
@@ -94,16 +95,16 @@ export class SearchComponent implements OnInit {
       if (e instanceof NavigationEnd) {
 
         // Getting the current URL
-        const url: string = document.location.pathname;
+        const navUrl: string = document.location.pathname;
 
         // Extracting URL fragments
-        const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
+        const navUrlFragments: string[] = navUrl.split('/').filter((uf: string) => uf.length > 0);
 
         // Extracting the route name
-        const route: string = urlFragments[0] || null;
+        const navRoute: string = navUrlFragments[0] || null;
 
         // Updating the collapse state
-        this.collapse = route === 'lookup';
+        this.collapse = navRoute === 'lookup';
       }
     });
   }
@@ -156,6 +157,15 @@ export class SearchComponent implements OnInit {
     // Updating the loading state
     this.search.searchActivated = this.loading = false;
   }
+
+  //#endregion
+
+  //#region Methods
+
+  /**
+   * Gets the current language
+   */
+  getLanguage = () => TranslateHelper.currentLanguage;
 
   //#endregion
 }

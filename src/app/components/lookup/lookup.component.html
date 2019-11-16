@@ -12,38 +12,39 @@
 
           <!-- The Steam level -->
           <span class="level"
-                [title]="user.username + '\' Steam level'">{{ user.level }}</span>
+                [title]="'lookup.hover.level' | translate: { username: user.username }">{{ user.level }}</span>
 
           <!-- The user's avatar -->
           <img class="avatar"
                [src]="user.avatar"
-               [alt]="user.username + ' \' avatar'">
+               [alt]="'lookup.avatarAlt' | translate: { username: user.username }">
         </div>
 
         <div class="col">
 
           <!-- The username -->
-          <span title="The username"
-                class="username">{{ user.username }}</span>
+          <span class="username"
+                [title]="'lookup.hover.username' | translate">{{ user.username }}</span>
 
           <!-- The real name -->
-          <span title="The real name"
-                class="realname">{{ user.realname }}</span>
+          <span class="realname"
+                [title]="'lookup.hover.realname' | translate">{{ user.realname }}</span>
 
           <!-- The Steam ID -->
-          <span title="The Steam ID"
-                class="steamid">{{ user.id }}</span>
+          <span class="steamid"
+                [title]="'lookup.hover.steamId' | translate">{{ user.id }}</span>
         </div>
 
         <div class="col">
 
           <!-- The Steam state -->
           <span class="state"
-                [ngClass]="'state--' + getSteamState(user.state)">{{ getSteamState(user.state) }}</span>
+                [ngClass]="'state--' + getSteamState(user.state)">{{ ('lookup.status.' + getSteamState(user.state)) | translate }}</span>
 
           <!-- The time in which the user was last online -->
           <span *ngIf="user.state === 0"
-                class="lastlogoff">Last seen on {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
+                class="lastlogoff">{{ 'lookup.lastOnline' | translate }}
+            {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
         </div>
       </div>
 
@@ -72,9 +73,9 @@
             class="lookup__main">
 
     <mat-tab-group mat-align-tabs="center">
-      <mat-tab label="Missing content">Missing content</mat-tab>
-      <mat-tab label="Packages">Packages</mat-tab>
-      <mat-tab label="Owned">
+      <mat-tab [label]="'lookup.tabs.missing' | translate">{{ 'lookup.tabs.missing' | translate }}</mat-tab>
+      <mat-tab [label]="'lookup.tabs.packages' | translate">{{ 'lookup.tabs.packages' | translate }}</mat-tab>
+      <mat-tab [label]="'lookup.tabs.owned' | translate">
         <ul *ngIf="user && user.apps">
           <li *ngFor="let app of user.apps; let i = index">
             {{ i + 1 }} - <app-steam-app [app]="app"></app-steam-app>

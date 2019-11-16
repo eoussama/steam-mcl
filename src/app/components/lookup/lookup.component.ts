@@ -1,13 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { SearchService } from 'src/app/services/search.service';
+import { SearchService } from 'src/app/services/search/search.service';
 
 import { User } from 'src/app/models/user';
 import { ISearchResult } from 'src/app/models/searchresult';
 import { ESearchStates } from 'src/app/enums/searchresulttypes.enum';
 import { ESearchTypes } from 'src/app/enums/searchtypestype.enum';
 import { EPersonStates } from 'src/app/enums/personstates.enum';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 @Component({
   selector: 'app-lookup',
@@ -39,11 +41,12 @@ export class LookupComponent implements OnInit, OnDestroy {
 
   /**
    * The constructor of the lookup component
-   * 
+   *
    * @param route The route injector
    */
   constructor(
-    private search: SearchService
+    private search: SearchService,
+    private translate: TranslateService
   ) { }
 
   //#endregion
@@ -52,8 +55,11 @@ export class LookupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    // Initializing the translation service
+    TranslateHelper.init(this.translate);
+
     // Getting the search results
-    const searchResult: ISearchResult = window.history.state['searchResult'] || null;
+    const searchResult: ISearchResult = window.history.state.searchResult || null;
 
     // Checking if the search result object is valid
     if (searchResult) {
@@ -65,30 +71,30 @@ export class LookupComponent implements OnInit, OnDestroy {
       if (searchResult.state === ESearchStates.Success) {
 
         // Updating the loader user ID
-        this.user = new User(searchResult['details']['result']);
+        this.user = new User(searchResult.details.result);
       }
     }
 
     // Subscribing to the search event
-    this.searchSubscription = this.search.searchEvent.subscribe((searchResult: ISearchResult) => {
+    this.searchSubscription = this.search.searchEvent.subscribe((subSearchResult: ISearchResult) => {
 
       // Updating the progress object
-      this.currentSearch = searchResult;
+      this.currentSearch = subSearchResult;
 
       // Checking the search type
-      switch (searchResult.type) {
+      switch (subSearchResult.type) {
 
         // Steam ID retrieval
         case ESearchTypes.SteamIDRetrieval: {
 
           // Checking if the search was successful
-          if (searchResult.state === ESearchStates.Success) {
+          if (subSearchResult.state === ESearchStates.Success) {
 
             // Updating the loading status
             this.currentSearch.state = ESearchStates.Loading;
 
             // Storing the user's data
-            this.user = new User(searchResult.details['result']);
+            this.user = new User(subSearchResult.details.result);
           }
 
           break;
@@ -99,7 +105,7 @@ export class LookupComponent implements OnInit, OnDestroy {
 
           // Checking if the search was successful
           if (searchResult.state === ESearchStates.Success) {
-            this.user.apps = this.currentSearch.details['result'];
+            this.user.apps = this.currentSearch.details.result;
             console.log(this.user);
           }
 
@@ -126,18 +132,18 @@ export class LookupComponent implements OnInit, OnDestroy {
    * @param type The search's type
    */
   getLoadingMessage = (type: ESearchTypes = this.currentSearch.type): string => [
-    'Retrieving the Steam ID',
-    'Validating the Steam ID',
-    'Fetching the Steam library',
-    'Processing the Steam library'
-  ][type];
+    this.translate.instant('lookup.loading.retrieving'),
+    this.translate.instant('lookup.loading.validating'),
+    this.translate.instant('lookup.loading.fetching'),
+    this.translate.instant('lookup.loading.processing')
+  ][type]
 
   /**
    * Checks if the loading is finished
    */
   loadingFinished = (): boolean =>
     this.currentSearch.type === ESearchTypes.SteamLibraryProcess
-    && this.currentSearch.state !== ESearchStates.Loading;
+    && this.currentSearch.state !== ESearchStates.Loading
 
   /**
    * Gets the Steam state for the loaded user
@@ -150,7 +156,7 @@ export class LookupComponent implements OnInit, OnDestroy {
     'snooze',
     'toTrade',
     'toPlay'
-  ][state];
+  ][state]
 
   //#endregion
 }

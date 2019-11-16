@@ -1,22 +1,22 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Validator } from './../helpers/validator';
+import { Validator } from '../../helpers/validator';
 
-import { environment } from './../../environments/environment';
+import { environment } from '../../../environments/environment';
 
-import { App } from '../models/app';
-import { IUser } from '../models/user';
-import { ISearchResult } from '../models/searchresult';
-import { ESteamIDTypes } from '../enums/steamidtypes.enum';
-import { ESearchStates } from '../enums/searchresulttypes.enum';
-import { ESearchTypes } from '../enums/searchtypestype.enum';
+import { App } from '../../models/app';
+import { IUser } from '../../models/user';
+import { ISearchResult } from '../../models/searchresult';
+import { ESteamIDTypes } from '../../enums/steamidtypes.enum';
+import { ESearchStates } from '../../enums/searchresulttypes.enum';
+import { ESearchTypes } from '../../enums/searchtypestype.enum';
 
-import InvalidSteamID64Error from '../errors/invalid_id64.error';
-import InvalidNicknameError from '../errors/invalid_nickname.error';
-import InvalidProfileURLError from '../errors/invalid_url.error';
-import InvalidPermalinkError from '../errors/invalid_permalink.error';
+import InvalidSteamID64Error from '../../errors/invalid_id64.error';
+import InvalidNicknameError from '../../errors/invalid_nickname.error';
+import InvalidProfileURLError from '../../errors/invalid_url.error';
+import InvalidPermalinkError from '../../errors/invalid_permalink.error';
 
-import BaseError from '../errors/base.error';
+import BaseError from '../../errors/base.error';
 
 @Injectable({
   providedIn: 'root'

@@ -24,17 +24,12 @@
         </h1>
 
         <h2 [@collapseSubtitle]="getState()"
-            class="search__subtitle">Missing Content Lookup</h2>
+            class="search__subtitle">{{ 'app.search.sub-title' | translate }}</h2>
 
         <!-- The description -->
         <p [@collapseDescription]="getState()"
            class="search__description">
-          Easily lookup up missing DLC, Sequels, Prequesl, Spin-Offs... etc from your
-          <a href="https://store.steampowered.com/"
-             target="_blank">
-            Steam
-          </a>
-          library.
+          <ng-container *ngTemplateOutlet="description; context: { lang: getLanguage() }"></ng-container>
         </p>
 
         <!-- SteamMCL logo -->
@@ -56,12 +51,12 @@
                       appearance="standard">
 
         <!-- The search label -->
-        <mat-label>Steam profile</mat-label>
+        <mat-label>{{ 'app.search.label' | translate }}</mat-label>
 
         <!-- The search input -->
         <input #searchInputRef
                matInput
-               placeholder="Enter your Steam ID here..."
+               [placeholder]="'app.search.placeholder' | translate"
                [disabled]="loading"
                (change)="onSearchChanged($event)">
 
@@ -70,28 +65,53 @@
 
         <!-- The search hints -->
         <mat-hint>
-          You can also input
-          <a href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID-"
-             target="_blank">
-            Steam ID64</a>
-          ,
-          <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-             target="_blank">
-            Steam nickname
-          </a>
-          ,
-          <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-             target="_blank">
-            Profile URL
-          </a>
-          and
-          <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
-             target="_blank">
-            Profile permalink
-          </a>
-          .
+          <ng-container *ngTemplateOutlet="hint; context: { lang: getLanguage() }"></ng-container>
         </mat-hint>
       </mat-form-field>
     </div>
   </div>
 </div>
+
+<!-- The description template -->
+<ng-template #description
+             let-lang="lang">
+  <ng-container [ngSwitch]="lang">
+    <ng-container *ngSwitchCase="'en'">
+      Easily lookup up missing DLC, Sequels, Prequesl, Spin-Offs... etc from your
+      <a href="https://store.steampowered.com/"
+         target="_blank">
+        Steam
+      </a>
+      library.
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<!-- The hint template -->
+<ng-template #hint
+             let-lang="lang">
+  <ng-container [ngSwitch]="lang">
+    <ng-container *ngSwitchCase="'en'">
+      You can also input
+      <a href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID-"
+         target="_blank">
+        Steam ID64</a>
+      ,
+      <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
+         target="_blank">
+        Steam nickname
+      </a>
+      ,
+      <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
+         target="_blank">
+        Profile URL
+      </a>
+      and
+      <a href="https://steamcommunity.com/discussions/forum/1/618458030664854265/"
+         target="_blank">
+        Profile permalink
+      </a>
+      .
+    </ng-container>
+  </ng-container>
+</ng-template>
