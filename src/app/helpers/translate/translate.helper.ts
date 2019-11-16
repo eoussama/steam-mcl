@@ -22,14 +22,24 @@ export class TranslateHelper {
 
   /**
    * Initializes the translation service
+   *
+   * @param translate The translation service
    */
-  static init(translate: TranslateService): void {
-    translate.addLangs(['en']);
-    translate.setDefaultLang('en');
-    translate.use('en');
+  static init = (translate: TranslateService): Promise<any> =>
+    new Promise((resolve, reject) => {
+      translate.addLangs(['en']);
+      translate.setDefaultLang('en');
+      translate.use('en')
+        .toPromise()
+        .then(() => {
+          TranslateHelper.currentLanguage = translate.currentLang;
+          resolve(TranslateHelper.currentLanguage);
+        })
+        .catch((err: any) => {
+          reject(err);
+        });
+    })
 
-    TranslateHelper.currentLanguage = translate.currentLang;
-  }
 
   /**
    * Returns translations given their scope

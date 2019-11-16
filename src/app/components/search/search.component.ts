@@ -162,6 +162,9 @@ export class SearchComponent implements OnInit {
 
   //#region Methods
 
+  /**
+   * Gets the current language
+   */
   getLanguage = () => TranslateHelper.currentLanguage;
 
   //#endregion
