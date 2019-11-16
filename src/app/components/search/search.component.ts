@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { SearchService } from 'src/app/services/search/search.service';
 
 import { collapseAnimation } from 'src/app/animations/searchcollapse';
+import { TranslateHelper } from 'src/app/helpers/translate/translate.helper';
 
 @Component({
   selector: 'app-search',
@@ -44,8 +46,12 @@ export class SearchComponent implements OnInit {
    */
   constructor(
     private search: SearchService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private translate: TranslateService
+  ) {
+    this.translate.use('en');
+    // TranslateHelper.init(translate);
+  }
 
   //#endregion
 
@@ -94,16 +100,16 @@ export class SearchComponent implements OnInit {
       if (e instanceof NavigationEnd) {
 
         // Getting the current URL
-        const url: string = document.location.pathname;
+        const navUrl: string = document.location.pathname;
 
         // Extracting URL fragments
-        const urlFragments: string[] = url.split('/').filter((uf: string) => uf.length > 0);
+        const navUrlFragments: string[] = navUrl.split('/').filter((uf: string) => uf.length > 0);
 
         // Extracting the route name
-        const route: string = urlFragments[0] || null;
+        const navRoute: string = navUrlFragments[0] || null;
 
         // Updating the collapse state
-        this.collapse = route === 'lookup';
+        this.collapse = navRoute === 'lookup';
       }
     });
   }

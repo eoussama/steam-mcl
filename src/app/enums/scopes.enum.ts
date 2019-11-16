@@ -2,7 +2,7 @@
  * Global scopes
  */
 export enum Scopes {
-  Global = 'global',
+  App = 'app',
   Landing = 'landing',
   Lookup = 'lookup',
   Search = 'search'

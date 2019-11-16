@@ -13,7 +13,7 @@ export class TranslateHelper {
    * Initializes the translation service
    */
   static init(translate: TranslateService): void {
-    translate.addLangs(['en'])
+    translate.addLangs(['en']);
     translate.setDefaultLang('en');
     translate.use('en');
   }

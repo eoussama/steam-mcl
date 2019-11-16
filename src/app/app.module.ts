@@ -20,16 +20,16 @@ import { Scopes } from './enums/scopes.enum';
     BrowserModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot({
+      isolate: true,
       loader: {
         provide: TranslateLoader,
-        useFactory: TranslateHelper.loader(Scopes.Global),
+        useFactory: TranslateHelper.loader(Scopes.App),
         deps: [HttpClient]
       }
     }),
     AppRoutingModule,
     SearchModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
