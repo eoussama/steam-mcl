@@ -132,10 +132,10 @@ export class LookupComponent implements OnInit, OnDestroy {
    * @param type The search's type
    */
   getLoadingMessage = (type: ESearchTypes = this.currentSearch.type): string => [
-    'Retrieving the Steam ID',
-    'Validating the Steam ID',
-    'Fetching the Steam library',
-    'Processing the Steam library'
+    this.translate.instant('lookup.loading.retrieving'),
+    this.translate.instant('lookup.loading.validating'),
+    this.translate.instant('lookup.loading.fetching'),
+    this.translate.instant('lookup.loading.processing')
   ][type]
 
   /**
