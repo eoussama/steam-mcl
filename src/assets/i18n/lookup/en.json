@@ -26,7 +26,8 @@
     "tabs": {
       "missing": "Missing content",
       "packages": "Packages",
-      "owned": "Owned"
+      "owned": "Owned",
+      "empty": "Such empty!"
     }
   }
 }

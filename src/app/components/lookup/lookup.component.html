@@ -6,63 +6,63 @@
 
       <!-- The user's info -->
       <div *ngSwitchCase="1"
-           class="lookup__user">
+        class="lookup__user">
 
         <div class="col">
 
           <!-- The Steam level -->
           <span class="level"
-                [title]="'lookup.hover.level' | translate: { username: user.username }">{{ user.level }}</span>
+            [title]="'lookup.hover.level' | translate: { username: user.username }">{{ user.level }}</span>
 
           <!-- The user's avatar -->
           <img class="avatar"
-               [src]="user.avatar"
-               [alt]="'lookup.avatarAlt' | translate: { username: user.username }">
+            [src]="user.avatar"
+            [alt]="'lookup.avatarAlt' | translate: { username: user.username }">
         </div>
 
         <div class="col">
 
           <!-- The username -->
           <span class="username"
-                [title]="'lookup.hover.username' | translate">{{ user.username }}</span>
+            [title]="'lookup.hover.username' | translate">{{ user.username }}</span>
 
           <!-- The real name -->
           <span class="realname"
-                [title]="'lookup.hover.realname' | translate">{{ user.realname }}</span>
+            [title]="'lookup.hover.realname' | translate">{{ user.realname }}</span>
 
           <!-- The Steam ID -->
           <span class="steamid"
-                [title]="'lookup.hover.steamId' | translate">{{ user.id }}</span>
+            [title]="'lookup.hover.steamId' | translate">{{ user.id }}</span>
         </div>
 
         <div class="col">
 
           <!-- The Steam state -->
           <span class="state"
-                [ngClass]="'state--' + getSteamState(user.state)">{{ ('lookup.status.' + getSteamState(user.state)) | translate }}</span>
+            [ngClass]="'state--' + getSteamState(user.state)">{{ ('lookup.status.' + getSteamState(user.state)) | translate }}</span>
 
           <!-- The time in which the user was last online -->
           <span *ngIf="user.state === 0"
-                class="lastlogoff">{{ 'lookup.lastOnline' | translate }}
+            class="lastlogoff">{{ 'lookup.lastOnline' | translate }}
             {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
         </div>
       </div>
 
       <!-- The error -->
       <div *ngSwitchCase="0"
-           class="lookup__error">
+        class="lookup__error">
         <mat-icon class="icon"
-                  size="large"
-                  aria-hidden="false"
-                  aria-label="Error icon">warning</mat-icon>
+          size="large"
+          aria-hidden="false"
+          aria-label="Error icon">warning</mat-icon>
         <span class="message">{{ currentSearch.details.error.message }}</span>
       </div>
 
       <!-- The loader -->
       <div *ngSwitchDefault
-           class="lookup__loader">
+        class="lookup__loader">
         <mat-spinner class="loader"
-                     diameter="50"></mat-spinner>
+          diameter="50"></mat-spinner>
         <span class="message message--loader">{{ getLoadingMessage() }}</span>
       </div>
     </ng-container>
@@ -70,11 +70,19 @@
 
   <!-- The main container -->
   <mat-card *ngIf="loadingFinished()"
-            class="lookup__main">
+    class="lookup__main">
 
     <mat-tab-group mat-align-tabs="center">
-      <mat-tab [label]="'lookup.tabs.missing' | translate">{{ 'lookup.tabs.missing' | translate }}</mat-tab>
-      <mat-tab [label]="'lookup.tabs.packages' | translate">{{ 'lookup.tabs.packages' | translate }}</mat-tab>
+      <mat-tab [label]="'lookup.tabs.missing' | translate">
+        <div class="empty">
+          {{ 'lookup.tabs.empty' | translate }}
+        </div>
+      </mat-tab>
+      <mat-tab [label]="'lookup.tabs.packages' | translate">
+        <div class="empty">
+          {{ 'lookup.tabs.empty' | translate }}
+        </div>
+      </mat-tab>
       <mat-tab [label]="'lookup.tabs.owned' | translate">
         <ul *ngIf="user && user.apps">
           <li *ngFor="let app of user.apps; let i = index">
