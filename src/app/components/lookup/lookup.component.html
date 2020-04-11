@@ -42,7 +42,7 @@
             [ngClass]="'state--' + getSteamState(user.state)">{{ ('lookup.status.' + getSteamState(user.state)) | translate }}</span>
 
           <!-- The time in which the user was last online -->
-          <span *ngIf="user.state === 0"
+          <span *ngIf="user.state === 0 && user.lastOnline"
             class="lastlogoff">{{ 'lookup.lastOnline' | translate }}
             {{ user.lastOnline | date:'dd/mm/yyyy' }}</span>
         </div>

@@ -134,8 +134,15 @@ export class User {
     this.creationTime = new Date(user.timecreated * 1000);
     this.lastOnline = new Date(user.lastlogoff * 1000);
     this.apps = user.apps;
+
+    if (this.lastOnline.toString().toLowerCase() === 'invalid date') {
+      this.lastOnline = null;
+    }
+
+    if (this.creationTime.toString().toLowerCase() === 'invalid date') {
+      this.creationTime = null;
+    }
   }
 
   //#endregion
-
 }
