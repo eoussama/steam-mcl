@@ -73,21 +73,21 @@
     class="lookup__main">
 
     <mat-tab-group mat-align-tabs="center">
-      <mat-tab [label]="'lookup.tabs.missing' | translate">
-        <ng-container *ngTemplateOutlet="empty"></ng-container>
-      </mat-tab>
-      <mat-tab [label]="'lookup.tabs.packages' | translate">
-        <ng-container *ngTemplateOutlet="empty"></ng-container>
-      </mat-tab>
       <mat-tab [label]="'lookup.tabs.owned' | translate">
         <ng-container *ngIf="user.apps && user.apps.length > 0; else empty;">
           <ul class="app-list"
             *ngIf="user && user.apps">
             <li *ngFor="let app of user.apps; let i = index">
-              {{ i + 1 }} - <app-steam-app [app]="app"></app-steam-app>
+              <app-steam-app [app]="app"></app-steam-app>
             </li>
           </ul>
         </ng-container>
+      </mat-tab>
+      <mat-tab [label]="'lookup.tabs.packages' | translate">
+        <ng-container *ngTemplateOutlet="empty"></ng-container>
+      </mat-tab>
+      <mat-tab [label]="'lookup.tabs.missing' | translate">
+        <ng-container *ngTemplateOutlet="empty"></ng-container>
       </mat-tab>
     </mat-tab-group>
   </mat-card>
