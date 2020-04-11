@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { IApp } from 'src/app/models/app';
+import { App } from 'src/app/models/app';
 
 @Component({
   selector: 'app-steam-app',
@@ -9,7 +9,7 @@ import { IApp } from 'src/app/models/app';
 })
 export class SteamAppComponent {
 
-  @Input() app: IApp;
+  @Input() app: App;
 
   //#region Constructor
 

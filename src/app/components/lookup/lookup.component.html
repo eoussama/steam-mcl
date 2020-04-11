@@ -81,7 +81,8 @@
       </mat-tab>
       <mat-tab [label]="'lookup.tabs.owned' | translate">
         <ng-container *ngIf="user.apps && user.apps.length > 0; else empty;">
-          <ul *ngIf="user && user.apps">
+          <ul class="app-list"
+            *ngIf="user && user.apps">
             <li *ngFor="let app of user.apps; let i = index">
               {{ i + 1 }} - <app-steam-app [app]="app"></app-steam-app>
             </li>
