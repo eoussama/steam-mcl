@@ -41,7 +41,7 @@ export class SearchService {
 
   /**
    * The constructor of the search ID service
-   * 
+   *
    * @param http The HTTP object
    */
   constructor(private http: HttpClient) {
@@ -52,7 +52,7 @@ export class SearchService {
 
   //#endregion
 
-  //#region Functions 
+  //#region Functions
 
   /**
    * Starts the core search
@@ -332,9 +332,9 @@ export class SearchService {
   }
 
   /**
-   * Gets a list of owned games 
+   * Gets a list of owned games
    * for a specific Steam user
-   * 
+   *
    * @param steamId The Steam ID of the owner
    */
   async getOwnedApps(steamId: string): Promise<any> {
@@ -358,47 +358,52 @@ export class SearchService {
    * @param rawApps The list of app IDs to process
    */
   async processApps(rawApps: any[]): Promise<App[]> {
+    return new Promise((resolve, reject) => {
 
-    // Emitting the Steam library process event
-    this.searchEvent.emit({
-      state: ESearchStates.Loading,
-      type: ESearchTypes.SteamLibraryProcess
-    });
+      // Emitting the Steam library process event
+      this.searchEvent.emit({
+        state: ESearchStates.Loading,
+        type: ESearchTypes.SteamLibraryProcess
+      });
 
-    // Preparing the data list
-    const apps: App[] = [];
+      // Preparing the data list
+      const apps: App[] = [];
 
-    // Looping through the apps list
-    (rawApps || []).forEach(async (app: string) => {
+      // Looping through the apps list
+      (rawApps || []).forEach(async (app: string, index: number) => {
 
-      // Getting the app's ID
-      const appId: number = app['appid'];
+        // Getting the app's ID
+        const appId: number = app['appid'];
 
-      // Getting the result
-      const result = await this.getApp(appId);
+        // Getting the result
+        const result = await this.getApp(appId);
 
-      if (result && result[appId]['success']) {
+        if (result && result[appId]['success']) {
 
-        // Getting the current app's info
-        const appInfo: App = new App(result[appId]['data']);
+          // Getting the current app's info
+          const appInfo: App = new App(result[appId]['data']);
 
-        // Checking the validity of the app
-        if (appInfo) {
+          // Checking the validity of the app
+          if (appInfo) {
 
-          // Adding the processed app to the list
-          apps.push(appInfo);
+            // Adding the processed app to the list
+            apps.push(appInfo);
+          }
         }
-      }
-    });
 
-    // Returning the processed list
-    return apps;
+        if (index >= (rawApps || []).length - 1) {
+
+          // Returning the processed list
+          resolve(apps);
+        }
+      });
+    });
   }
 
   /**
    * Gets information about
    * a specified app ID
-   * 
+   *
    * @param appId The app ID of the game
    */
   async getApp(appid: number): Promise<any> {
@@ -410,7 +415,7 @@ export class SearchService {
 
   /**
    * Gets a user's Steam ID
-   * 
+   *
    * @param steamId The Steam ID
    */
   async getSteamLevel(steamId: string): Promise<any> {

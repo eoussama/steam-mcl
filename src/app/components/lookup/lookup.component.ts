@@ -104,7 +104,7 @@ export class LookupComponent implements OnInit, OnDestroy {
         case ESearchTypes.SteamLibraryProcess: {
 
           // Checking if the search was successful
-          if (searchResult.state === ESearchStates.Success) {
+          if (subSearchResult.state === ESearchStates.Success) {
             this.user.apps = this.currentSearch.details.result;
             console.log(this.user);
           }

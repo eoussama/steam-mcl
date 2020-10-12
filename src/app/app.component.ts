@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       if ([ESearchTypes.SteamIDRetrieval, ESearchTypes.SteamIDValidation].includes(searchResult.type)) {
 
         // Getting the search input
-        const input = searchResult.details.meta.input;
+        const input = searchResult.details.meta.input || '';
 
         // Navigating to the lookup page
         this.router.navigate(['lookup', input], { state: { searchResult } });
