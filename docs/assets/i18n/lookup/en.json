@@ -1,0 +1,33 @@
+{
+  "lookup": {
+    "lastOnline": "Last seen on",
+    "avatarAlt": "{{ username }}'s avatar",
+    "hover": {
+      "username": "The username",
+      "realname": "The real name",
+      "steamId": "The Steam ID",
+      "level": "{{ username }}' Steam level"
+    },
+    "loading": {
+      "retrieving": "Retrieving the Steam ID",
+      "validating": "Validating the Steam ID",
+      "fetching": "Fetching the Steam library",
+      "processing": "Processing the Steam library"
+    },
+    "status": {
+      "offline": "Offline",
+      "online": "Online",
+      "busy": "Busy",
+      "away": "Away",
+      "snooze": "Snooze",
+      "toTrade": "Trading",
+      "toPlay": "Wanting to play"
+    },
+    "tabs": {
+      "missing": "Missing content",
+      "packages": "Packages",
+      "owned": "Owned",
+      "empty": "Such empty!"
+    }
+  }
+}
