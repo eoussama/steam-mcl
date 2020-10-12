@@ -47,7 +47,7 @@ export class TranslateHelper {
    * @param scope The scope of the translation
    */
   static loader(scope: Scopes): any {
-    return (http: HttpClient) => new TranslateHttpLoader(http, `./../assets/i18n/${scope}/`, '.json');
+    return (http: HttpClient) => new TranslateHttpLoader(http, `./assets/i18n/${scope}/`, '.json');
   }
 
   //#endregion
