@@ -13,6 +13,7 @@
     "start": "ng serve",
     "build": "ng build",
     "prod": "ng build --prod --output-path docs --base-href /steam-mcl/",
+    "deploy": "git pull origin master && git push origin master && git checkout gh-pages && git pull origin gh-pages && git merge master && npm run prod && git add . && git commit -m \"Build\" && git push origin gh-pages && git checkout master",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
