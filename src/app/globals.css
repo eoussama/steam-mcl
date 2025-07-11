@@ -236,6 +236,67 @@ body {
   }
 }
 
+/* View Transition Animations */
+@supports (view-transition-name: none) {
+  ::view-transition-old(search-morph-container),
+  ::view-transition-new(search-morph-container) {
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  ::view-transition-old(search-card),
+  ::view-transition-new(search-card) {
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  ::view-transition-old(search-input),
+  ::view-transition-new(search-input) {
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Smooth morphing transition */
+  ::view-transition-group(search-morph-container) {
+    animation-duration: 0.7s;
+    animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  ::view-transition-group(search-card) {
+    animation-duration: 0.8s;
+    animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  ::view-transition-group(search-input) {
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Add scale and opacity for better morphing effect */
+  ::view-transition-old(search-morph-container) {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  ::view-transition-new(search-morph-container) {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Fallback for browsers without view transition support */
+@supports not (view-transition-name: none) {
+  /* Enhanced regular transitions as fallback */
+  [style*="viewTransitionName"] {
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  
+  /* Add subtle fade effect for navigation without view transitions */
+  .page-transition-fallback {
+    animation: fadeIn 0.4s ease-out;
+  }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }

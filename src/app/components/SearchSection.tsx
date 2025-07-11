@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTransitionRouter } from 'next-view-transitions';
 import { Search, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 import { ExternalLink } from './ExternalLink';
 import { useSteamUserSearch, SteamPlayerResponse } from '../hooks/useSteam';
@@ -16,10 +16,16 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morph
   const [steamProfile, setSteamProfile] = useState(''); // Empty by default as requested
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const router = useRouter();
+  const [supportsViewTransitions, setSupportsViewTransitions] = useState(false);
+  const router = useTransitionRouter();
 
   // Use React Query hook for Steam user search
   const { data, isLoading, error } = useSteamUserSearch(searchQuery);
+
+  // Check for view transition support
+  useEffect(() => {
+    setSupportsViewTransitions('startViewTransition' in document);
+  }, []);
 
   // Handle navigation and callbacks when data is received
   useEffect(() => {
@@ -45,10 +51,22 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morph
     }
   };
 
+  const containerClassName = `relative animate-fadeInUp ${!supportsViewTransitions ? 'page-transition-fallback' : ''}`;
+
   return (
-    <div className="relative animate-fadeInUp" {...morphProps}>
+    <div 
+      className={containerClassName}
+      style={{ 
+        viewTransitionName: supportsViewTransitions ? 'search-morph-container' : undefined,
+        ...(morphProps?.style || {})
+      }}
+      {...morphProps}
+    >
       {/* Card with enhanced gradient background */}
-      <div className="relative bg-[var(--card-background)]/80 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden hover:shadow-[var(--steam-accent)]/20 transition-all duration-500">
+      <div 
+        className="relative bg-[var(--card-background)]/80 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden hover:shadow-[var(--steam-accent)]/20 transition-all duration-500"
+        style={{ viewTransitionName: supportsViewTransitions ? 'search-card' : undefined }}
+      >
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/10 via-transparent to-[var(--steam-accent)]/5 opacity-50 hover:opacity-100 transition-opacity duration-500" />
         
@@ -88,6 +106,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morph
                       : 'border-[var(--input-border)] hover:border-[var(--steam-accent)]/60 hover:shadow-lg'
                     }
                   `}
+                  style={{ viewTransitionName: supportsViewTransitions ? 'search-input' : undefined }}
                   placeholder="Enter your Steam profile..."
                   disabled={isLoading}
                 />

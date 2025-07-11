@@ -6,14 +6,15 @@ import { ParticlesBackground } from '../components/ParticlesBackground';
 import { ExternalLink } from '../components/ExternalLink';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useTransitionRouter } from 'next-view-transitions';
 import { useSteamUserSearch } from '../hooks/useSteam';
 import packageJson from '../../../package.json';
 
 export default function UserProfilePage() {
   const [mounted, setMounted] = useState(false);
   const params = useParams();
-  const router = useRouter();
+  const router = useTransitionRouter();
   const username = decodeURIComponent(params.username as string);
   
   // Auto-search for the user from URL

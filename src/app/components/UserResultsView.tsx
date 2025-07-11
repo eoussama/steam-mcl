@@ -62,9 +62,11 @@ const mockMissingContent = [
 
 export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose }) => {
   const [mounted, setMounted] = useState(false);
+  const [supportsViewTransitions, setSupportsViewTransitions] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    setSupportsViewTransitions('startViewTransition' in document);
   }, []);
 
   const missingContentTypes = {
@@ -74,10 +76,18 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
     'Season Pass': { color: 'bg-green-500/10 border-green-500/30 text-green-400', icon: '🎫' }
   };
 
+  const containerClassName = `w-full max-w-4xl space-y-6 flex flex-col h-full ${mounted ? 'animate-fadeInUp' : 'opacity-0'} ${!supportsViewTransitions ? 'page-transition-fallback' : ''}`;
+
   return (
-    <div className={`w-full max-w-4xl space-y-6 flex flex-col h-full ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
+    <div 
+      className={containerClassName}
+      style={{ viewTransitionName: supportsViewTransitions ? 'search-morph-container' : undefined }}
+    >
       {/* User Info Header */}
-      <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden">
+      <div 
+        className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden"
+        style={{ viewTransitionName: supportsViewTransitions ? 'search-card' : undefined }}
+      >
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/10 via-transparent to-[var(--steam-accent)]/5 opacity-50" />
         
@@ -125,6 +135,7 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                 onClick={onClose}
                 className="group relative px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
                 aria-label="Back to search"
+                style={{ viewTransitionName: supportsViewTransitions ? 'search-input' : undefined }}
               >
                 <Search 
                   size={16} 
