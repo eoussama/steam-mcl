@@ -423,7 +423,7 @@ export async function analyzeMissingContentSteamOnly(ownedGames: OwnedGame[]): P
     });
     
     // Limit results to avoid overwhelming the user
-    return uniqueContent.slice(0, 100);
+    return uniqueContent;
     
   } catch (error) {
     console.error('Error analyzing missing content with Steam data:', error);

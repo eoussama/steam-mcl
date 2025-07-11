@@ -1,7 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Gamepad2, Globe, AlertTriangle, Search, Loader2, ExternalLink as ExternalLinkIcon } from 'lucide-react';
+import { 
+  Gamepad2, 
+  Globe, 
+  AlertTriangle, 
+  Search, 
+  Loader2, 
+  ExternalLink as ExternalLinkIcon,
+  Download,
+  Package,
+  RotateCcw,
+  Sparkles,
+  Gift,
+  Link
+} from 'lucide-react';
 import Image from 'next/image';
 import { ExternalLink } from './ExternalLink';
 import { SteamPlayerResponse, useMissingContentAnalysis } from '../hooks/useSteam';
@@ -24,12 +37,36 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
   }, []);
 
   const missingContentTypes = {
-    DLC: { color: 'bg-purple-500/10 border-purple-500/30 text-purple-400', icon: '🎮' },
-    Expansion: { color: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400', icon: '📦' },
-    Sequel: { color: 'bg-blue-500/10 border-blue-500/30 text-blue-400', icon: '🔄' },
-    Edition: { color: 'bg-orange-500/10 border-orange-500/30 text-orange-400', icon: '✨' },
-    Bundle: { color: 'bg-green-500/10 border-green-500/30 text-green-400', icon: '🎫' },
-    Related: { color: 'bg-gray-500/10 border-gray-500/30 text-gray-400', icon: '🔗' }
+    DLC: { 
+      color: 'bg-purple-500/10 border-purple-500/30 text-purple-400', 
+      icon: Download,
+      label: 'DLC'
+    },
+    Expansion: { 
+      color: 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400', 
+      icon: Package,
+      label: 'Expansion'
+    },
+    Sequel: { 
+      color: 'bg-blue-500/10 border-blue-500/30 text-blue-400', 
+      icon: RotateCcw,
+      label: 'Sequel'
+    },
+    Edition: { 
+      color: 'bg-orange-500/10 border-orange-500/30 text-orange-400', 
+      icon: Sparkles,
+      label: 'Edition'
+    },
+    Bundle: { 
+      color: 'bg-green-500/10 border-green-500/30 text-green-400', 
+      icon: Gift,
+      label: 'Bundle'
+    },
+    Related: { 
+      color: 'bg-gray-500/10 border-gray-500/30 text-gray-400', 
+      icon: Link,
+      label: 'Related'
+    }
   };
 
   const containerClassName = `w-full max-w-4xl space-y-6 flex flex-col h-full ${mounted ? 'animate-fadeInUp' : 'opacity-0'} ${!supportsViewTransitions ? 'page-transition-fallback' : ''}`;
@@ -160,6 +197,7 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
             ) : (
               missingContentData.missingContent.map((item, index) => {
                 const typeConfig = missingContentTypes[item.type as keyof typeof missingContentTypes];
+                const IconComponent = typeConfig?.icon || Gamepad2;
 
                 return (
                   <div
@@ -176,13 +214,13 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                         <span
                           className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${typeConfig?.color || 'bg-gray-500/10 border-gray-500/30 text-gray-400'}`}
                         >
-                          {item.type}
+                          {typeConfig?.label || item.type}
                         </span>
                       </div>
 
                       <div className="flex-1 space-y-2 pr-16">
                         <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{typeConfig?.icon || '🎮'}</span>
+                          <IconComponent size={24} className={`${typeConfig?.color?.split(' ')[2] || 'text-gray-400'}`} />
                           <div>
                             <h3 className="font-bold text-[var(--foreground)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
                               {item.name}
