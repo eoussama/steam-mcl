@@ -116,9 +116,6 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
         
         <div className="relative p-6 flex flex-col h-full">
           <div className="flex items-center space-x-3 mb-6 flex-shrink-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-[var(--steam-accent)] to-[var(--steam-primary)] rounded-full flex items-center justify-center shadow-xl">
-              {isAnalyzing ? <Loader2 size={24} className="text-white animate-spin" /> : <AlertTriangle size={24} className="text-white" />}
-            </div>
             <div>
               <h2 className="text-2xl font-bold text-[var(--foreground)]">
                 Missing Content
