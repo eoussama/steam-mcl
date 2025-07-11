@@ -1,6 +1,5 @@
 'use client';
 
-import { SteamLogo } from './components/SteamLogo';
 import { SearchSection } from './components/SearchSection';
 import { ErrorMessage } from './components/ErrorMessage';
 import { ThemeToggle } from './components/ThemeToggle';
