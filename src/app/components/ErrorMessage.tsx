@@ -17,12 +17,12 @@ export const ErrorMessage: React.FC = () => {
 
   return (
     <div className="relative animate-fadeInUp" style={{ animationDelay: '200ms' }}>
-      <div className="bg-gradient-to-r from-[var(--error)]/10 via-[var(--warning)]/10 to-[var(--error)]/10 border border-[var(--warning)]/40 rounded-2xl p-6 backdrop-blur-sm hover:shadow-lg transition-all duration-300 group">
-        <div className="flex items-start space-x-5">
+      <div className="bg-gradient-to-r from-[var(--error)]/10 via-[var(--warning)]/10 to-[var(--error)]/10 border border-[var(--warning)]/40 rounded-2xl p-5 backdrop-blur-sm hover:shadow-lg transition-all duration-300 group">
+        <div className="flex items-start space-x-4">
           <div className="flex-shrink-0">
-            <div className="w-14 h-14 bg-gradient-to-br from-[var(--warning)] to-[var(--error)] rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+            <div className="w-12 h-12 bg-gradient-to-br from-[var(--warning)] to-[var(--error)] rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
               <AlertTriangle 
-                size={28} 
+                size={24} 
                 className="text-white animate-pulse group-hover:animate-bounce" 
               />
             </div>
@@ -45,7 +45,7 @@ export const ErrorMessage: React.FC = () => {
               
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="inline-flex items-center space-x-2 text-sm text-[var(--steam-accent)] hover:text-[var(--steam-hover)] transition-all duration-300 font-semibold hover:scale-105"
+                className="inline-flex items-center space-x-2 text-sm text-[var(--steam-accent)] hover:text-[var(--steam-hover)] transition-all duration-300 font-semibold hover:scale-105 cursor-pointer"
               >
                 <span>{isExpanded ? 'Show less' : 'Show more details'}</span>
                 <ChevronDown 
@@ -56,7 +56,7 @@ export const ErrorMessage: React.FC = () => {
             </div>
             
             {isExpanded && (
-              <div className="mt-6 p-4 bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/50 animate-fadeIn backdrop-blur-sm">
+              <div className="mt-5 p-4 bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/50 animate-fadeIn backdrop-blur-sm">
                 <p className="text-sm text-[var(--foreground-muted)] mb-4 font-semibold flex items-center space-x-2">
                   <span className="w-2 h-2 bg-[var(--steam-accent)] rounded-full animate-pulse" />
                   <span>Possible solutions:</span>

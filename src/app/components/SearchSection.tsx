@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Sparkles } from 'lucide-react';
+import { Search, Sparkles, ExternalLink } from 'lucide-react';
 
 export const SearchSection: React.FC = () => {
   const [steamProfile, setSteamProfile] = useState('eoussama');
@@ -17,6 +17,18 @@ export const SearchSection: React.FC = () => {
     console.log('Searching for:', steamProfile);
   };
 
+  const InfoLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
+    <a 
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[var(--steam-accent)] font-semibold hover:text-[var(--steam-primary)] transition-all duration-300 cursor-pointer hover:underline hover:scale-105 inline-flex items-center gap-1 group"
+    >
+      {children}
+      <ExternalLink size={12} className="opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+    </a>
+  );
+
   return (
     <div className="relative animate-fadeInUp">
       {/* Card with enhanced gradient background */}
@@ -28,12 +40,12 @@ export const SearchSection: React.FC = () => {
         <div className="absolute top-4 right-4 w-2 h-2 bg-[var(--steam-accent)]/30 rounded-full animate-pulse" />
         <div className="absolute bottom-6 left-6 w-1 h-1 bg-[var(--steam-accent)]/40 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
         
-        <div className="relative p-8 lg:p-10">
-          <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="relative p-6 lg:p-7">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <label 
                 htmlFor="steam-profile" 
-                className="flex items-center space-x-2 text-lg font-bold text-[var(--foreground)] mb-4"
+                className="flex items-center space-x-2 text-lg font-bold text-[var(--foreground)] mb-3"
               >
                 <Sparkles size={20} className="text-[var(--steam-accent)] animate-pulse" />
                 <span>Steam Profile</span>
@@ -48,13 +60,13 @@ export const SearchSection: React.FC = () => {
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                   className={`
-                    w-full px-8 py-6 text-xl font-medium
+                    w-full px-6 py-5 text-xl font-medium
                     bg-[var(--input-background)]/80 backdrop-blur-sm
                     border-2 rounded-2xl
                     text-[var(--input-text)]
                     placeholder:text-[var(--foreground-muted)]
                     transition-all duration-500 ease-out
-                    focus:outline-none focus:ring-0
+                    focus:outline-none focus:ring-0 cursor-text
                     ${isFocused 
                       ? 'border-[var(--steam-accent)] shadow-2xl shadow-[var(--steam-accent)]/30 scale-[1.02] bg-[var(--input-background)]' 
                       : 'border-[var(--input-border)] hover:border-[var(--steam-accent)]/60 hover:shadow-lg'
@@ -75,33 +87,41 @@ export const SearchSection: React.FC = () => {
                 
                 {/* Input icon */}
                 <div className={`
-                  absolute right-6 top-1/2 -translate-y-1/2
-                  transition-all duration-300
+                  absolute right-5 top-1/2 -translate-y-1/2
+                  transition-all duration-300 pointer-events-none
                   ${isFocused ? 'text-[var(--steam-accent)] scale-110' : 'text-[var(--foreground-muted)]'}
                 `}>
                   <Search size={24} />
                 </div>
               </div>
               
-              <div className="flex items-start space-x-3 mt-4 p-4 bg-[var(--background-secondary)]/40 rounded-xl border border-[var(--card-border)]/30">
+              <div className="flex items-start space-x-3 mt-4 p-3 bg-[var(--background-secondary)]/40 rounded-xl border border-[var(--card-border)]/30">
                 <div className="w-2 h-2 rounded-full bg-[var(--steam-accent)] mt-2 flex-shrink-0 animate-pulse" />
                 <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
                   Supports{' '}
-                  <span className="text-[var(--steam-accent)] font-semibold">Steam ID64</span>,{' '}
-                  <span className="text-[var(--steam-accent)] font-semibold">Steam nickname</span>,{' '}
-                  <span className="text-[var(--steam-accent)] font-semibold">Profile URL</span> or{' '}
-                  <span className="text-[var(--steam-accent)] font-semibold">Profile permalink</span>
+                  <InfoLink href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID">
+                    Steam ID64
+                  </InfoLink>,{' '}
+                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                    Steam nickname
+                  </InfoLink>,{' '}
+                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                    Profile URL
+                  </InfoLink> or{' '}
+                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                    Profile permalink
+                  </InfoLink>
                 </p>
               </div>
             </div>
             
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center pt-3">
               <button
                 type="submit"
-                className="group relative px-12 py-5 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-110 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-4 focus:ring-offset-[var(--card-background)] overflow-hidden"
+                className="group relative px-10 py-4 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-110 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-4 focus:ring-offset-[var(--card-background)] overflow-hidden cursor-pointer"
                 aria-label="Search Steam profile"
               >
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3">
                   <Search 
                     size={24}
                     className="transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" 
