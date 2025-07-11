@@ -1,12 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Sparkles } from 'lucide-react';
+import { Search, Sparkles, User, Gamepad2, AlertCircle, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { ExternalLink } from './ExternalLink';
+import { useSteamUserSearch } from '../hooks/useSteam';
 
 export const SearchSection: React.FC = () => {
-  const [steamProfile, setSteamProfile] = useState('eoussama');
+  const [steamProfile, setSteamProfile] = useState(''); // Empty by default as requested
+  const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+
+  // Use React Query hook for Steam user search
+  const { data, isLoading, error } = useSteamUserSearch(searchQuery);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSteamProfile(e.target.value);
@@ -14,8 +20,9 @@ export const SearchSection: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Functionality will be added later
-    console.log('Searching for:', steamProfile);
+    if (steamProfile.trim()) {
+      setSearchQuery(steamProfile.trim());
+    }
   };
 
   return (
@@ -62,6 +69,7 @@ export const SearchSection: React.FC = () => {
                     }
                   `}
                   placeholder="Enter your Steam profile..."
+                  disabled={isLoading}
                 />
                 
                 {/* Enhanced focus ring with glow */}
@@ -74,13 +82,17 @@ export const SearchSection: React.FC = () => {
                   }
                 `} />
                 
-                {/* Input icon */}
+                {/* Input icon with loading state */}
                 <div className={`
                   absolute right-4 top-1/2 -translate-y-1/2
                   transition-all duration-300 pointer-events-none
                   ${isFocused ? 'text-[var(--steam-accent)] scale-110' : 'text-[var(--foreground-muted)]'}
                 `}>
-                  <Search size={20} />
+                  {isLoading ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <Search size={20} />
+                  )}
                 </div>
               </div>
               
@@ -107,15 +119,20 @@ export const SearchSection: React.FC = () => {
             <div className="flex justify-center pt-2">
               <button
                 type="submit"
-                className="group relative px-8 py-3 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-base rounded-xl shadow-xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-3 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-3 focus:ring-offset-[var(--card-background)] overflow-hidden cursor-pointer"
+                disabled={!steamProfile.trim() || isLoading}
+                className="group relative px-8 py-3 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-base rounded-xl shadow-xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-3 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-3 focus:ring-offset-[var(--card-background)] overflow-hidden cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-xl"
                 aria-label="Search Steam profile"
               >
                 <div className="flex items-center space-x-2">
-                  <Search 
-                    size={20}
-                    className="transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" 
-                  />
-                  <span>Discover Missing Content</span>
+                  {isLoading ? (
+                    <Loader2 size={20} className="animate-spin" />
+                  ) : (
+                    <Search 
+                      size={20}
+                      className="transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" 
+                    />
+                  )}
+                  <span>{isLoading ? 'Searching...' : 'Discover Missing Content'}</span>
                 </div>
                 
                 {/* Enhanced shine effect */}
@@ -126,6 +143,47 @@ export const SearchSection: React.FC = () => {
               </button>
             </div>
           </form>
+
+          {/* Error State */}
+          {error && (
+            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+              <div className="flex items-center space-x-2 text-red-400">
+                <AlertCircle size={16} />
+                <span className="text-sm font-medium">
+                  {error instanceof Error ? error.message : 'Failed to fetch Steam data'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Results Preview */}
+          {data && data.player && (
+            <div className="mt-4 p-4 bg-[var(--background-secondary)]/40 rounded-lg border border-[var(--card-border)]/30">
+              <div className="flex items-center space-x-3 mb-3">
+                <Image
+                  src={data.player.avatarmedium}
+                  alt={`${data.player.personaname}'s avatar`}
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-full border-2 border-[var(--steam-accent)]/30"
+                />
+                <div>
+                  <h3 className="font-bold text-[var(--foreground)] flex items-center space-x-2">
+                    <User size={16} />
+                    <span>{data.player.personaname}</span>
+                  </h3>
+                  <p className="text-xs text-[var(--foreground-muted)]">Steam ID: {data.player.steamid}</p>
+                </div>
+              </div>
+              
+              {data.ownedGames && (
+                <div className="flex items-center space-x-2 text-sm text-[var(--foreground-secondary)]">
+                  <Gamepad2 size={16} />
+                  <span>{data.ownedGames.length} games owned</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       

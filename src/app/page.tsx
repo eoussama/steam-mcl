@@ -1,7 +1,6 @@
 'use client';
 
 import { SearchSection } from './components/SearchSection';
-import { ErrorMessage } from './components/ErrorMessage';
 import { ThemeToggle } from './components/ThemeToggle';
 import { ParticlesBackground } from './components/ParticlesBackground';
 import { ExternalLink } from './components/ExternalLink';
@@ -11,7 +10,6 @@ import packageJson from '../../package.json';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [showError, setShowError] = useState(false); // Control error visibility
 
   useEffect(() => {
     setMounted(true);
@@ -99,13 +97,6 @@ export default function Home() {
             <SearchSection />
           </div>
         </div>
-
-        {/* Error Message Section - Only show when needed */}
-        {showError && (
-          <div className={`w-full max-w-3xl ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
-            <ErrorMessage />
-          </div>
-        )}
       </div>
 
       {/* Footer - Enhanced with ExternalLink components */}
