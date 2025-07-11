@@ -14,7 +14,7 @@ export interface UserResultsViewProps {
 export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose }) => {
   const [mounted, setMounted] = useState(false);
   const [supportsViewTransitions, setSupportsViewTransitions] = useState(false);
-  
+
   // Use the missing content analysis hook
   const { data: missingContentData, isLoading: isAnalyzing, error: analysisError } = useMissingContentAnalysis(data.steamId);
 
@@ -35,18 +35,18 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
   const containerClassName = `w-full max-w-4xl space-y-6 flex flex-col h-full ${mounted ? 'animate-fadeInUp' : 'opacity-0'} ${!supportsViewTransitions ? 'page-transition-fallback' : ''}`;
 
   return (
-    <div 
+    <div
       className={containerClassName}
       style={{ viewTransitionName: supportsViewTransitions ? 'search-morph-container' : undefined }}
     >
       {/* User Info Header */}
-      <div 
+      <div
         className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden"
         style={{ viewTransitionName: supportsViewTransitions ? 'search-card' : undefined }}
       >
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/10 via-transparent to-[var(--steam-accent)]/5 opacity-50" />
-        
+
         <div className="relative p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -59,7 +59,7 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                   className="w-20 h-20 rounded-full border-4 border-[var(--steam-accent)]/30 shadow-xl"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <h1 className="text-3xl font-black text-[var(--foreground)]">
                   {data.player.personaname}
@@ -75,17 +75,17 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                 )}
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               {/* Steam Profile Button */}
-              <ExternalLink 
+              <ExternalLink
                 href={data.player.profileurl}
                 className="inline-flex items-center space-x-2 px-4 py-2 bg-[var(--steam-primary)] hover:bg-[var(--steam-primary)]/80 text-white hover:text-white text-sm font-medium rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 shadow-lg hover:shadow-xl"
               >
                 <Globe size={16} />
                 <span>View Profile</span>
               </ExternalLink>
-              
+
               {/* Back to Search Button */}
               <button
                 onClick={onClose}
@@ -93,14 +93,14 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                 aria-label="Back to search"
                 style={{ viewTransitionName: supportsViewTransitions ? 'search-input' : undefined }}
               >
-                <Search 
-                  size={16} 
-                  className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" 
+                <Search
+                  size={16}
+                  className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300"
                 />
                 <span className="text-sm font-medium text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
                   Search Again
                 </span>
-                
+
                 {/* Hover effect */}
                 <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
               </button>
@@ -113,7 +113,7 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
       <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl flex-1 flex flex-col">
         {/* Animated gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/5 via-transparent to-[var(--steam-accent)]/10 opacity-50" />
-        
+
         <div className="relative p-6 flex flex-col h-full">
           <div className="flex items-center space-x-3 mb-6 flex-shrink-0">
             <div>
@@ -121,9 +121,9 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                 Missing Content
               </h2>
               <p className="text-sm text-[var(--foreground-muted)]">
-                {isAnalyzing 
-                  ? 'Analyzing your game library...' 
-                  : analysisError 
+                {isAnalyzing
+                  ? 'Analyzing your game library...'
+                  : analysisError
                     ? 'Error analyzing content'
                     : `${missingContentData?.missingContent?.length || 0} items found that you might be interested in`
                 }
@@ -160,19 +160,27 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
             ) : (
               missingContentData.missingContent.map((item, index) => {
                 const typeConfig = missingContentTypes[item.type as keyof typeof missingContentTypes];
-              
+
                 return (
                   <div
                     key={item.appid}
                     className="animate-fadeInUp"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <ExternalLink
-                      href={item.steamUrl}
-                      className="group relative block p-4 bg-[var(--background-secondary)]/40 hover:bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] no-underline"
+                    <div 
+                      className="group relative w-full block p-4 bg-[var(--background-secondary)]/40 hover:bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] no-underline items-start justify-between cursor-pointer"
+                      onClick={() => window.open(`https://store.steampowered.com/app/${item.appid}`, '_blank')}
                     >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 space-y-2">
+                      {/* Type badge - positioned at top right */}
+                      <div className="absolute top-3 right-3">
+                        <span
+                          className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${typeConfig?.color || 'bg-gray-500/10 border-gray-500/30 text-gray-400'}`}
+                        >
+                          {item.type}
+                        </span>
+                      </div>
+
+                      <div className="flex-1 space-y-2 pr-16">
                         <div className="flex items-center space-x-3">
                           <span className="text-2xl">{typeConfig?.icon || '🎮'}</span>
                           <div>
@@ -186,32 +194,18 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                             )}
                           </div>
                         </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <span 
-                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${typeConfig?.color || 'bg-gray-500/10 border-gray-500/30 text-gray-400'}`}
-                          >
-                            {item.type}
-                          </span>
-                        </div>
-                        
+
                         <p className="text-sm text-[var(--foreground-muted)]">
                           {item.description}
                         </p>
                       </div>
-                      
-                      <ExternalLinkIcon 
-                        size={16} 
-                        className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300 flex-shrink-0 ml-2" 
-                                             />
-                     </div>
-                   </ExternalLink>
-                 </div>
+                    </div>
+                  </div>
                 );
               })
             )}
           </div>
-          
+
           <div className="mt-6 p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--card-border)]/20 flex-shrink-0">
             <p className="text-xs text-[var(--foreground-muted)] text-center">
               <span className="inline-flex items-center space-x-1">
