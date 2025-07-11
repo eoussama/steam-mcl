@@ -63,7 +63,7 @@ export default function Home() {
           {/* Header Section - Logo as Background Element */}
           <div className="relative">
             {/* Background Logo - Positioned Behind Text */}
-            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 opacity-10 pointer-events-none z-0">
+            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
               <Image
                 src="/logo.png"
                 alt="Steam Logo"
