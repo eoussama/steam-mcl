@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Sparkles, User, Gamepad2, AlertCircle, Loader2 } from 'lucide-react';
+import { Search, Sparkles, User, Gamepad2, AlertCircle, Loader2, Globe } from 'lucide-react';
 import Image from 'next/image';
 import { ExternalLink } from './ExternalLink';
 import { useSteamUserSearch } from '../hooks/useSteam';
@@ -120,7 +120,7 @@ export const SearchSection: React.FC = () => {
               <button
                 type="submit"
                 disabled={!steamProfile.trim() || isLoading}
-                className="group relative px-8 py-3 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-base rounded-xl shadow-xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-3 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-3 focus:ring-offset-[var(--card-background)] overflow-hidden cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-xl"
+                className="group relative px-8 py-3 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-base rounded-xl shadow-xl transition-all duration-500 ease-out transform focus:outline-none focus:ring-3 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-3 focus:ring-offset-[var(--card-background)] overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:shadow-[var(--steam-accent)]/40 enabled:hover:scale-105 enabled:hover:-translate-y-1 enabled:cursor-pointer"
                 aria-label="Search Steam profile"
               >
                 <div className="flex items-center space-x-2">
@@ -129,17 +129,17 @@ export const SearchSection: React.FC = () => {
                   ) : (
                     <Search 
                       size={20}
-                      className="transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" 
+                      className="transition-all duration-500 group-enabled:group-hover:scale-125 group-enabled:group-hover:rotate-12" 
                     />
                   )}
                   <span>{isLoading ? 'Searching...' : 'Discover Missing Content'}</span>
                 </div>
                 
-                {/* Enhanced shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                {/* Enhanced shine effect - only on enabled hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-enabled:group-hover:translate-x-full transition-transform duration-1000 ease-out" />
                 
-                {/* Pulse effect on hover */}
-                <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-500 -z-10" />
+                {/* Pulse effect on hover - only when enabled */}
+                <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-enabled:group-hover:scale-100 transition-transform duration-500 -z-10" />
               </button>
             </div>
           </form>
@@ -159,21 +159,31 @@ export const SearchSection: React.FC = () => {
           {/* Results Preview */}
           {data && data.player && (
             <div className="mt-4 p-4 bg-[var(--background-secondary)]/40 rounded-lg border border-[var(--card-border)]/30">
-              <div className="flex items-center space-x-3 mb-3">
-                <Image
-                  src={data.player.avatarmedium}
-                  alt={`${data.player.personaname}'s avatar`}
-                  width={40}
-                  height={40}
-                  className="w-10 h-10 rounded-full border-2 border-[var(--steam-accent)]/30"
-                />
-                <div>
-                  <h3 className="font-bold text-[var(--foreground)] flex items-center space-x-2">
-                    <User size={16} />
-                    <span>{data.player.personaname}</span>
-                  </h3>
-                  <p className="text-xs text-[var(--foreground-muted)]">Steam ID: {data.player.steamid}</p>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <Image
+                    src={data.player.avatarmedium}
+                    alt={`${data.player.personaname}'s avatar`}
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 rounded-full border-2 border-[var(--steam-accent)]/30"
+                  />
+                  <div>
+                    <h3 className="font-bold text-[var(--foreground)]">
+                      {data.player.personaname}
+                    </h3>
+                    <p className="text-xs text-[var(--foreground-muted)]">Steam ID: {data.player.steamid}</p>
+                  </div>
                 </div>
+                
+                {/* Steam Profile Button */}
+                <ExternalLink 
+                  href={data.player.profileurl}
+                  className="inline-flex items-center space-x-1 px-3 py-2 bg-[var(--steam-primary)] hover:bg-[var(--steam-primary)]/80 text-white hover:text-white text-sm font-medium rounded-lg transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 shadow-lg hover:shadow-xl"
+                >
+                  <Globe size={14} />
+                  <span>Steam Profile</span>
+                </ExternalLink>
               </div>
               
               {data.ownedGames && (
