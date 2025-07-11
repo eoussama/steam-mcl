@@ -48,6 +48,19 @@ export interface OwnedGame {
 }
 
 /**
+ * Interface for missing content analysis using Steam data only
+ */
+export interface SteamMissingContent {
+  appid: number;
+  name: string;
+  type: 'DLC' | 'Expansion' | 'Sequel' | 'Edition' | 'Bundle' | 'Related';
+  baseGame: string;
+  baseGameAppid: number;
+  description: string;
+  steamUrl: string;
+}
+
+/**
  * Interface for API response structures
  */
 export interface GetAppListResponse {
@@ -220,4 +233,152 @@ export function extractSteamId(input: string): string | null {
   
   // If no pattern matches, assume it's a vanity URL
   return trimmed;
+}
+
+/**
+ * Analyze missing content using Steam data only
+ * Compares owned games with full Steam catalog to find potential DLC, expansions, etc.
+ */
+export async function analyzeMissingContentSteamOnly(ownedGames: OwnedGame[]): Promise<SteamMissingContent[]> {
+  try {
+    // Get the complete Steam app list
+    const allApps = await getAppList();
+    const missingContent: SteamMissingContent[] = [];
+    
+    // Create a set of owned app IDs for quick lookup
+    const ownedAppIds = new Set(ownedGames.map(game => game.appid));
+    
+    // Create a map of owned games by name for easier matching
+    const ownedGamesByName = new Map<string, OwnedGame>();
+    ownedGames.forEach(game => {
+      if (game.name) {
+        ownedGamesByName.set(game.name.toLowerCase(), game);
+      }
+    });
+    
+    // Analyze each owned game for missing content
+    for (const ownedGame of ownedGames) {
+      if (!ownedGame.name) continue;
+      
+      const baseName = ownedGame.name;
+      const baseNameLower = baseName.toLowerCase();
+      
+      // Find related content by pattern matching
+      const relatedApps = allApps.filter(app => {
+        // Skip if we already own this app
+        if (ownedAppIds.has(app.appid)) return false;
+        
+        const appNameLower = app.name.toLowerCase();
+        
+        // Skip if the app name is too short or generic
+        if (app.name.length < 3) return false;
+        
+        // Check for various patterns that indicate related content
+        return (
+          // DLC patterns
+          appNameLower.includes(baseNameLower + ' -') ||
+          appNameLower.includes(baseNameLower + ':') ||
+          appNameLower.includes(baseNameLower + ' dlc') ||
+          appNameLower.includes(baseNameLower + ' expansion') ||
+          
+          // Edition patterns
+          (appNameLower.includes(baseNameLower) && (
+            appNameLower.includes('edition') ||
+            appNameLower.includes('remaster') ||
+            appNameLower.includes('enhanced') ||
+            appNameLower.includes('definitive') ||
+            appNameLower.includes('complete') ||
+            appNameLower.includes('ultimate') ||
+            appNameLower.includes('deluxe') ||
+            appNameLower.includes('gold') ||
+            appNameLower.includes('goty') ||
+            appNameLower.includes('game of the year')
+          )) ||
+          
+          // Sequel patterns (be more restrictive to avoid false positives)
+          (appNameLower.startsWith(baseNameLower + ' ') && (
+            /\s(2|3|4|5|ii|iii|iv|v)\b/.test(appNameLower) ||
+            appNameLower.includes(' sequel') ||
+            appNameLower.includes(' returns') ||
+            appNameLower.includes(' continues')
+          )) ||
+          
+          // Bundle patterns
+          (appNameLower.includes('bundle') && appNameLower.includes(baseNameLower)) ||
+          (appNameLower.includes('collection') && appNameLower.includes(baseNameLower)) ||
+          (appNameLower.includes('pack') && appNameLower.includes(baseNameLower))
+        );
+      });
+      
+      // Categorize and add related apps
+      for (const relatedApp of relatedApps) {
+        const relatedNameLower = relatedApp.name.toLowerCase();
+        let type: SteamMissingContent['type'] = 'Related';
+        let description = `Related content for ${baseName}`;
+        
+        // Determine content type based on name patterns
+        if (relatedNameLower.includes('dlc') || 
+            relatedNameLower.includes(baseNameLower + ' -') ||
+            relatedNameLower.includes(baseNameLower + ':')) {
+          type = 'DLC';
+          description = `DLC for ${baseName}`;
+        } else if (relatedNameLower.includes('expansion')) {
+          type = 'Expansion';
+          description = `Expansion for ${baseName}`;
+        } else if (relatedNameLower.includes('edition') || 
+                   relatedNameLower.includes('remaster') ||
+                   relatedNameLower.includes('enhanced') ||
+                   relatedNameLower.includes('definitive') ||
+                   relatedNameLower.includes('complete') ||
+                   relatedNameLower.includes('ultimate') ||
+                   relatedNameLower.includes('deluxe') ||
+                   relatedNameLower.includes('gold') ||
+                   relatedNameLower.includes('goty')) {
+          type = 'Edition';
+          description = `Enhanced edition of ${baseName}`;
+        } else if (relatedNameLower.includes('bundle') || 
+                   relatedNameLower.includes('collection') ||
+                   relatedNameLower.includes('pack')) {
+          type = 'Bundle';
+          description = `Bundle containing ${baseName}`;
+        } else if (/\s(2|3|4|5|ii|iii|iv|v)\b/.test(relatedNameLower) ||
+                   relatedNameLower.includes(' sequel') ||
+                   relatedNameLower.includes(' returns') ||
+                   relatedNameLower.includes(' continues')) {
+          type = 'Sequel';
+          description = `Sequel to ${baseName}`;
+        }
+        
+        missingContent.push({
+          appid: relatedApp.appid,
+          name: relatedApp.name,
+          type,
+          baseGame: baseName,
+          baseGameAppid: ownedGame.appid,
+          description,
+          steamUrl: `https://store.steampowered.com/app/${relatedApp.appid}/`
+        });
+      }
+    }
+    
+    // Remove duplicates and sort by type priority
+    const uniqueContent = missingContent.filter((content, index, self) => 
+      index === self.findIndex(c => c.appid === content.appid)
+    );
+    
+    // Sort by type priority and then by name
+    const typePriority = { 'DLC': 1, 'Expansion': 2, 'Edition': 3, 'Sequel': 4, 'Bundle': 5, 'Related': 6 };
+    uniqueContent.sort((a, b) => {
+      const priorityDiff = typePriority[a.type] - typePriority[b.type];
+      if (priorityDiff !== 0) return priorityDiff;
+      return a.name.localeCompare(b.name);
+    });
+    
+    // Limit results to avoid overwhelming the user
+    return uniqueContent.slice(0, 100);
+    
+  } catch (error) {
+    console.error('Error analyzing missing content with Steam data:', error);
+    return [];
+  }
 } 

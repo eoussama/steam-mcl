@@ -4,6 +4,7 @@
  */
 
 import igdb from 'igdb-api-node';
+import { twitchTokenManager } from './twitch-token-manager';
 
 /**
  * Game category types in IGDB
@@ -69,19 +70,21 @@ export interface IGDBGame {
 }
 
 /**
- * Get IGDB client instance
+ * Get IGDB client instance with automatic token management
  */
-function getIGDBClient() {
+async function getIGDBClient() {
   if (typeof window !== 'undefined') {
     throw new Error('IGDB API should not be used on client-side');
   }
   
   const clientId = process.env.TWITCH_CLIENT_ID;
-  const accessToken = process.env.TWITCH_APP_ACCESS_TOKEN;
   
-  if (!clientId || !accessToken) {
-    throw new Error('TWITCH_CLIENT_ID and TWITCH_APP_ACCESS_TOKEN environment variables are required');
+  if (!clientId) {
+    throw new Error('TWITCH_CLIENT_ID environment variable is required');
   }
+  
+  // Get a valid access token from the token manager
+  const accessToken = await twitchTokenManager.getAccessToken();
   
   return igdb(clientId, accessToken);
 }
@@ -90,7 +93,7 @@ function getIGDBClient() {
  * Search for games by name in IGDB
  */
 export async function searchGamesInIGDB(query: string, limit = 10): Promise<IGDBGame[]> {
-  const client = getIGDBClient();
+  const client = await getIGDBClient();
   
   try {
     const response = await client
@@ -110,7 +113,7 @@ export async function searchGamesInIGDB(query: string, limit = 10): Promise<IGDB
  * Get game details by IGDB ID
  */
 export async function getGameById(id: number): Promise<IGDBGame | null> {
-  const client = getIGDBClient();
+  const client = await getIGDBClient();
   
   try {
     const response = await client
@@ -134,7 +137,7 @@ export async function getGameById(id: number): Promise<IGDBGame | null> {
  * Get related content for a game (DLC, expansions, sequels, etc.)
  */
 export async function getRelatedContent(gameName: string): Promise<IGDBGame[]> {
-  const client = getIGDBClient();
+  const client = await getIGDBClient();
   
   try {
     // First, find the main game

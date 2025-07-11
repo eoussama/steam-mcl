@@ -6,7 +6,7 @@
 'use client';
 
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { type MissingContent } from '../lib/igdb-api';
+import { type SteamMissingContent } from '../lib/steam-api';
 
 // Types for API responses
 export interface SteamApp {
@@ -40,7 +40,7 @@ export interface SteamPlayerResponse {
 }
 
 export interface MissingContentResponse {
-  missingContent: MissingContent[];
+  missingContent: SteamMissingContent[];
   analyzedGames: number;
   totalOwnedGames?: number;
   message?: string;
