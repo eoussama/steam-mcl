@@ -1,22 +1,38 @@
 'use client';
 
 import { SearchSection } from './components/SearchSection';
+import { UserResultsView } from './components/UserResultsView';
 import { ThemeToggle } from './components/ThemeToggle';
 import { ParticlesBackground } from './components/ParticlesBackground';
 import { ExternalLink } from './components/ExternalLink';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useMorph } from 'react-morph';
+import { SteamPlayerResponse } from './hooks/useSteam';
 import packageJson from '../../package.json';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
+  const [userData, setUserData] = useState<SteamPlayerResponse | null>(null);
+  const [showResults, setShowResults] = useState(false);
+  const morph = useMorph();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const handleUserFound = (data: SteamPlayerResponse) => {
+    setUserData(data);
+    setShowResults(true);
+  };
+
+  const handleCloseResults = () => {
+    setShowResults(false);
+    setUserData(null);
+  };
+
   return (
-    <main className="h-screen overflow-hidden bg-gradient-to-br from-[var(--background)] via-[var(--background-secondary)] to-[var(--background-tertiary)] relative flex flex-col">
+    <main className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--background-secondary)] to-[var(--background-tertiary)] relative flex flex-col">
       {/* tsParticles Background */}
       <ParticlesBackground />
       
@@ -58,45 +74,67 @@ export default function Home() {
             {/* Main Content Container - Centered and Viewport Focused */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
         {/* Single Container for All Content - Consistent Width */}
-        <div className={`w-full max-w-2xl space-y-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
-          {/* Header Section - Logo as Background Element */}
-          <div className="relative">
-            {/* Background Logo - Positioned Behind Text */}
-            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
-              <Image
-                src="/logo.png"
-                alt="Steam Logo"
-                fill
-                className="object-contain drop-shadow-2xl animate-float"
-                priority
-              />
-            </div>
-            
-            {/* Text Content - Full Width */}
-            <div className="relative z-10 text-left space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tight steam-title">
-                  Steam
-                </h1>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
-                  Missing Content Lookup
-                </h2>
+        {!showResults ? (
+          <div className={`w-full max-w-2xl space-y-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} {...morph}>
+            {/* Header Section - Logo as Background Element */}
+            <div className="relative">
+              {/* Background Logo - Positioned Behind Text */}
+              <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
+                <Image
+                  src="/logo.png"
+                  alt="Steam Logo"
+                  fill
+                  className="object-contain drop-shadow-2xl animate-float"
+                  priority
+                />
               </div>
               
-              <div>
-                <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
-                  Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library. 
-                  Never miss out on content that could enhance your gaming experience.
-                </p>
+              {/* Text Content - Full Width */}
+              <div className="relative z-10 text-left space-y-4">
+                <div className="space-y-2">
+                  <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tight steam-title">
+                    Steam
+                  </h1>
+                  <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
+                    Missing Content Lookup
+                  </h2>
+                </div>
+                
+                <div>
+                  <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
+                    Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library. 
+                    Never miss out on content that could enhance your gaming experience.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Search Section - The Main Focus */}
-          <div className={`${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
-            <SearchSection />
+            {/* Search Section - The Main Focus */}
+            <div className={`${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
+              <SearchSection onUserFound={handleUserFound} />
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 flex flex-col items-center w-full py-8" {...morph}>
+            {/* Condensed Header */}
+            <div className="w-full max-w-4xl mb-6 text-center flex-shrink-0">
+              <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-tight steam-title mb-2">
+                Steam
+              </h1>
+              <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent">
+                Missing Content Lookup
+              </h2>
+            </div>
+            
+            {/* User Results */}
+            {userData && (
+              <UserResultsView 
+                data={userData} 
+                onClose={handleCloseResults}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {/* Footer - Enhanced with ExternalLink components */}

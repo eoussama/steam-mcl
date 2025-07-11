@@ -1,18 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Sparkles, User, Gamepad2, AlertCircle, Loader2, Globe } from 'lucide-react';
-import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { Search, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 import { ExternalLink } from './ExternalLink';
-import { useSteamUserSearch } from '../hooks/useSteam';
+import { useSteamUserSearch, SteamPlayerResponse } from '../hooks/useSteam';
 
-export const SearchSection: React.FC = () => {
+export interface SearchSectionProps {
+  onUserFound?: (data: SteamPlayerResponse) => void;
+  morphProps?: Record<string, unknown>;
+}
+
+export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morphProps }) => {
   const [steamProfile, setSteamProfile] = useState(''); // Empty by default as requested
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
   // Use React Query hook for Steam user search
   const { data, isLoading, error } = useSteamUserSearch(searchQuery);
+
+  // Call onUserFound when data is received
+  useEffect(() => {
+    if (data && data.player && onUserFound) {
+      onUserFound(data);
+    }
+  }, [data, onUserFound]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSteamProfile(e.target.value);
@@ -26,7 +37,7 @@ export const SearchSection: React.FC = () => {
   };
 
   return (
-    <div className="relative animate-fadeInUp">
+    <div className="relative animate-fadeInUp" {...morphProps}>
       {/* Card with enhanced gradient background */}
       <div className="relative bg-[var(--card-background)]/80 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl overflow-hidden hover:shadow-[var(--steam-accent)]/20 transition-all duration-500">
         {/* Animated gradient overlay */}
@@ -156,44 +167,7 @@ export const SearchSection: React.FC = () => {
             </div>
           )}
 
-          {/* Results Preview */}
-          {data && data.player && (
-            <div className="mt-4 p-4 bg-[var(--background-secondary)]/40 rounded-lg border border-[var(--card-border)]/30">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <Image
-                    src={data.player.avatarmedium}
-                    alt={`${data.player.personaname}'s avatar`}
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 rounded-full border-2 border-[var(--steam-accent)]/30"
-                  />
-                  <div>
-                    <h3 className="font-bold text-[var(--foreground)]">
-                      {data.player.personaname}
-                    </h3>
-                    <p className="text-xs text-[var(--foreground-muted)]">Steam ID: {data.player.steamid}</p>
-                  </div>
-                </div>
-                
-                {/* Steam Profile Button */}
-                <ExternalLink 
-                  href={data.player.profileurl}
-                  className="inline-flex items-center space-x-1 px-3 py-2 bg-[var(--steam-primary)] hover:bg-[var(--steam-primary)]/80 text-white hover:text-white text-sm font-medium rounded-lg transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 shadow-lg hover:shadow-xl"
-                >
-                  <Globe size={14} />
-                  <span>Steam Profile</span>
-                </ExternalLink>
-              </div>
-              
-              {data.ownedGames && (
-                <div className="flex items-center space-x-2 text-sm text-[var(--foreground-secondary)]">
-                  <Gamepad2 size={16} />
-                  <span>{data.ownedGames.length} games owned</span>
-                </div>
-              )}
-            </div>
-          )}
+
         </div>
       </div>
       

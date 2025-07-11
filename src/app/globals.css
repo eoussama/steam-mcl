@@ -167,6 +167,24 @@ body {
   background: var(--foreground-secondary);
 }
 
+/* Thin scrollbar variant */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thumb-steam::-webkit-scrollbar-thumb {
+  background: var(--steam-accent);
+  border-radius: 3px;
+}
+
+.scrollbar-thumb-steam::-webkit-scrollbar-thumb:hover {
+  background: var(--steam-primary);
+}
+
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
 /* Selection */
 ::selection {
   background: var(--steam-accent);
