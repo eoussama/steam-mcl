@@ -23,7 +23,7 @@ export const ExternalLink: React.FC<ExternalLinkProps> = ({
       rel="noopener noreferrer"
       className={`
         text-[var(--steam-accent)] font-semibold 
-        hover:text-[var(--steam-primary)] 
+        hover:text-[var(--steam-hover)]
         transition-all duration-300 
         cursor-pointer hover:underline hover:scale-105 
         inline-flex items-center group

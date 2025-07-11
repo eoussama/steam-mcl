@@ -55,6 +55,9 @@
     --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
     --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
     
+    /* Steam brand colors - better hover for dark mode */
+    --steam-hover: #ffffff;
+    
     /* Interactive elements */
     --input-background: #334155;
     --input-border: #475569;
@@ -100,6 +103,9 @@
   --card-border: #334155;
   --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
   --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  
+  /* Steam brand colors - better hover for dark mode */
+  --steam-hover: #ffffff;
   
   --input-background: #334155;
   --input-border: #475569;

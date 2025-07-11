@@ -59,21 +59,21 @@ export default function Home() {
       {/* Main Content Container - Centered and Viewport Focused */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
         {/* Header Section - Enhanced Creative Layout */}
-        <div className={`w-full max-w-6xl mb-8 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className={`w-full max-w-5xl mb-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
             {/* Left Side - Enhanced Text Content */}
-            <div className="text-left space-y-6">
-              <div className="space-y-3">
-                <h1 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight tracking-tight">
+            <div className="text-left space-y-4">
+              <div className="space-y-2">
+                <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight tracking-tight">
                   Steam
                 </h1>
-                <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
+                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
                   Missing Content Lookup
                 </h2>
               </div>
               
               <div className="max-w-lg">
-                <p className="text-lg md:text-xl text-[var(--foreground-muted)] leading-relaxed font-medium">
+                <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
                   Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library. 
                   Never miss out on content that could enhance your gaming experience.
                 </p>
@@ -82,7 +82,7 @@ export default function Home() {
             
             {/* Right Side - Big Logo */}
             <div className="flex justify-center lg:justify-end">
-              <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 animate-float">
+              <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 animate-float">
                 <Image
                   src="/logo.png"
                   alt="Steam Logo"
@@ -96,19 +96,19 @@ export default function Home() {
         </div>
 
         {/* Header Text - Matching Search Box Width */}
-        <div className={`w-full max-w-2xl mb-6 text-center ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '50ms' }}>
-          <div className="space-y-3">
-            <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight">
+        <div className={`w-full max-w-2xl mb-4 text-center ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '50ms' }}>
+          <div className="space-y-2">
+            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight">
               Find Your Missing Games
             </h3>
-            <p className="text-base md:text-lg text-[var(--foreground-muted)] font-medium leading-relaxed">
+            <p className="text-sm md:text-base text-[var(--foreground-muted)] font-medium leading-relaxed">
               Enter your Steam profile below to discover content you might have missed
             </p>
           </div>
         </div>
 
         {/* Search Section - The Main Focus */}
-        <div className={`w-full max-w-2xl mb-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
+        <div className={`w-full max-w-2xl mb-4 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
           <SearchSection />
         </div>
 
@@ -121,16 +121,13 @@ export default function Home() {
       </div>
 
       {/* Footer - Enhanced with ExternalLink components */}
-      <div className={`relative z-10 text-center py-3 border-t border-[var(--card-border)]/30 bg-[var(--background)]/50 backdrop-blur-sm ${mounted ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-[var(--foreground-muted)] font-medium">
+      <div className={`relative z-10 text-center py-2 border-t border-[var(--card-border)]/30 bg-[var(--background)]/50 backdrop-blur-sm ${mounted ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
           <span>v0.1.0</span>
           <span className="hidden sm:inline">•</span>
-          <span>
-            Made with ❤️ by{' '}
-            <ExternalLink href="https://ouss.es">
-              eoussama
-            </ExternalLink>
-          </span>
+          <ExternalLink href="https://ouss.es">
+            eoussama
+          </ExternalLink>
           <span className="hidden sm:inline">•</span>
           <ExternalLink href="https://github.com/eoussama/steam-mcl">
             GitHub
