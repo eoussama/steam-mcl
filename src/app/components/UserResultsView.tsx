@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Gamepad2, Globe, AlertTriangle } from 'lucide-react';
+import { Gamepad2, Globe, AlertTriangle, Search } from 'lucide-react';
 import Image from 'next/image';
 import { ExternalLink } from './ExternalLink';
 import { SteamPlayerResponse } from '../hooks/useSteam';
@@ -120,19 +120,22 @@ export const UserResultsView: React.FC<UserResultsViewProps> = ({ data, onClose 
                 <span>View Profile</span>
               </ExternalLink>
               
-              {/* Close Button */}
+              {/* Back to Search Button */}
               <button
                 onClick={onClose}
-                className="group relative w-9.5 h-9.5 bg-[var(--background-secondary)]/50 hover:bg-red-500/10 border border-[var(--card-border)]/30 hover:border-red-500/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500/50 cursor-pointer flex items-center justify-center"
-                aria-label="Close results"
+                className="group relative px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
+                aria-label="Back to search"
               >
-                <X 
+                <Search 
                   size={16} 
-                  className="text-[var(--foreground-muted)] group-hover:text-red-400 transition-colors duration-300" 
+                  className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" 
                 />
+                <span className="text-sm font-medium text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
+                  Search Again
+                </span>
                 
                 {/* Hover effect */}
-                <div className="absolute inset-0 bg-red-500/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+                <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
               </button>
             </div>
           </div>

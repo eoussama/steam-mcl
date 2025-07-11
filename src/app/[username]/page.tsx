@@ -1,19 +1,31 @@
 'use client';
 
-import { SearchSection } from './components/SearchSection';
-import { ThemeToggle } from './components/ThemeToggle';
-import { ParticlesBackground } from './components/ParticlesBackground';
-import { ExternalLink } from './components/ExternalLink';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import packageJson from '../../package.json';
+import { UserResultsView } from '../components/UserResultsView';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { ParticlesBackground } from '../components/ParticlesBackground';
+import { ExternalLink } from '../components/ExternalLink';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useSteamUserSearch } from '../hooks/useSteam';
+import packageJson from '../../../package.json';
+
+export default function UserProfilePage() {
   const [mounted, setMounted] = useState(false);
+  const params = useParams();
+  const router = useRouter();
+  const username = decodeURIComponent(params.username as string);
+  
+  // Auto-search for the user from URL
+  const { data, isLoading, error } = useSteamUserSearch(username);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleBackToHome = () => {
+    router.push('/');
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--background-secondary)] to-[var(--background-tertiary)] relative flex flex-col">
@@ -55,51 +67,69 @@ export default function Home() {
         <ThemeToggle />
       </div>
 
-      {/* Main Content Container - Centered and Viewport Focused */}
-      <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
-        {/* Single Container for All Content - Consistent Width */}
-        <div className={`w-full max-w-2xl space-y-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
-          {/* Header Section - Logo as Background Element */}
-          <div className="relative">
-            {/* Background Logo - Positioned Behind Text */}
-            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
-              <Image
-                src="/logo.png"
-                alt="Steam Logo"
-                fill
-                className="object-contain drop-shadow-2xl animate-float"
-                priority
-              />
-            </div>
-            
-            {/* Text Content - Full Width */}
-            <div className="relative z-10 text-left space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tight steam-title">
-                  Steam
-                </h1>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
-                  Missing Content Lookup
-                </h2>
+      {/* Main Content Container */}
+      <div className="flex-1 flex flex-col items-center w-full py-8 relative z-10">
+        {/* Condensed Header */}
+        <div className="w-full max-w-4xl mb-6 text-center flex-shrink-0">
+          <button 
+            onClick={handleBackToHome}
+            className="inline-block hover:scale-105 transition-transform duration-300 cursor-pointer"
+          >
+            <h1 className="text-4xl md:text-5xl font-black leading-tight tracking-tight steam-title mb-2 hover:text-[var(--steam-accent)] transition-colors duration-300">
+              Steam
+            </h1>
+          </button>
+          <h2 className="text-lg md:text-xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent">
+            Missing Content Lookup
+          </h2>
+        </div>
+
+
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className={`w-full max-w-4xl space-y-6 flex flex-col ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
+            <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl p-6">
+              <div className="flex items-center justify-center space-x-3">
+                <div className="w-8 h-8 border-4 border-[var(--steam-accent)]/30 border-t-[var(--steam-accent)] rounded-full animate-spin" />
+                <span className="text-lg font-medium text-[var(--foreground)]">
+                  Searching for {username}...
+                </span>
               </div>
-              
-              <div>
-                <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
-                  Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library. 
-                  Never miss out on content that could enhance your gaming experience.
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className={`w-full max-w-4xl space-y-6 flex flex-col ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
+            <div className="relative bg-red-500/10 backdrop-blur-xl border border-red-500/30 rounded-2xl shadow-2xl p-6">
+              <div className="text-center space-y-3">
+                <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto">
+                  <span className="text-2xl">❌</span>
+                </div>
+                <h3 className="text-xl font-bold text-red-400">User Not Found</h3>
+                                 <p className="text-red-300">
+                   Could not find Steam user: <span className="font-mono font-bold">&ldquo;{username}&rdquo;</span>
+                 </p>
+                <p className="text-sm text-red-400/80">
+                  Try searching with a different Steam ID, username, or profile URL.
                 </p>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Search Section - The Main Focus */}
-          <div className={`${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
-            <SearchSection />
-          </div>
-        </div>
+        {/* User Results */}
+        {data && data.player && !isLoading && (
+          <UserResultsView 
+            data={data} 
+            onClose={handleBackToHome}
+          />
+        )}
       </div>
 
-      {/* Footer - Enhanced with ExternalLink components */}
+      {/* Footer */}
       <div className={`relative z-10 text-center py-2 border-t border-[var(--card-border)]/30 bg-[var(--background)]/50 backdrop-blur-sm ${mounted ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
           <span>v{packageJson.version}</span>
@@ -115,4 +145,4 @@ export default function Home() {
       </div>
     </main>
   );
-}
+} 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Search, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 import { ExternalLink } from './ExternalLink';
 import { useSteamUserSearch, SteamPlayerResponse } from '../hooks/useSteam';
@@ -8,22 +9,30 @@ import { useSteamUserSearch, SteamPlayerResponse } from '../hooks/useSteam';
 export interface SearchSectionProps {
   onUserFound?: (data: SteamPlayerResponse) => void;
   morphProps?: Record<string, unknown>;
+  autoNavigate?: boolean; // New prop to control automatic navigation
 }
 
-export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morphProps }) => {
+export const SearchSection: React.FC<SearchSectionProps> = ({ onUserFound, morphProps, autoNavigate = true }) => {
   const [steamProfile, setSteamProfile] = useState(''); // Empty by default as requested
   const [searchQuery, setSearchQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const router = useRouter();
 
   // Use React Query hook for Steam user search
   const { data, isLoading, error } = useSteamUserSearch(searchQuery);
 
-  // Call onUserFound when data is received
+  // Handle navigation and callbacks when data is received
   useEffect(() => {
-    if (data && data.player && onUserFound) {
-      onUserFound(data);
+    if (data && data.player) {
+      if (autoNavigate) {
+        // Navigate to the user's profile page
+        router.push(`/${encodeURIComponent(steamProfile.trim())}`);
+      } else if (onUserFound) {
+        // Just call the callback if auto-navigation is disabled
+        onUserFound(data);
+      }
     }
-  }, [data, onUserFound]);
+  }, [data, onUserFound, autoNavigate, router, steamProfile]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSteamProfile(e.target.value);
