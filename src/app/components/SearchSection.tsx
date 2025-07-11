@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Search, Sparkles } from 'lucide-react';
 
 export const SearchSection: React.FC = () => {
   const [steamProfile, setSteamProfile] = useState('eoussama');
@@ -17,23 +18,28 @@ export const SearchSection: React.FC = () => {
   };
 
   return (
-    <div className="relative">
-      {/* Card with gradient background */}
-      <div className="relative bg-[var(--card-background)] border border-[var(--card-border)] rounded-2xl shadow-lg overflow-hidden backdrop-blur-sm">
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/5 to-transparent pointer-events-none" />
+    <div className="relative animate-fadeInUp">
+      {/* Card with enhanced gradient background */}
+      <div className="relative bg-[var(--card-background)]/80 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-3xl shadow-2xl overflow-hidden group hover:shadow-[var(--steam-accent)]/20 transition-all duration-500">
+        {/* Animated gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/10 via-transparent to-[var(--steam-accent)]/5 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
         
-        <div className="relative p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-3">
+        {/* Floating particles effect */}
+        <div className="absolute top-4 right-4 w-2 h-2 bg-[var(--steam-accent)]/30 rounded-full animate-pulse" />
+        <div className="absolute bottom-6 left-6 w-1 h-1 bg-[var(--steam-accent)]/40 rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        
+        <div className="relative p-8 lg:p-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-4">
               <label 
                 htmlFor="steam-profile" 
-                className="block text-sm font-semibold text-[var(--foreground)] mb-3"
+                className="flex items-center space-x-2 text-lg font-bold text-[var(--foreground)] mb-4"
               >
-                Steam Profile
+                <Sparkles size={20} className="text-[var(--steam-accent)] animate-pulse" />
+                <span>Steam Profile</span>
               </label>
               
-              <div className="relative">
+              <div className="relative group/input">
                 <input
                   id="steam-profile"
                   type="text"
@@ -42,40 +48,49 @@ export const SearchSection: React.FC = () => {
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                   className={`
-                    w-full px-6 py-4 text-lg
-                    bg-[var(--input-background)] 
-                    border-2 rounded-xl
+                    w-full px-8 py-6 text-xl font-medium
+                    bg-[var(--input-background)]/80 backdrop-blur-sm
+                    border-2 rounded-2xl
                     text-[var(--input-text)]
                     placeholder:text-[var(--foreground-muted)]
-                    transition-all duration-300 ease-in-out
+                    transition-all duration-500 ease-out
                     focus:outline-none focus:ring-0
                     ${isFocused 
-                      ? 'border-[var(--steam-accent)] shadow-lg shadow-[var(--steam-accent)]/20 scale-[1.02]' 
-                      : 'border-[var(--input-border)] hover:border-[var(--steam-accent)]/50'
+                      ? 'border-[var(--steam-accent)] shadow-2xl shadow-[var(--steam-accent)]/30 scale-[1.02] bg-[var(--input-background)]' 
+                      : 'border-[var(--input-border)] hover:border-[var(--steam-accent)]/60 hover:shadow-lg'
                     }
                   `}
                   placeholder="Enter your Steam profile..."
                 />
                 
-                {/* Animated focus ring */}
+                {/* Enhanced focus ring with glow */}
                 <div className={`
-                  absolute inset-0 rounded-xl pointer-events-none
-                  transition-all duration-300 ease-in-out
+                  absolute inset-0 rounded-2xl pointer-events-none
+                  transition-all duration-500 ease-out
                   ${isFocused 
-                    ? 'ring-2 ring-[var(--steam-accent)]/30 ring-offset-2 ring-offset-[var(--card-background)]' 
+                    ? 'ring-4 ring-[var(--steam-accent)]/20 ring-offset-4 ring-offset-[var(--card-background)] scale-105' 
                     : ''
                   }
                 `} />
+                
+                {/* Input icon */}
+                <div className={`
+                  absolute right-6 top-1/2 -translate-y-1/2
+                  transition-all duration-300
+                  ${isFocused ? 'text-[var(--steam-accent)] scale-110' : 'text-[var(--foreground-muted)]'}
+                `}>
+                  <Search size={24} />
+                </div>
               </div>
               
-              <div className="flex items-start space-x-2 mt-3">
-                <div className="w-1 h-1 rounded-full bg-[var(--steam-accent)] mt-2 flex-shrink-0" />
+              <div className="flex items-start space-x-3 mt-4 p-4 bg-[var(--background-secondary)]/40 rounded-xl border border-[var(--card-border)]/30">
+                <div className="w-2 h-2 rounded-full bg-[var(--steam-accent)] mt-2 flex-shrink-0 animate-pulse" />
                 <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
-                  You can also input{' '}
+                  Supports{' '}
                   <span className="text-[var(--steam-accent)] font-semibold">Steam ID64</span>,{' '}
                   <span className="text-[var(--steam-accent)] font-semibold">Steam nickname</span>,{' '}
                   <span className="text-[var(--steam-accent)] font-semibold">Profile URL</span> or{' '}
-                  <span className="text-[var(--steam-accent)] font-semibold">Profile permalink</span>.
+                  <span className="text-[var(--steam-accent)] font-semibold">Profile permalink</span>
                 </p>
               </div>
             </div>
@@ -83,32 +98,31 @@ export const SearchSection: React.FC = () => {
             <div className="flex justify-center pt-4">
               <button
                 type="submit"
-                className="group relative px-8 py-4 bg-gradient-to-r from-[var(--steam-primary)] to-[var(--steam-secondary)] text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)] focus:ring-offset-2 focus:ring-offset-[var(--card-background)]"
+                className="group relative px-12 py-5 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-lg rounded-2xl shadow-2xl hover:shadow-[var(--steam-accent)]/40 transition-all duration-500 ease-out transform hover:scale-110 hover:-translate-y-2 focus:outline-none focus:ring-4 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-4 focus:ring-offset-[var(--card-background)] overflow-hidden"
                 aria-label="Search Steam profile"
               >
-                <div className="flex items-center space-x-3">
-                  <svg 
-                    className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  <span>Search Profile</span>
+                <div className="flex items-center space-x-4">
+                  <Search 
+                    size={24}
+                    className="transition-all duration-500 group-hover:scale-125 group-hover:rotate-12" 
+                  />
+                  <span>Discover Missing Content</span>
                 </div>
                 
-                {/* Shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+                {/* Enhanced shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                
+                {/* Pulse effect on hover */}
+                <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-500 -z-10" />
               </button>
             </div>
           </form>
         </div>
       </div>
       
-      {/* Decorative elements */}
-      <div className="absolute -top-4 -right-4 w-8 h-8 bg-[var(--steam-accent)]/20 rounded-full blur-sm" />
-      <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-[var(--steam-accent)]/10 rounded-full blur-sm" />
+      {/* Enhanced decorative elements */}
+      <div className="absolute -top-6 -right-6 w-12 h-12 bg-gradient-to-br from-[var(--steam-accent)]/30 to-[var(--steam-accent)]/10 rounded-full blur-xl animate-pulse" />
+      <div className="absolute -bottom-6 -left-6 w-8 h-8 bg-gradient-to-tl from-[var(--steam-accent)]/20 to-transparent rounded-full blur-lg animate-pulse" style={{ animationDelay: '1.5s' }} />
     </div>
   );
 }; 
