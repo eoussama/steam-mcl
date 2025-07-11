@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.83.0",
+    "@tanstack/react-virtual": "^3.13.12",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
