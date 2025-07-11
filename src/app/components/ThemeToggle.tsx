@@ -55,7 +55,7 @@ export const ThemeToggle: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-2 w-36 bg-[var(--card-background)]/95 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-xl shadow-2xl overflow-hidden animate-fadeInUp">
+        <div className="absolute top-full right-0 mt-1 w-36 bg-[var(--card-background)]/95 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-xl shadow-2xl overflow-hidden animate-fadeInUp">
           {themes.map((themeOption) => {
             const Icon = themeOption.icon;
             return (

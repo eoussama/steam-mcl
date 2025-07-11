@@ -19,7 +19,7 @@
   --steam-primary: #1b2838;
   --steam-secondary: #2a475e;
   --steam-accent: #66c0f4;
-  --steam-hover: #417a9b;
+  --steam-hover: #1b2838;
   
   /* Interactive elements */
   --input-background: #ffffff;
@@ -82,6 +82,9 @@
   --card-border: #e2e8f0;
   --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  /* Steam brand colors - better hover for light mode */
+  --steam-hover: #1b2838;
   
   --input-background: #ffffff;
   --input-border: #d1d5db;
@@ -226,4 +229,41 @@ body {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
+}
+
+/* Steam title gradient - only in light mode */
+.steam-title {
+  color: var(--foreground);
+}
+
+[data-theme="light"] .steam-title {
+  background: linear-gradient(135deg, var(--steam-primary) 0%, var(--steam-accent) 50%, var(--steam-secondary) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@media (prefers-color-scheme: light) {
+  .steam-title {
+    background: linear-gradient(135deg, var(--steam-primary) 0%, var(--steam-accent) 50%, var(--steam-secondary) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+[data-theme="dark"] .steam-title {
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] .steam-title {
+    background: none;
+    -webkit-text-fill-color: unset;
+    color: var(--foreground);
+  }
 }

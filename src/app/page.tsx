@@ -56,15 +56,27 @@ export default function Home() {
         <ThemeToggle />
       </div>
 
-      {/* Main Content Container - Centered and Viewport Focused */}
+            {/* Main Content Container - Centered and Viewport Focused */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
-        {/* Header Section - Enhanced Creative Layout */}
-        <div className={`w-full max-w-5xl mb-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-            {/* Left Side - Enhanced Text Content */}
-            <div className="text-left space-y-4">
+        {/* Single Container for All Content - Consistent Width */}
+        <div className={`w-full max-w-2xl space-y-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
+          {/* Header Section - Logo as Background Element */}
+          <div className="relative">
+            {/* Background Logo - Positioned Behind Text */}
+            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 opacity-10 pointer-events-none z-0">
+              <Image
+                src="/logo.png"
+                alt="Steam Logo"
+                fill
+                className="object-contain drop-shadow-2xl animate-float"
+                priority
+              />
+            </div>
+            
+            {/* Text Content - Full Width */}
+            <div className="relative z-10 text-left space-y-4">
               <div className="space-y-2">
-                <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight tracking-tight">
+                <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tight steam-title">
                   Steam
                 </h1>
                 <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
@@ -72,44 +84,19 @@ export default function Home() {
                 </h2>
               </div>
               
-              <div className="max-w-lg">
+              <div>
                 <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
                   Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library. 
                   Never miss out on content that could enhance your gaming experience.
                 </p>
               </div>
             </div>
-            
-            {/* Right Side - Big Logo */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 animate-float">
-                <Image
-                  src="/logo.png"
-                  alt="Steam Logo"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                  priority
-                />
-              </div>
-            </div>
           </div>
-        </div>
 
-        {/* Header Text - Matching Search Box Width */}
-        <div className={`w-full max-w-2xl mb-4 text-center ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '50ms' }}>
-          <div className="space-y-2">
-            <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-accent)] to-[var(--steam-secondary)] bg-clip-text text-transparent leading-tight">
-              Find Your Missing Games
-            </h3>
-            <p className="text-sm md:text-base text-[var(--foreground-muted)] font-medium leading-relaxed">
-              Enter your Steam profile below to discover content you might have missed
-            </p>
+          {/* Search Section - The Main Focus */}
+          <div className={`${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
+            <SearchSection />
           </div>
-        </div>
-
-        {/* Search Section - The Main Focus */}
-        <div className={`w-full max-w-2xl mb-4 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
-          <SearchSection />
         </div>
 
         {/* Error Message Section - Only show when needed */}
