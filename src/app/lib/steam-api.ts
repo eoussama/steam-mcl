@@ -236,6 +236,57 @@ export function extractSteamId(input: string): string | null {
 }
 
 /**
+ * Check if a Steam app is available on the store (not removed/delisted)
+ * This is a basic check - apps with very generic names or those that redirect to homepage are likely unavailable
+ */
+function isAppLikelyAvailable(app: SteamApp): boolean {
+  const name = app.name.toLowerCase();
+  
+  // Filter out apps with very generic or system-like names that are likely not real games
+  const genericPatterns = [
+    /^test$/,
+    /^demo$/,
+    /^sdk$/,
+    /^tool$/,
+    /^server$/,
+    /^dedicated server$/,
+    /^beta$/,
+    /^alpha$/,
+    /^prototype$/,
+    /^sample$/,
+    /^template$/,
+    /^placeholder$/,
+    /^unknown$/,
+    /^untitled$/,
+    /valve.*tool/,
+    /source.*sdk/,
+    /steamworks/,
+    /^steam/,
+    /^valve/
+  ];
+  
+  // Check if the name matches any generic pattern
+  if (genericPatterns.some(pattern => pattern.test(name))) {
+    return false;
+  }
+  
+  // Filter out apps with very short names (likely system apps)
+  if (app.name.trim().length < 3) {
+    return false;
+  }
+  
+  // Filter out apps that are clearly system/development tools
+  if (name.includes('dedicated server') || 
+      name.includes('source sdk') || 
+      name.includes('steamworks') ||
+      name.includes('valve tool')) {
+    return false;
+  }
+  
+  return true;
+}
+
+/**
  * Analyze missing content using Steam data only
  * Compares owned games with full Steam catalog to find potential DLC, expansions, etc.
  */
@@ -248,13 +299,8 @@ export async function analyzeMissingContentSteamOnly(ownedGames: OwnedGame[]): P
     // Create a set of owned app IDs for quick lookup
     const ownedAppIds = new Set(ownedGames.map(game => game.appid));
     
-    // Create a map of owned games by name for easier matching
-    const ownedGamesByName = new Map<string, OwnedGame>();
-    ownedGames.forEach(game => {
-      if (game.name) {
-        ownedGamesByName.set(game.name.toLowerCase(), game);
-      }
-    });
+    // Filter out likely unavailable/system apps
+    const availableApps = allApps.filter(isAppLikelyAvailable);
     
     // Analyze each owned game for missing content
     for (const ownedGame of ownedGames) {
@@ -264,11 +310,13 @@ export async function analyzeMissingContentSteamOnly(ownedGames: OwnedGame[]): P
       const baseNameLower = baseName.toLowerCase();
       
       // Find related content by pattern matching
-      const relatedApps = allApps.filter(app => {
-        // Skip if we already own this app
+      const relatedApps = availableApps.filter(app => {
+        // Skip if we already own this app (double-check with both appid and name)
         if (ownedAppIds.has(app.appid)) return false;
         
+        // Also check by name to catch cases where same game has different app IDs
         const appNameLower = app.name.toLowerCase();
+        if (appNameLower === baseNameLower) return false;
         
         // Skip if the app name is too short or generic
         if (app.name.length < 3) return false;

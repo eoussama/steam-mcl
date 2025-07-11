@@ -133,7 +133,7 @@ export function useSteamUserSearch(input: string) {
 
 /**
  * Hook to analyze missing content for a Steam user
- * Uses IGDB API to find missing DLC, sequels, prequels, and spin-offs
+ * Uses Steam catalog data to find missing DLC, expansions, sequels, and related content
  */
 export function useMissingContentAnalysis(steamId: string): UseQueryResult<MissingContentResponse, Error> {
   return useQuery({
