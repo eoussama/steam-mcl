@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Sparkles, ExternalLink } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
+import { ExternalLink } from './ExternalLink';
 
 export const SearchSection: React.FC = () => {
   const [steamProfile, setSteamProfile] = useState('eoussama');
@@ -16,18 +17,6 @@ export const SearchSection: React.FC = () => {
     // Functionality will be added later
     console.log('Searching for:', steamProfile);
   };
-
-  const InfoLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
-    <a 
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-[var(--steam-accent)] font-semibold hover:text-[var(--steam-primary)] transition-all duration-300 cursor-pointer hover:underline hover:scale-105 inline-flex items-center gap-1 group"
-    >
-      {children}
-      <ExternalLink size={12} className="opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
-    </a>
-  );
 
   return (
     <div className="relative animate-fadeInUp">
@@ -99,18 +88,18 @@ export const SearchSection: React.FC = () => {
                 <div className="w-2 h-2 rounded-full bg-[var(--steam-accent)] mt-2 flex-shrink-0 animate-pulse" />
                 <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
                   Supports{' '}
-                  <InfoLink href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID">
+                  <ExternalLink href="https://help.daybreakgames.com/hc/en-us/articles/230631407-How-do-I-locate-my-Steam-ID">
                     Steam ID64
-                  </InfoLink>,{' '}
-                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                  </ExternalLink>,{' '}
+                  <ExternalLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
                     Steam nickname
-                  </InfoLink>,{' '}
-                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                  </ExternalLink>,{' '}
+                  <ExternalLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
                     Profile URL
-                  </InfoLink> or{' '}
-                  <InfoLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
+                  </ExternalLink> or{' '}
+                  <ExternalLink href="https://steamcommunity.com/discussions/forum/1/618458030664854265/">
                     Profile permalink
-                  </InfoLink>
+                  </ExternalLink>
                 </p>
               </div>
             </div>
