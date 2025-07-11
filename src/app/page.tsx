@@ -7,6 +7,7 @@ import { ParticlesBackground } from './components/ParticlesBackground';
 import { ExternalLink } from './components/ExternalLink';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import packageJson from '../../package.json';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -110,7 +111,7 @@ export default function Home() {
       {/* Footer - Enhanced with ExternalLink components */}
       <div className={`relative z-10 text-center py-2 border-t border-[var(--card-border)]/30 bg-[var(--background)]/50 backdrop-blur-sm ${mounted ? 'animate-fadeIn' : 'opacity-0'}`} style={{ animationDelay: '300ms' }}>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
-          <span>v0.1.0</span>
+          <span>v{packageJson.version}</span>
           <span className="hidden sm:inline">•</span>
           <ExternalLink href="https://ouss.es">
             eoussama
