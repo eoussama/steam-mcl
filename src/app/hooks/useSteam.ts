@@ -6,6 +6,7 @@
 'use client';
 
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { type MissingContent } from '../lib/igdb-api';
 
 // Types for API responses
 export interface SteamApp {
@@ -38,11 +39,19 @@ export interface SteamPlayerResponse {
   steamId: string;
 }
 
+export interface MissingContentResponse {
+  missingContent: MissingContent[];
+  analyzedGames: number;
+  totalOwnedGames?: number;
+  message?: string;
+}
+
 // Query keys for React Query caching
 export const STEAM_QUERY_KEYS = {
   appList: ['steam', 'apps'] as const,
   playerData: (input: string) => ['steam', 'player', input] as const,
   searchGames: (query: string) => ['steam', 'search-games', query] as const,
+  missingContent: (steamId: string) => ['steam', 'missing-content', steamId] as const,
 } as const;
 
 /**
@@ -124,19 +133,34 @@ export function useSteamUserSearch(input: string) {
 
 /**
  * Hook to analyze missing content for a Steam user
- * This would be used for the main feature of finding missing DLC, sequels, etc.
+ * Uses IGDB API to find missing DLC, sequels, prequels, and spin-offs
  */
-export function useMissingContentAnalysis(steamId: string) {
-  const { data, isLoading, error } = useSteamUserSearch(steamId);
-  
-  // This is a placeholder for the missing content analysis logic
-  // In a real implementation, this would analyze owned games against a database
-  // of related content (DLC, sequels, prequels, spin-offs)
-  
-  return {
-    ownedGames: data?.ownedGames || [],
-    missingContent: [], // TODO: Implement missing content detection
-    isLoading,
-    error,
-  };
+export function useMissingContentAnalysis(steamId: string): UseQueryResult<MissingContentResponse, Error> {
+  return useQuery({
+    queryKey: STEAM_QUERY_KEYS.missingContent(steamId),
+    queryFn: async (): Promise<MissingContentResponse> => {
+      if (!steamId.trim()) {
+        throw new Error('Steam ID is required');
+      }
+
+      const response = await fetch(`/api/missing-content?steamId=${encodeURIComponent(steamId.trim())}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to analyze missing content');
+      }
+      
+      return response.json();
+    },
+    enabled: !!steamId && steamId.trim().length > 0,
+    staleTime: 10 * 60 * 1000, // 10 minutes - content analysis is expensive
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    retry: (failureCount, error) => {
+      // Don't retry on configuration errors
+      if (error instanceof Error && error.message.includes('credentials not configured')) {
+        return false;
+      }
+      return failureCount < 1; // Only retry once
+    },
+  });
 } 

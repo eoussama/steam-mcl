@@ -67,6 +67,7 @@ export default function Home() {
                 src="/logo.png"
                 alt="Steam Logo"
                 fill
+                sizes='100vw'
                 className="object-contain drop-shadow-2xl animate-float"
                 priority
               />
