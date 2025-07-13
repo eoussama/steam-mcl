@@ -1,10 +1,11 @@
 {
   "name": "steam-mcl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Steam Missing Content Lookup - Find missing DLC, Sequels, Prequels, and Spin-Offs from your Steam library",
   "author": "eoussama",
+  "author_url": "https://ouss.es",
   "license": "MIT",
-  "homepage": "https://github.com/eoussama/steam-mcl",
+  "homepage": "https://steam-mcl.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/eoussama/steam-mcl.git"
@@ -31,11 +32,13 @@
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.8.1",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
     "next-view-transitions": "^0.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
