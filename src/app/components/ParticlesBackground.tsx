@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import Particles from '@tsparticles/react';
-import { loadSlim } from '@tsparticles/slim';
-import { tsParticles } from '@tsparticles/engine';
+import { useEffect } from "react";
+import Particles from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import { tsParticles } from "@tsparticles/engine";
+
+
 
 export const ParticlesBackground: React.FC = () => {
   useEffect(() => {
@@ -17,7 +19,7 @@ export const ParticlesBackground: React.FC = () => {
     fpsLimit: 60,
     particles: {
       color: {
-        value: '#66c0f4',
+        value: "#66c0f4",
       },
       move: {
         enable: true,
@@ -30,7 +32,7 @@ export const ParticlesBackground: React.FC = () => {
         value: 0.3,
       },
       shape: {
-        type: 'circle',
+        type: "circle",
       },
       size: {
         value: 2,
