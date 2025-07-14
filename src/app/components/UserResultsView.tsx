@@ -201,7 +201,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
         </div>
       </div>
 
-      <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl flex-1 flex flex-col">
+      <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl flex-1 flex flex-col overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/5 via-transparent to-[var(--steam-accent)]/10 opacity-50" />
 
         <div className="relative p-4 sm:p-6 flex flex-col h-full">
