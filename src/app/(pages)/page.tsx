@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-import { cn } from "./lib/helpers";
+import { cn } from "@/lib/helpers";
 
-import { Footer } from "./components/Footer";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { SearchSection } from "./components/SearchSection";
-import { ParticlesBackground } from "./components/ParticlesBackground";
+import { Footer } from "@/app/components/Footer";
+import { ThemeToggle } from "@/app/components/ThemeToggle";
+import { SearchSection } from "@/app/components/SearchSection";
+import { ParticlesBackground } from "@/app/components/ParticlesBackground";
 
 
 
