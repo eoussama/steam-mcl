@@ -32,14 +32,10 @@ export default function Home() {
         <ThemeToggle />
       </div>
 
-      {/* Main Content Container - Centered and Viewport Focused */}
       <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
-        {/* Single Container for All Content - Consistent Width */}
         <div className={`w-full max-w-2xl space-y-6 ${mounted ? 'animate-fadeInUp' : 'opacity-0'}`}>
-          {/* Header Section - Logo as Background Element */}
           <div className="relative">
-            {/* Background Logo - Positioned Behind Text */}
-            <div className="absolute top-0 right-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
+            <div className="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
               <Image
                 fill
                 priority
@@ -50,19 +46,18 @@ export default function Home() {
               />
             </div>
 
-            {/* Text Content - Full Width */}
             <div className="relative z-10 text-left space-y-4">
               <div className="space-y-2">
-                <h1 className="text-6xl md:text-8xl font-black leading-tight tracking-tight steam-title">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight tracking-tight steam-title">
                   Steam
                 </h1>
-                <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
                   Missing Content Lookup
                 </h2>
               </div>
 
               <div>
-                <p className="text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
+                <p className="text-sm sm:text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
                   Discover DLC, sequels, prequels, and spin-offs that are missing from your Steam library.
                   Never miss out on content that could enhance your gaming experience.
                 </p>
@@ -70,7 +65,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Search Section - The Main Focus */}
           <div className={`${mounted ? 'animate-fadeInUp' : 'opacity-0'}`} style={{ animationDelay: '100ms' }}>
             <SearchSection />
           </div>
