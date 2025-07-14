@@ -9,7 +9,7 @@ import { ExternalLink } from "@/app/components/ExternalLink";
 import { UserResultsView } from "@/app/components/UserResultsView";
 import { ParticlesBackground } from "@/app/components/ParticlesBackground";
 
-import packageJson from "../../../package.json";
+import packageJson from "../../../../package.json";
 import { useSteamUserSearch } from "@/hooks/useSteam";
 
 
