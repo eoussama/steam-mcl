@@ -1,8 +1,11 @@
-'use client';
+"use client";
 
-import { useTheme } from '../lib/theme-context';
-import { Sun, Moon, Monitor, ChevronDown } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
+import { Sun, Moon, Monitor, ChevronDown } from "lucide-react";
+
+import { useTheme } from "../hooks/useTheme";
+
+
 
 export const ThemeToggle: React.FC = () => {
   const { theme, setTheme } = useTheme();
@@ -17,17 +20,17 @@ export const ThemeToggle: React.FC = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const getThemeIcon = () => {
+  const getThemeIcon = (): React.ReactNode => {
     switch (theme) {
-      case 'light':
+      case "light":
         return <Sun size={18} className="transition-all duration-300 group-hover:rotate-180" />;
-      case 'dark':
+      case "dark":
         return <Moon size={18} className="transition-all duration-300 group-hover:rotate-12" />;
-      case 'system':
+      case "system":
         return <Monitor size={18} className="transition-all duration-300 group-hover:scale-110" />;
       default:
         return <Monitor size={18} className="transition-all duration-300 group-hover:scale-110" />;
@@ -35,9 +38,9 @@ export const ThemeToggle: React.FC = () => {
   };
 
   const themes = [
-    { id: 'light', name: 'Light', icon: Sun },
-    { id: 'dark', name: 'Dark', icon: Moon },
-    { id: 'system', name: 'System', icon: Monitor },
+    { id: "light", name: "Light", icon: Sun },
+    { id: "dark", name: "Dark", icon: Moon },
+    { id: "system", name: "System", icon: Monitor },
   ] as const;
 
   return (
