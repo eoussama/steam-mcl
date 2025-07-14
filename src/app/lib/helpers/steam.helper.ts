@@ -161,7 +161,7 @@ function isAppLikelyAvailable(app: TSteamApp): boolean {
   return true;
 }
 
-export async function analyzeMissingContentSteamOnly(ownedGames: Array<TOwnedGame>): Promise<Array<TSteamMissingContent>> {
+export async function analyzeMissingContent(ownedGames: Array<TOwnedGame>): Promise<Array<TSteamMissingContent>> {
   try {
     const allApps = await getAppList();
     const missingContent: Array<TSteamMissingContent> = [];
