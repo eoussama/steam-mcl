@@ -55,7 +55,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
   const virtualizer = useVirtualizer({
     count: filteredMissingContent.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 120,
+    estimateSize: () => 100,
     overscan: 5,
     enabled: !!filteredMissingContent.length,
   });
@@ -74,23 +74,21 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
       className="animate-pulse mb-4"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="group relative w-full block p-4 bg-[var(--foreground)]/4 rounded-xl border border-[var(--card-border)]/10">
-        <div className="absolute top-3 right-3">
-          <div className="h-6 w-16 bg-[var(--foreground)]/4 rounded-md"></div>
+      <div className="group relative w-full block p-3 sm:p-4 bg-[var(--foreground)]/4 rounded-xl border border-[var(--card-border)]/10">
+        <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+          <div className="h-5 sm:h-6 w-12 sm:w-16 bg-[var(--foreground)]/4 rounded-md"></div>
         </div>
 
-        <div className="flex-1 space-y-2 pr-16">
-          <div className="flex items-center space-x-3">
-            <div className="w-6 h-6 bg-[var(--foreground)]/4 rounded"></div>
+        <div className="flex-1 space-y-2 pr-14 sm:pr-16">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-5 sm:w-6 h-5 sm:h-6 bg-[var(--foreground)]/4 rounded"></div>
             <div className="flex-1">
-              <div className="h-5 bg-[var(--foreground)]/4 rounded mb-2" style={{ width: `${60 + Math.random() * 40}%` }}></div>
-              <div className="h-3 bg-[var(--foreground)]/4 rounded" style={{ width: `${40 + Math.random() * 30}%` }}></div>
+              <div className="h-4 sm:h-5 bg-[var(--foreground)]/4 rounded mb-1 sm:mb-2" style={{ width: `${60 + Math.random() * 40}%` }}></div>
             </div>
           </div>
 
           <div className="space-y-1">
-            <div className="h-4 bg-[var(--foreground)]/4 rounded" style={{ width: `${70 + Math.random() * 30}%` }}></div>
-            <div className="h-4 bg-[var(--foreground)]/4 rounded" style={{ width: `${50 + Math.random() * 40}%` }}></div>
+            <div className="h-3 sm:h-4 bg-[var(--foreground)]/4 rounded" style={{ width: `${70 + Math.random() * 30}%` }}></div>
           </div>
         </div>
       </div>
@@ -143,47 +141,48 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
       >
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/10 via-transparent to-[var(--steam-accent)]/5 opacity-50" />
 
-        <div className="relative p-6">
+        <div className="relative p-4 sm:p-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="relative">
+            <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+              <div className="relative flex-shrink-0">
                 <Image
                   src={data.player.avatarfull}
                   alt={`${data.player.personaname}"s avatar`}
                   width={80}
                   height={80}
-                  className="w-20 h-20 rounded-full border-4 border-[var(--steam-accent)]/30 shadow-xl"
+                  className="w-14 h-14 sm:w-20 sm:h-20 rounded-full border-3 sm:border-4 border-[var(--steam-accent)]/30 shadow-xl"
                 />
               </div>
 
-              <div className="space-y-2">
-                <h1 className="text-3xl font-black text-[var(--foreground)]">
+              <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-[var(--foreground)] truncate">
                   {data.player.personaname}
                 </h1>
-                <p className="text-sm text-[var(--foreground-muted)] font-mono">
+                <p className="text-xs sm:text-sm text-[var(--foreground-muted)] font-mono truncate">
                   Steam ID: {data.player.steamid}
                 </p>
                 {data.ownedGames && (
-                  <div className="flex items-center space-x-2 text-[var(--foreground-secondary)]">
-                    <Gamepad2 size={16} />
-                    <span className="font-semibold">{data.ownedGames.length} games owned</span>
+                  <div className="flex items-center space-x-1 sm:space-x-2 text-[var(--foreground-secondary)]">
+                    <Gamepad2 size={14} className="sm:hidden" />
+                    <Gamepad2 size={16} className="hidden sm:block" />
+                    <span className="font-semibold text-xs sm:text-sm">{data.ownedGames.length} games owned</span>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               <ExternalLink
                 href={data.player.profileurl}
-                className="inline-flex items-center space-x-2 px-4 py-2 bg-[var(--steam-primary)] hover:bg-[var(--steam-primary)]/80 text-white hover:text-white text-sm font-medium rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center space-x-2 px-3 sm:px-4 py-2 bg-[var(--steam-primary)] hover:bg-[var(--steam-primary)]/80 text-white hover:text-white text-sm font-medium rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 shadow-lg hover:shadow-xl"
               >
                 <Globe size={16} />
-                <span>View Profile</span>
+                <span className="hidden sm:inline">View Profile</span>
               </ExternalLink>
 
               <button
                 onClick={onClose}
-                className="group relative px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
+                className="group relative px-3 sm:px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
                 aria-label="Back to search"
                 style={{ viewTransitionName: supportsViewTransitions ? "search-input" : undefined }}
               >
@@ -191,7 +190,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   size={16}
                   className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300"
                 />
-                <span className="text-sm font-medium text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
+                <span className="hidden sm:inline text-sm font-medium text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
                   Search Again
                 </span>
 
@@ -205,13 +204,13 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
       <div className="relative bg-[var(--card-background)]/90 backdrop-blur-xl border border-[var(--card-border)]/50 rounded-2xl shadow-2xl flex-1 flex flex-col">
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/5 via-transparent to-[var(--steam-accent)]/10 opacity-50" />
 
-        <div className="relative p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-6 flex-shrink-0">
+        <div className="relative p-4 sm:p-6 flex flex-col h-full">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 flex-shrink-0">
             <div>
-              <h2 className="text-2xl font-bold text-[var(--foreground)]">
+              <h2 className="text-xl sm:text-2xl font-bold text-[var(--foreground)]">
                 Missing Content
               </h2>
-              <p className="text-sm text-[var(--foreground-muted)]">
+              <p className="text-xs sm:text-sm text-[var(--foreground-muted)]">
                 {isAnalyzing
                   ? "Analyzing your game library..."
                   : analysisError
@@ -226,7 +225,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             {!isAnalyzing && !analysisError && missingContentData?.missingContent?.length && (
               <button
                 onClick={() => setShowSearch(!showSearch)}
-                className={`group relative px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2 ${
+                className={`group relative px-2 sm:px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-1 sm:space-x-2 ${
                   showSearch
                     ? "bg-[var(--steam-accent)]/10 border-[var(--steam-accent)]/30 text-[var(--steam-accent)]"
                     : "bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 text-[var(--foreground-muted)] hover:text-[var(--steam-accent)]"
@@ -234,7 +233,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                 aria-label={showSearch ? "Hide search" : "Show search"}
               >
                 <Filter size={16} className="transition-colors duration-300" />
-                <span className="text-sm font-medium transition-colors duration-300">
+                <span className="hidden sm:inline text-sm font-medium transition-colors duration-300">
                   {showSearch ? "Hide Filter" : "Filter"}
                 </span>
                 <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
@@ -242,8 +241,9 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             )}
           </div>
 
+          {/* Search Section */}
           {showSearch && !isAnalyzing && !analysisError && missingContentData?.missingContent?.length && (
-            <div className="mb-6 flex-shrink-0 animate-fadeInUp">
+            <div className="mb-4 sm:mb-6 flex-shrink-0 animate-fadeInUp">
               <div className="relative group/input">
                 <input
                   type="text"
@@ -252,7 +252,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                   className={`
-                    w-full px-4 py-3 pr-20 text-base font-medium
+                    w-full px-3 sm:px-4 py-2 sm:py-3 pr-16 sm:pr-20 text-sm sm:text-base font-medium
                     bg-[var(--input-background)]/80 backdrop-blur-sm
                     border-2 rounded-xl
                     text-[var(--input-text)]
@@ -280,17 +280,19 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   {searchQuery && (
                     <button
                       onClick={handleClearSearch}
-                      className="p-1.5 hover:bg-[var(--background-secondary)]/50 rounded-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer group"
+                      className="p-1 sm:p-1.5 hover:bg-[var(--background-secondary)]/50 rounded-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer group"
                       aria-label="Clear search"
                     >
-                      <X size={16} className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" />
+                      <X size={14} className="sm:hidden text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" />
+                      <X size={16} className="hidden sm:block text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" />
                     </button>
                   )}
                   <div className={`
-                    p-1.5 transition-all duration-300 pointer-events-none
+                    p-1 sm:p-1.5 transition-all duration-300 pointer-events-none
                     ${searchFocused ? "text-[var(--steam-accent)] scale-110" : "text-[var(--foreground-muted)]"}
                   `}>
-                    <Search size={16} />
+                    <Search size={14} className="sm:hidden" />
+                    <Search size={16} className="hidden sm:block" />
                   </div>
                 </div>
               </div>
@@ -379,33 +381,29 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                       }}
                     >
                       <div
-                        className="group relative w-full block p-4 bg-[var(--background-secondary)]/40 hover:bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 transition-all duration-300 hover:shadow-lg no-underline items-start justify-between cursor-pointer"
+                        className="group relative w-full block p-3 sm:p-4 bg-[var(--background-secondary)]/40 hover:bg-[var(--background-secondary)]/60 rounded-xl border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 transition-all duration-300 hover:shadow-lg no-underline items-start justify-between cursor-pointer"
                         onClick={() => window.open(`https://store.steampowered.com/app/${item.appid}`, "_blank")}
                       >
-                        <div className="absolute top-3 right-3">
+                        <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                           <span
-                            className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border ${typeConfig?.color || "bg-gray-500/10 border-gray-500/30 text-gray-400"}`}
+                            className={`inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md text-xs font-medium border ${typeConfig?.color || "bg-gray-500/10 border-gray-500/30 text-gray-400"}`}
                           >
                             {typeConfig?.label || item.type}
                           </span>
                         </div>
 
-                        <div className="flex-1 space-y-2 pr-16">
-                          <div className="flex items-center space-x-3">
-                            <IconComponent size={24} className={`${typeConfig?.color?.split(" ")[2] || "text-gray-400"}`} />
-                            <div>
-                              <h3 className="font-bold text-[var(--foreground)] group-hover:text-[var(--steam-accent)] transition-colors duration-300">
+                        <div className="flex-1 space-y-1 sm:space-y-2 pr-12 sm:pr-16">
+                          <div className="flex items-center space-x-2 sm:space-x-3">
+                            <IconComponent size={20} className={`sm:hidden ${typeConfig?.color?.split(" ")[2] || "text-gray-400"}`} />
+                            <IconComponent size={24} className={`hidden sm:block ${typeConfig?.color?.split(" ")[2] || "text-gray-400"}`} />
+                            <div className="min-w-0 flex-1">
+                              <h3 className="font-bold text-sm sm:text-base text-[var(--foreground)] group-hover:text-[var(--steam-accent)] transition-colors duration-300 line-clamp-2">
                                 {item.name}
                               </h3>
-                              {item.baseGame && (
-                                <p className="text-xs text-[var(--foreground-muted)]">
-                                  Related to: {item.baseGame}
-                                </p>
-                              )}
                             </div>
                           </div>
 
-                          <p className="text-sm text-[var(--foreground-muted)]">
+                          <p className="text-xs sm:text-sm text-[var(--foreground-muted)] line-clamp-2">
                             {item.description}
                           </p>
                         </div>
@@ -417,7 +415,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             )}
           </div>
 
-          <div className="mt-6 p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--card-border)]/20 flex-shrink-0">
+          <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-[var(--background-secondary)]/30 rounded-xl border border-[var(--card-border)]/20 flex-shrink-0">
             <p className="text-xs text-[var(--foreground-muted)] text-center">
               <span className="inline-flex items-center space-x-1">
                 <span className="w-2 h-2 bg-[var(--steam-accent)] rounded-full animate-pulse" />
