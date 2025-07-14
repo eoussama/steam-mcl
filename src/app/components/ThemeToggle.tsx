@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Sun, Moon, Monitor, ChevronDown } from "lucide-react";
 
-import { useTheme } from "../hooks/useTheme";
+import { cn } from "@/lib/helpers";
+import { useTheme } from "@/hooks/useTheme";
 
 
 
@@ -12,7 +13,6 @@ export const ThemeToggle: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -51,9 +51,9 @@ export const ThemeToggle: React.FC = () => {
         aria-label="Toggle theme"
       >
         {getThemeIcon()}
-        <ChevronDown 
-          size={14} 
-          className={`transition-all duration-300 ${isOpen ? 'rotate-180' : ''} group-hover:text-[var(--steam-accent)]`} 
+        <ChevronDown
+          size={14}
+          className={`transition-all duration-300 ${isOpen ? 'rotate-180' : ''} group-hover:text-[var(--steam-accent)]`}
         />
       </button>
 
@@ -64,19 +64,18 @@ export const ThemeToggle: React.FC = () => {
             return (
               <button
                 key={themeOption.id}
+                aria-label={`Switch to ${themeOption.name} theme`}
                 onClick={() => {
                   setTheme(themeOption.id);
                   setIsOpen(false);
                 }}
-                className={`
-                  w-full flex items-center space-x-2 px-3 py-2 text-left transition-all duration-300 cursor-pointer
-                  hover:bg-[var(--steam-accent)]/10 hover:text-[var(--steam-accent)]
-                  ${theme === themeOption.id 
-                    ? 'bg-[var(--steam-accent)]/20 text-[var(--steam-accent)] font-semibold' 
-                    : 'text-[var(--foreground)]'
-                  }
-                `}
-                aria-label={`Switch to ${themeOption.name} theme`}
+                className={cn(
+                  `w-full flex items-center space-x-2 px-3 py-2 text-left transition-all duration-300 cursor-pointer
+                  hover:bg-[var(--steam-accent)]/10 hover:text-[var(--steam-accent)]`,
+                  theme === themeOption.id
+                    ? "bg-[var(--steam-accent)]/20 text-[var(--steam-accent)] font-semibold"
+                    : "text-[var(--foreground)]"
+                )}
               >
                 <Icon size={16} className="transition-all duration-300" />
                 <span className="font-medium text-sm">{themeOption.name}</span>
