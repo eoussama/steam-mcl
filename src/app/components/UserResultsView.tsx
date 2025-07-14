@@ -207,7 +207,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             className="flex-1 pr-2 scrollbar-thin scrollbar-thumb-steam scrollbar-track-transparent overflow-auto"
             style={{
               height: "100%",
-              minHeight: "400px",
+              minHeight: "calc(100vh - 600px)",
               contain: "strict"
             }}
           >
