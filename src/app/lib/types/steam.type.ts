@@ -58,3 +58,16 @@ export type TResolveVanityURLResponse = {
     message?: string;
   };
 }
+
+export type TSteamPlayerResponse = {
+  player: TSteamUser;
+  ownedGames: Array<TOwnedGame>;
+  steamId: string;
+}
+
+export type TMissingContentResponse = {
+  missingContent: Array<TSteamMissingContent>;
+  analyzedGames: number;
+  totalOwnedGames?: number;
+  message?: string;
+}
