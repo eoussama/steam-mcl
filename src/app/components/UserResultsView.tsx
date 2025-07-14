@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   Gamepad2,
@@ -23,6 +24,7 @@ import {
 import { ExternalLink } from "./ExternalLink";
 
 import { cn } from "@/lib/helpers";
+import { STEAM_QUERY_KEYS } from "@/lib/consts";
 import { TSteamPlayerResponse } from "@/lib/types";
 import { useMissingContentAnalysis } from "@/hooks/useSteam";
 
@@ -41,10 +43,10 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
   const [showSearch, setShowSearch] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
+  const queryClient = useQueryClient();
   const parentRef = useRef<HTMLDivElement>(null);
   const { data: missingContentData, isLoading: isAnalyzing, error: analysisError } = useMissingContentAnalysis(data.steamId);
 
-  // Filter missing content based on search query
   const filteredMissingContent = useMemo(() => {
     if (!missingContentData?.missingContent) return [];
     if (!searchQuery.trim()) return missingContentData.missingContent;
@@ -69,6 +71,14 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
 
   const handleClearSearch = () => {
     setSearchQuery("");
+  };
+
+  const handleSearchAgain = () => {
+    queryClient.cancelQueries({
+      queryKey: STEAM_QUERY_KEYS.missingContent(data.steamId)
+    });
+
+    onClose();
   };
 
   const SkeletonItem = ({ index }: { index: number }) => (
@@ -183,7 +193,8 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
               </ExternalLink>
 
               <button
-                onClick={onClose}
+                disabled={isAnalyzing}
+                onClick={handleSearchAgain}
                 className="group relative px-3 sm:px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
                 aria-label="Back to search"
                 style={{ viewTransitionName: supportsViewTransitions ? "search-input" : undefined }}
@@ -228,8 +239,8 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
               <button
                 onClick={() => setShowSearch(!showSearch)}
                 className={`group relative px-2 sm:px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-1 sm:space-x-2 ${showSearch
-                    ? "bg-[var(--steam-accent)]/10 border-[var(--steam-accent)]/30 text-[var(--steam-accent)]"
-                    : "bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 text-[var(--foreground-muted)] hover:text-[var(--steam-accent)]"
+                  ? "bg-[var(--steam-accent)]/10 border-[var(--steam-accent)]/30 text-[var(--steam-accent)]"
+                  : "bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 text-[var(--foreground-muted)] hover:text-[var(--steam-accent)]"
                   }`}
                 aria-label={showSearch ? "Hide search" : "Show search"}
               >
