@@ -19,13 +19,17 @@ export const Footer: React.FC<TFooterProps> = ({ mounted }: TFooterProps) => {
         mounted ? "animate-fadeIn" : "opacity-0",
       )}
     >
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
+      <div className="flex flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
         <span>v{packageJson.version}</span>
-        <span className="hidden sm:inline">•</span>
+
+        <span>•</span>
+
         <ExternalLink href={packageJson.author_url}>
           {packageJson.author}
         </ExternalLink>
-        <span className="hidden sm:inline">•</span>
+
+        <span>•</span>
+
         <ExternalLink href={packageJson.repository.url}>
           GitHub
         </ExternalLink>
