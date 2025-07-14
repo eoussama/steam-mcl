@@ -195,7 +195,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
               <button
                 disabled={isAnalyzing}
                 onClick={handleSearchAgain}
-                className="group relative px-3 sm:px-4 py-2 bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2"
+                className="group relative px-3 sm:px-4 py-2 bg-[var(--background-secondary)]/50 disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:bg-[var(--steam-accent)]/10 border border-[var(--card-border)]/30 enabled:hover:border-[var(--steam-accent)]/30 rounded-xl transition-all duration-300 enabled:hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 enabled:cursor-pointer flex items-center space-x-2"
                 aria-label="Back to search"
                 style={{ viewTransitionName: supportsViewTransitions ? "search-input" : undefined }}
               >
