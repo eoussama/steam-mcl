@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '../lib/theme-context';
-import { queryClient } from '../lib/react-query-client';
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
 
-interface ClientWrapperProps {
+import { ThemeProvider } from "@/lib/context";
+import { queryClient } from "@/lib/react-query-client";
+
+
+
+type TClientWrapperProps = {
   children: ReactNode;
 }
 
-export const ClientWrapper: React.FC<ClientWrapperProps> = ({ children }) => {
+export const ClientWrapper: React.FC<TClientWrapperProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system">
