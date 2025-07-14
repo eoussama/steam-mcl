@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "../lib/helpers";
+import { cn } from "@/lib/helpers";
 import { ExternalLink } from "./ExternalLink";
 import packageJson from "../../../package.json";
 
