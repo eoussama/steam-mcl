@@ -92,21 +92,6 @@ export async function resolveVanityURL(vanityUrl: string): Promise<string | null
   }
 }
 
-export async function searchGames(query: string, limit = 50): Promise<Array<TSteamApp>> {
-  const apps = await getAppList();
-  const searchTerm = query.toLowerCase().trim();
-
-  if (!searchTerm) {
-    return [];
-  }
-
-  const filteredApps = apps
-    .filter(app => app.name.toLowerCase().includes(searchTerm))
-    .slice(0, limit);
-
-  return filteredApps;
-}
-
 export function extractSteamId(input: string): string | null {
   const trimmed = input.trim();
 
