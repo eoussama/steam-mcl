@@ -5,7 +5,7 @@
   --steam-dark: #1b2838;
   --steam-blue: #66c0f4;
   --steam-light: #c7d5e0;
-  
+
   /* Light theme colors */
   --background: #ffffff;
   --background-secondary: #f8fafc;
@@ -13,31 +13,31 @@
   --foreground: #1b2838;
   --foreground-secondary: #66c0f4;
   --foreground-muted: #8fa8b2;
-  
+
   /* Card and surface colors */
   --card-background: #ffffff;
   --card-border: #c7d5e0;
   --card-shadow: 0 1px 3px 0 rgb(27 40 56 / 0.1), 0 1px 2px -1px rgb(27 40 56 / 0.1);
   --card-shadow-lg: 0 10px 15px -3px rgb(27 40 56 / 0.1), 0 4px 6px -4px rgb(27 40 56 / 0.1);
-  
+
   /* Steam brand colors */
   --steam-primary: #1b2838;
   --steam-secondary: #2a475e;
   --steam-accent: #66c0f4;
   --steam-hover: #1b2838;
-  
+
   /* Interactive elements */
   --input-background: #ffffff;
   --input-border: #c7d5e0;
   --input-border-focus: #66c0f4;
   --input-text: #1b2838;
-  
+
   /* Status colors */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #66c0f4;
-  
+
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #1b2838 0%, #66c0f4 100%);
   --gradient-steam: linear-gradient(135deg, #1b2838 0%, #66c0f4 100%);
@@ -53,22 +53,22 @@
     --foreground: #c7d5e0;
     --foreground-secondary: #66c0f4;
     --foreground-muted: #8fa8b2;
-    
+
     /* Card and surface colors */
     --card-background: #1b2838;
     --card-border: #2a475e;
     --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
     --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-    
+
     /* Steam brand colors - better hover for dark mode */
     --steam-hover: #c7d5e0;
-    
+
     /* Interactive elements */
     --input-background: #2a475e;
     --input-border: #66c0f4;
     --input-border-focus: #66c0f4;
     --input-text: #c7d5e0;
-    
+
     /* Gradients */
     --gradient-surface: linear-gradient(145deg, #1b2838 0%, #2a475e 100%);
   }
@@ -82,19 +82,19 @@
   --foreground: #1b2838;
   --foreground-secondary: #66c0f4;
   --foreground-muted: #8fa8b2;
-  
+
   --card-background: #ffffff;
   --card-border: #c7d5e0;
   --card-shadow: 0 1px 3px 0 rgb(27 40 56 / 0.1), 0 1px 2px -1px rgb(27 40 56 / 0.1);
   --card-shadow-lg: 0 10px 15px -3px rgb(27 40 56 / 0.1), 0 4px 6px -4px rgb(27 40 56 / 0.1);
-  
+
   /* Steam brand colors - better hover for light mode */
   --steam-hover: #1b2838;
-  
+
   --input-background: #ffffff;
   --input-border: #c7d5e0;
   --input-text: #1b2838;
-  
+
   --gradient-surface: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
 }
 
@@ -106,19 +106,19 @@
   --foreground: #c7d5e0;
   --foreground-secondary: #66c0f4;
   --foreground-muted: #8fa8b2;
-  
+
   --card-background: #1b2838;
   --card-border: #2a475e;
   --card-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
   --card-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-  
+
   /* Steam brand colors - better hover for dark mode */
   --steam-hover: #c7d5e0;
-  
+
   --input-background: #2a475e;
   --input-border: #66c0f4;
   --input-text: #c7d5e0;
-  
+
   --gradient-surface: linear-gradient(145deg, #1b2838 0%, #2a475e 100%);
 }
 
@@ -175,10 +175,19 @@ body {
 .scrollbar-thumb-steam::-webkit-scrollbar-thumb {
   background: var(--steam-accent);
   border-radius: 3px;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .scrollbar-thumb-steam::-webkit-scrollbar-thumb:hover {
   background: var(--steam-primary);
+}
+
+[data-theme="dark"] .scrollbar-thumb-steam::-webkit-scrollbar-thumb:hover {
+  background: #ffffff;
 }
 
 .scrollbar-track-transparent::-webkit-scrollbar-track {
@@ -203,6 +212,7 @@ body {
     opacity: 0;
     transform: translateY(5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -213,15 +223,19 @@ body {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-10px);
   }
@@ -231,6 +245,7 @@ body {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -238,6 +253,7 @@ body {
 
 /* View Transition Animations */
 @supports (view-transition-name: none) {
+
   ::view-transition-old(search-morph-container),
   ::view-transition-new(search-morph-container) {
     animation-duration: 0.7s;
@@ -286,11 +302,12 @@ body {
 
 /* Fallback for browsers without view transition support */
 @supports not (view-transition-name: none) {
+
   /* Enhanced regular transitions as fallback */
   [style*="viewTransitionName"] {
     transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
-  
+
   /* Add subtle fade effect for navigation without view transitions */
   .page-transition-fallback {
     animation: fadeIn 0.4s ease-out;
@@ -310,7 +327,7 @@ body {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
