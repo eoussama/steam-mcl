@@ -1,21 +1,13 @@
 <p align=center>
-   <img width=100 src="public/logo-large.png">
+   <img width=200 src="public/logo-large.png">
 </p>
-<h1 align=center>Steam Missing Content Lookup (Steam MCL)</h1>
+<h1 align=center>Steam Missing Content Lookup</h1>
 
 <p align=center>
-A modern web application to easily lookup missing DLC, Sequels, Prequels, Spin-Offs, and related content from your Steam library.
+Easily lookup missing DLC, Sequels, Prequels, Spin-Offs, and related content from your Steam library.
 </p>
 
 ---
-
-## Features
-
-- 🔍 **Smart Search**: Support for Steam profiles, Steam ID64, nicknames, profile URLs, and permalinks
-- 🌓 **Dark/Light Mode**: Automatic system theme detection with manual override
-- 🎨 **Modern Design**: Beautiful, responsive UI with smooth animations
-- ⚡ **Fast & Lightweight**: Built with Next.js 15 and optimized for performance
-- 🎮 **Steam-Themed**: Authentic Steam branding and color scheme
 
 ## Getting Started
 
@@ -54,15 +46,6 @@ pnpm dev
    - Profile URL
    - Profile permalink
 3. Click the search button to find missing content
-
-## Tech Stack
-
-- **Framework**: Next.js 15 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS with custom CSS variables
-- **Fonts**: Geist Sans & Geist Mono
-- **Theme**: Custom React Context with system detection
-- **Package Manager**: pnpm
 
 ## Development
 
