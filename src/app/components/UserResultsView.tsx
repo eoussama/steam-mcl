@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 
 import { ExternalLink } from "./ExternalLink";
+
+import { cn } from "@/lib/helpers";
 import { TSteamPlayerResponse } from "@/lib/types";
 import { useMissingContentAnalysis } from "@/hooks/useSteam";
 
@@ -34,7 +36,7 @@ export type TUserResultsViewProps = {
 export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose }) => {
   const [mounted, setMounted] = useState(false);
   const [supportsViewTransitions, setSupportsViewTransitions] = useState(false);
-  
+
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -46,7 +48,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
   const filteredMissingContent = useMemo(() => {
     if (!missingContentData?.missingContent) return [];
     if (!searchQuery.trim()) return missingContentData.missingContent;
-    
+
     return missingContentData.missingContent.filter(item =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
     );
@@ -132,7 +134,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
 
   return (
     <div
-      className={containerClassName}
+      className={cn(containerClassName, "px-4")}
       style={{ viewTransitionName: supportsViewTransitions ? "search-morph-container" : undefined }}
     >
       <div
@@ -225,11 +227,10 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             {!isAnalyzing && !analysisError && missingContentData?.missingContent?.length && (
               <button
                 onClick={() => setShowSearch(!showSearch)}
-                className={`group relative px-2 sm:px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-1 sm:space-x-2 ${
-                  showSearch
+                className={`group relative px-2 sm:px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-1 sm:space-x-2 ${showSearch
                     ? "bg-[var(--steam-accent)]/10 border-[var(--steam-accent)]/30 text-[var(--steam-accent)]"
                     : "bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 text-[var(--foreground-muted)] hover:text-[var(--steam-accent)]"
-                }`}
+                  }`}
                 aria-label={showSearch ? "Hide search" : "Show search"}
               >
                 <Filter size={16} className="transition-colors duration-300" />
