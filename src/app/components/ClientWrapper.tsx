@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { ThemeProvider } from "@/lib/context";
-import { queryClient } from "@/lib/react-query-client";
+import { queryClient } from "@/app/lib/helpers";
 
 
 
