@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
+import { cn } from "./lib/helpers";
+
 import { Footer } from "./components/Footer";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { SearchSection } from "./components/SearchSection";
@@ -23,7 +25,10 @@ export default function Home() {
 
       <div className="absolute inset-0 bg-gradient-to-r from-[var(--steam-accent)]/5 to-transparent pointer-events-none" />
 
-      <div className={`absolute top-4 right-4 z-20 ${mounted ? 'animate-fadeIn' : 'opacity-0'}`}>
+      <div className={cn(
+        "absolute top-4 right-4 z-20",
+        mounted ? "animate-fadeIn" : "opacity-0",
+      )}>
         <ThemeToggle />
       </div>
 
