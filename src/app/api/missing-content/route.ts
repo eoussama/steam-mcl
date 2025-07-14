@@ -1,40 +1,39 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getOwnedGames, analyzeMissingContentSteamOnly } from '../../lib/steam-api';
+import { NextRequest, NextResponse } from "next/server";
+import { getOwnedGames, analyzeMissingContent } from "@/lib/helpers";
+
+
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const steamId = searchParams.get('steamId');
+  const steamId = searchParams.get("steamId");
 
   if (!steamId) {
     return NextResponse.json(
-      { error: 'Steam ID parameter is required' },
+      { error: "Steam ID parameter is required" },
       { status: 400 }
     );
   }
 
   try {
-    // Get owned games from Steam
     const ownedGames = await getOwnedGames(steamId, true);
     
     if (!ownedGames || ownedGames.length === 0) {
       return NextResponse.json({
         missingContent: [],
-        message: 'No owned games found for this Steam profile'
+        message: "No owned games found for this Steam profile"
       });
     }
 
-    // Filter out games without names
     const validOwnedGames = ownedGames.filter(game => game.name && game.name.trim().length > 0);
 
     if (validOwnedGames.length === 0) {
       return NextResponse.json({
         missingContent: [],
-        message: 'No valid game names found in Steam library'
+        message: "No valid game names found in Steam library"
       });
     }
 
-    // Analyze missing content using Steam data only
-    const missingContent = await analyzeMissingContentSteamOnly(validOwnedGames);
+    const missingContent = await analyzeMissingContent(validOwnedGames);
 
     return NextResponse.json({
       missingContent,
@@ -42,10 +41,10 @@ export async function GET(request: NextRequest) {
       totalOwnedGames: ownedGames.length
     });
   } catch (error) {
-    console.error('Error analyzing missing content:', error);
+    console.error("Error analyzing missing content:", error);
     
     return NextResponse.json(
-      { error: 'Failed to analyze missing content' },
+      { error: "Failed to analyze missing content" },
       { status: 500 }
     );
   }
@@ -58,43 +57,40 @@ export async function POST(request: NextRequest) {
 
     if (!steamId) {
       return NextResponse.json(
-        { error: 'steamId is required' },
+        { error: "steamId is required" },
         { status: 400 }
       );
     }
 
-    // Get owned games from Steam
     const ownedGames = await getOwnedGames(steamId, true);
     
     if (!ownedGames || ownedGames.length === 0) {
       return NextResponse.json({
         missingContent: [],
-        message: 'No owned games found for this Steam profile'
+        message: "No owned games found for this Steam profile"
       });
     }
 
-    // Filter out games without names
     const validOwnedGames = ownedGames.filter(game => game.name && game.name.trim().length > 0);
 
     if (validOwnedGames.length === 0) {
       return NextResponse.json({
         missingContent: [],
-        message: 'No valid game names found in Steam library'
+        message: "No valid game names found in Steam library"
       });
     }
 
-    // Analyze missing content using Steam data only
-    const missingContent = await analyzeMissingContentSteamOnly(validOwnedGames);
+    const missingContent = await analyzeMissingContent(validOwnedGames);
 
     return NextResponse.json({
       missingContent,
       analyzedGames: validOwnedGames.length
     });
   } catch (error) {
-    console.error('Error analyzing missing content:', error);
+    console.error("Error analyzing missing content:", error);
     
     return NextResponse.json(
-      { error: 'Failed to analyze missing content' },
+      { error: "Failed to analyze missing content" },
       { status: 500 }
     );
   }
