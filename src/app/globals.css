@@ -363,6 +363,55 @@ body {
   color: transparent;
 }
 
+/* Adaptive results view height */
+.results-view-height {
+  min-height: calc(100vh - 425px);
+  
+  @media (min-width: 264px) {
+    min-height: calc(100vh - 397px);
+  }
+
+  @media (min-width: 372px) {
+    min-height: calc(100vh - 381px);
+  }
+
+  @media (min-width: 640px) {
+    min-height: calc(100vh - 477px);
+  }
+
+  @media (min-width: 768px) {
+    min-height: calc(100vh - 492px);
+  }
+
+  @media (min-width: 1024px) {
+    min-height: calc(100vh - 659px);
+  }
+}
+
+.results-view-height-no-search {
+  min-height: calc(100vh - 501px);
+  
+  @media (min-width: 264px) {
+    min-height: calc(100vh - 473px);
+  }
+
+  @media (min-width: 372px) {
+    min-height: calc(100vh - 457px);
+  }
+
+  @media (min-width: 640px) {
+    min-height: calc(100vh - 553px);
+  }
+
+  @media (min-width: 768px) {
+    min-height: calc(100vh - 568px);
+  }
+
+  @media (min-width: 1024px) {
+    min-height: calc(100vh - 583px);
+  }
+}
+
 /* Background logo opacity - different for light and dark modes */
 .bg-logo {
   opacity: 0.15;

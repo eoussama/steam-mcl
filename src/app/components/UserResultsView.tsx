@@ -167,7 +167,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   <div className="flex items-center space-x-1 sm:space-x-2 text-[var(--foreground-secondary)]">
                     <Gamepad2 size={14} className="sm:hidden" />
                     <Gamepad2 size={16} className="hidden sm:block" />
-                    <span className="font-semibold text-xs sm:text-sm">{data.ownedGames.length} games owned</span>
+                    <span className="font-semibold text-xs sm:text-sm line-clamp-1">{data.ownedGames.length} games owned</span>
                   </div>
                 )}
               </div>
@@ -302,10 +302,12 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
 
           <div
             ref={parentRef}
-            className="flex-1 pr-2 scrollbar-thin scrollbar-thumb-steam scrollbar-track-transparent overflow-auto"
+            className={cn(
+              "flex-1 pr-2 scrollbar-thin scrollbar-thumb-steam scrollbar-track-transparent overflow-auto",
+              showSearch ? "results-view-height" : "results-view-height-no-search"
+            )}
             style={{
               height: "100%",
-              minHeight: showSearch ? "calc(100vh - 659px)" : "calc(100vh - 583px)",
               contain: "strict"
             }}
           >
@@ -420,7 +422,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
             <p className="text-xs text-[var(--foreground-muted)] text-center">
               <span className="inline-flex items-center space-x-1">
                 <span className="w-2 h-2 bg-[var(--steam-accent)] rounded-full animate-pulse" />
-                <span>
+                <span className="line-clamp-1">
                   Analysis powered by Steam catalog data
                   {missingContentData?.analyzedGames && (
                     <> • Analyzed {missingContentData.analyzedGames} games</>
