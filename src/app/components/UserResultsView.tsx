@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import {
@@ -15,7 +15,9 @@ import {
   RotateCcw,
   Sparkles,
   Gift,
-  Link
+  Link,
+  X,
+  Filter
 } from "lucide-react";
 
 import { ExternalLink } from "./ExternalLink";
@@ -32,22 +34,40 @@ export type TUserResultsViewProps = {
 export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose }) => {
   const [mounted, setMounted] = useState(false);
   const [supportsViewTransitions, setSupportsViewTransitions] = useState(false);
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const parentRef = useRef<HTMLDivElement>(null);
   const { data: missingContentData, isLoading: isAnalyzing, error: analysisError } = useMissingContentAnalysis(data.steamId);
 
+  // Filter missing content based on search query
+  const filteredMissingContent = useMemo(() => {
+    if (!missingContentData?.missingContent) return [];
+    if (!searchQuery.trim()) return missingContentData.missingContent;
+    
+    return missingContentData.missingContent.filter(item =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    );
+  }, [missingContentData?.missingContent, searchQuery]);
+
   const virtualizer = useVirtualizer({
-    count: missingContentData?.missingContent?.length ?? 0,
+    count: filteredMissingContent.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 120,
     overscan: 5,
-    enabled: !!missingContentData?.missingContent?.length,
+    enabled: !!filteredMissingContent.length,
   });
 
   useEffect(() => {
     setMounted(true);
     setSupportsViewTransitions("startViewTransition" in document);
   }, []);
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+  };
 
   const SkeletonItem = ({ index }: { index: number }) => (
     <div
@@ -186,7 +206,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--steam-accent)]/5 via-transparent to-[var(--steam-accent)]/10 opacity-50" />
 
         <div className="relative p-6 flex flex-col h-full">
-          <div className="flex items-center space-x-3 mb-6 flex-shrink-0">
+          <div className="flex items-center justify-between mb-6 flex-shrink-0">
             <div>
               <h2 className="text-2xl font-bold text-[var(--foreground)]">
                 Missing Content
@@ -196,18 +216,93 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   ? "Analyzing your game library..."
                   : analysisError
                     ? "Error analyzing content"
-                    : `${missingContentData?.missingContent?.length || 0} items found that you might be interested in`
+                    : searchQuery
+                      ? `${filteredMissingContent.length} of ${missingContentData?.missingContent?.length || 0} items match "${searchQuery}"`
+                      : `${missingContentData?.missingContent?.length || 0} items found that you might be interested in`
                 }
               </p>
             </div>
+
+            {!isAnalyzing && !analysisError && missingContentData?.missingContent?.length && (
+              <button
+                onClick={() => setShowSearch(!showSearch)}
+                className={`group relative px-3 py-2 border rounded-xl transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer flex items-center space-x-2 ${
+                  showSearch
+                    ? "bg-[var(--steam-accent)]/10 border-[var(--steam-accent)]/30 text-[var(--steam-accent)]"
+                    : "bg-[var(--background-secondary)]/50 hover:bg-[var(--steam-accent)]/10 border-[var(--card-border)]/30 hover:border-[var(--steam-accent)]/30 text-[var(--foreground-muted)] hover:text-[var(--steam-accent)]"
+                }`}
+                aria-label={showSearch ? "Hide search" : "Show search"}
+              >
+                <Filter size={16} className="transition-colors duration-300" />
+                <span className="text-sm font-medium transition-colors duration-300">
+                  {showSearch ? "Hide Filter" : "Filter"}
+                </span>
+                <div className="absolute inset-0 bg-[var(--steam-accent)]/20 rounded-xl scale-0 group-hover:scale-100 transition-transform duration-300 -z-10" />
+              </button>
+            )}
           </div>
+
+          {showSearch && !isAnalyzing && !analysisError && missingContentData?.missingContent?.length && (
+            <div className="mb-6 flex-shrink-0 animate-fadeInUp">
+              <div className="relative group/input">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
+                  className={`
+                    w-full px-4 py-3 pr-20 text-base font-medium
+                    bg-[var(--input-background)]/80 backdrop-blur-sm
+                    border-2 rounded-xl
+                    text-[var(--input-text)]
+                    placeholder:text-[var(--foreground-muted)]
+                    transition-all duration-500 ease-out
+                    focus:outline-none focus:ring-0 cursor-text
+                    ${searchFocused
+                      ? "border-[var(--steam-accent)] shadow-xl shadow-[var(--steam-accent)]/30 scale-[1.01] bg-[var(--input-background)]"
+                      : "border-[var(--input-border)] hover:border-[var(--steam-accent)]/60 hover:shadow-lg"
+                    }
+                  `}
+                  placeholder="Search by game name..."
+                />
+
+                <div className={`
+                  absolute inset-0 rounded-xl pointer-events-none
+                  transition-all duration-500 ease-out
+                  ${searchFocused
+                    ? "ring-3 ring-[var(--steam-accent)]/20 ring-offset-3 ring-offset-[var(--card-background)] scale-[1.02]"
+                    : ""
+                  }
+                `} />
+
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-1">
+                  {searchQuery && (
+                    <button
+                      onClick={handleClearSearch}
+                      className="p-1.5 hover:bg-[var(--background-secondary)]/50 rounded-lg transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--steam-accent)]/50 cursor-pointer group"
+                      aria-label="Clear search"
+                    >
+                      <X size={16} className="text-[var(--foreground-muted)] group-hover:text-[var(--steam-accent)] transition-colors duration-300" />
+                    </button>
+                  )}
+                  <div className={`
+                    p-1.5 transition-all duration-300 pointer-events-none
+                    ${searchFocused ? "text-[var(--steam-accent)] scale-110" : "text-[var(--foreground-muted)]"}
+                  `}>
+                    <Search size={16} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div
             ref={parentRef}
             className="flex-1 pr-2 scrollbar-thin scrollbar-thumb-steam scrollbar-track-transparent overflow-auto"
             style={{
               height: "100%",
-              minHeight: "calc(100vh - 600px)",
+              minHeight: showSearch ? "calc(100vh - 680px)" : "calc(100vh - 600px)",
               contain: "strict"
             }}
           >
@@ -241,6 +336,21 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                   Great! It looks like you have all the available content for your games, or we couldn&apos;t find any related content in the Steam catalog.
                 </p>
               </div>
+            ) : filteredMissingContent.length === 0 && searchQuery ? (
+              <div className="flex flex-col items-center justify-center h-full text-center p-8">
+                <Search size={48} className="text-[var(--foreground-muted)] mb-4" />
+                <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">No Results Found</h3>
+                <p className="text-sm text-[var(--foreground-muted)] max-w-md">
+                  No games match &ldquo;{searchQuery}&rdquo;. Try adjusting your search or{" "}
+                  <button
+                    onClick={handleClearSearch}
+                    className="text-[var(--steam-accent)] hover:text-[var(--steam-accent)]/80 underline transition-colors duration-300 cursor-pointer"
+                  >
+                    clear the filter
+                  </button>
+                  {" "}to see all results.
+                </p>
+              </div>
             ) : (
               <div
                 style={{
@@ -250,7 +360,7 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
                 }}
               >
                 {virtualizer.getVirtualItems().map((virtualItem) => {
-                  const item = missingContentData.missingContent[virtualItem.index];
+                  const item = filteredMissingContent[virtualItem.index];
                   if (!item) return null;
 
                   const typeConfig = missingContentTypes[item.type as keyof typeof missingContentTypes];
