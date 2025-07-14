@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 
 import { THEME_KEY } from "../consts";
 import { TNullable, TTheme } from "../types";
