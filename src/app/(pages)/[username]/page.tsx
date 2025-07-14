@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTransitionRouter } from "next-view-transitions";
 
+import { Footer } from "@/app/components/Footer";
 import { ThemeToggle } from "@/app/components/ThemeToggle";
-import { ExternalLink } from "@/app/components/ExternalLink";
 import { UserResultsView } from "@/app/components/UserResultsView";
 import { ParticlesBackground } from "@/app/components/ParticlesBackground";
 
-import packageJson from "../../../../package.json";
 import { useSteamUserSearch } from "@/hooks/useSteam";
 
 
@@ -122,22 +121,7 @@ export default function UserProfilePage() {
         )}
       </div>
 
-      <div
-        style={{ animationDelay: "300ms" }}
-        className={`relative z-10 text-center py-2 border-t border-[var(--card-border)]/30 bg-[var(--background)]/50 backdrop-blur-sm ${mounted ? "animate-fadeIn" : "opacity-0"}`}
-      >
-        <div className="flex flex-row items-center justify-center gap-1.5 text-xs text-[var(--foreground-muted)] font-medium">
-          <span>v{packageJson.version}</span>
-          <span>•</span>
-          <ExternalLink href={packageJson.author_url}>
-            {packageJson.author}
-          </ExternalLink>
-          <span>•</span>
-          <ExternalLink href={packageJson.repository.url}>
-            GitHub
-          </ExternalLink>
-        </div>
-      </div>
+      <Footer mounted={mounted} />
     </main>
   );
 } 
