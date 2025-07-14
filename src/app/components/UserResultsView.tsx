@@ -17,10 +17,11 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { ExternalLink } from './ExternalLink';
-import { SteamPlayerResponse, useMissingContentAnalysis } from '../hooks/useSteam';
+import { useMissingContentAnalysis } from '../hooks/useSteam';
+import { TSteamPlayerResponse } from '../lib';
 
 export interface UserResultsViewProps {
-  data: SteamPlayerResponse;
+  data: TSteamPlayerResponse;
   onClose: () => void;
 }
 

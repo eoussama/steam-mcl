@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react';
 import { useTransitionRouter } from 'next-view-transitions';
 import { Search, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 import { ExternalLink } from './ExternalLink';
-import { useSteamUserSearch, SteamPlayerResponse } from '../hooks/useSteam';
+import { useSteamUserSearch,  } from '../hooks/useSteam';
+import { TSteamPlayerResponse } from '../lib';
 
 export interface SearchSectionProps {
-  onUserFound?: (data: SteamPlayerResponse) => void;
+  onUserFound?: (data: TSteamPlayerResponse) => void;
   morphProps?: Record<string, unknown>;
   autoNavigate?: boolean; // New prop to control automatic navigation
 }
