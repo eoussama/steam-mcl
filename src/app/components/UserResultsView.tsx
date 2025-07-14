@@ -54,23 +54,23 @@ export const UserResultsView: React.FC<TUserResultsViewProps> = ({ data, onClose
       className="animate-pulse mb-4"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="group relative w-full block p-4 bg-[var(--background-secondary)]/20 rounded-xl border border-[var(--card-border)]/20">
+      <div className="group relative w-full block p-4 bg-[var(--foreground)]/4 rounded-xl border border-[var(--card-border)]/10">
         <div className="absolute top-3 right-3">
-          <div className="h-6 w-16 bg-[var(--background-secondary)]/40 rounded-md"></div>
+          <div className="h-6 w-16 bg-[var(--foreground)]/4 rounded-md"></div>
         </div>
 
         <div className="flex-1 space-y-2 pr-16">
           <div className="flex items-center space-x-3">
-            <div className="w-6 h-6 bg-[var(--background-secondary)]/40 rounded"></div>
+            <div className="w-6 h-6 bg-[var(--foreground)]/4 rounded"></div>
             <div className="flex-1">
-              <div className="h-5 bg-[var(--background-secondary)]/40 rounded mb-2" style={{ width: `${60 + Math.random() * 40}%` }}></div>
-              <div className="h-3 bg-[var(--background-secondary)]/30 rounded" style={{ width: `${40 + Math.random() * 30}%` }}></div>
+              <div className="h-5 bg-[var(--foreground)]/4 rounded mb-2" style={{ width: `${60 + Math.random() * 40}%` }}></div>
+              <div className="h-3 bg-[var(--foreground)]/4 rounded" style={{ width: `${40 + Math.random() * 30}%` }}></div>
             </div>
           </div>
 
           <div className="space-y-1">
-            <div className="h-4 bg-[var(--background-secondary)]/30 rounded" style={{ width: `${70 + Math.random() * 30}%` }}></div>
-            <div className="h-4 bg-[var(--background-secondary)]/30 rounded" style={{ width: `${50 + Math.random() * 40}%` }}></div>
+            <div className="h-4 bg-[var(--foreground)]/4 rounded" style={{ width: `${70 + Math.random() * 30}%` }}></div>
+            <div className="h-4 bg-[var(--foreground)]/4 rounded" style={{ width: `${50 + Math.random() * 40}%` }}></div>
           </div>
         </div>
       </div>
