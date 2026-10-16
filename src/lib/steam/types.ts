@@ -11,6 +11,7 @@ export type TStoreItem = {
   headerImage: string | null;
   capsuleImage: string | null;
   price: string | null;
+  priceCents: number | null;
   discountPercent: number;
   isFree: boolean;
   isComingSoon: boolean;

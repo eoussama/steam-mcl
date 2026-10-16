@@ -4,7 +4,7 @@ import type { TOwnedGame } from "@/lib/steam";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "@tanstack/react-store";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 import { isRateLimitError } from "@/lib/query/retry";
 import { useTRPC, useTRPCClient } from "@/lib/trpc";
@@ -14,14 +14,21 @@ import { createAnalysisSources } from "./sources";
 
 
 
+export type TLibraryAnalysis = TAnalysisState & {
+  /**
+   * Runs the analysis again, reusing every cached lookup.
+   */
+  restart: () => void;
+};
+
 /**
  * @description
  * Runs the missing content analysis for a library and exposes its progressive state.
  *
  * @param games - Games in the library, the analysis starts once they are available.
- * @returns The current analysis state.
+ * @returns The current analysis state and a way to restart it.
  */
-export function useLibraryAnalysis(games: ReadonlyArray<TOwnedGame> | undefined): TAnalysisState {
+export function useLibraryAnalysis(games: ReadonlyArray<TOwnedGame> | undefined): TLibraryAnalysis {
   const queryClient = useQueryClient();
   const trpc = useTRPC();
   const trpcClient = useTRPCClient();
@@ -44,5 +51,13 @@ export function useLibraryAnalysis(games: ReadonlyArray<TOwnedGame> | undefined)
     return () => analyzer.abort();
   }, [analyzer, games]);
 
-  return useSelector(analyzer.store);
+  const restart = useCallback(() => {
+    if (games) {
+      void analyzer.run(games);
+    }
+  }, [analyzer, games]);
+
+  const state = useSelector(analyzer.store);
+
+  return useMemo(() => ({ ...state, restart }), [state, restart]);
 }

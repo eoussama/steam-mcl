@@ -47,7 +47,8 @@ const SUPERSET_PHRASES = [
   "premium",
 ] as const;
 
-const EDITION_PATTERN = new RegExp(`\\b(?:${EDITION_PHRASES.join("|")})\\b`, "g");
+// "The Definitive Edition" style qualifiers take their article with them.
+const EDITION_PATTERN = new RegExp(`\\b(?:the )?(?:${EDITION_PHRASES.join("|")})\\b`, "g");
 const SUPERSET_PATTERN = new RegExp(`\\b(?:${SUPERSET_PHRASES.join("|")})\\b`);
 
 function simplify(title: string): string {

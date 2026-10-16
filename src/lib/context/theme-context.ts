@@ -8,7 +8,10 @@ import { createContext } from "react";
 
 export type TThemeContextType = {
   theme: TTheme;
-  setTheme: (theme: TTheme) => void;
+  /**
+   * Switches theme, optionally revealing it from a viewport point.
+   */
+  setTheme: (theme: TTheme, origin?: { x: number; y: number }) => void;
   resolvedTheme: TResolvedTheme;
 };
 

@@ -103,13 +103,75 @@ export function subscribeToSystemTheme(callback: () => void): () => void {
 
 /**
  * @description
+ * Resolves a theme preference to the theme to display.
+ *
+ * @param theme - Theme preference.
+ * @returns The light or dark theme.
+ */
+export function resolveTheme(theme: TTheme): TResolvedTheme {
+  return theme === "system" ? getSystemTheme() : theme;
+}
+
+/**
+ * @description
  * Applies a resolved theme to the document root.
  *
  * @param theme - Theme to apply.
  */
 export function applyTheme(theme: TResolvedTheme): void {
-  const root = document.documentElement;
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
 
-  root.dataset.theme = theme;
-  root.style.colorScheme = theme;
+/**
+ * Inline script applying the stored theme before the first paint, so pages never flash the wrong theme.
+ */
+export const THEME_BOOT_SCRIPT = `(() => {
+  try {
+    const stored = localStorage.getItem(${JSON.stringify(THEME_KEY)});
+    const dark = stored === "dark" || (stored !== "light" && matchMedia(${JSON.stringify(DARK_SCHEME_QUERY)}).matches);
+    document.documentElement.classList.toggle("dark", dark);
+  } catch {}
+})()`;
+
+/**
+ * @description
+ * Switches theme, revealing the new one as a circle growing from the given point when the browser supports
+ * view transitions and the visitor allows motion.
+ *
+ * @param theme - Theme preference to switch to.
+ * @param origin - Viewport point the reveal starts from, usually the toggle.
+ * @param origin.x - Horizontal coordinate, in pixels.
+ * @param origin.y - Vertical coordinate, in pixels.
+ */
+export function switchTheme(theme: TTheme, origin?: { x: number; y: number }): void {
+  const apply = () => {
+    storeTheme(theme);
+    applyTheme(resolveTheme(theme));
+  };
+
+  const root = document.documentElement;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!origin || reduceMotion || typeof document.startViewTransition !== "function" || resolveTheme(theme) === resolveTheme(readStoredTheme())) {
+    apply();
+
+    return;
+  }
+
+  const radius = Math.hypot(Math.max(origin.x, innerWidth - origin.x), Math.max(origin.y, innerHeight - origin.y));
+
+  root.dataset.themeTransition = "";
+
+  const transition = document.startViewTransition(apply);
+
+  void transition.ready.then(() => {
+    root.animate(
+      { clipPath: [`circle(0px at ${origin.x}px ${origin.y}px)`, `circle(${radius}px at ${origin.x}px ${origin.y}px)`] },
+      { duration: 500, easing: "cubic-bezier(0.22, 1, 0.36, 1)", pseudoElement: "::view-transition-new(root)" },
+    );
+  });
+
+  void transition.finished.finally(() => {
+    delete root.dataset.themeTransition;
+  });
 }

@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "@/lib/zod";
 
 
 
@@ -61,6 +61,7 @@ export const storeItemSchema = z.object({
   }).optional(),
   best_purchase_option: z.object({
     formatted_final_price: z.string().optional(),
+    final_price_in_cents: z.coerce.number().optional(),
     discount_pct: z.number().optional(),
   }).optional(),
 });

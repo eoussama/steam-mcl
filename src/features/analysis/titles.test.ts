@@ -18,6 +18,7 @@ describe("isSameTitle", () => {
     ["The Witcher 3: Wild Hunt", "The Witcher 3: Wild Hunt — Remastered"],
     ["Grand Theft Auto V Legacy", "Grand Theft Auto V Enhanced"],
     ["Dark Souls", "DARK SOULS™: REMASTERED"],
+    ["Grand Theft Auto: San Andreas", "Grand Theft Auto: San Andreas - The Definitive Edition"],
   ])("matches %s and %s", (a, b) => {
     expect(isSameTitle(a, b)).toBe(true);
   });

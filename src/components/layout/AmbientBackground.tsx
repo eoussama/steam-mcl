@@ -8,18 +8,21 @@ type TParticle = {
   vx: number;
   vy: number;
   r: number;
+  alpha: number;
 };
 
-const PARTICLE_COUNT = 30;
-const PARTICLE_COLOR = "102, 192, 244";
+const PARTICLE_DENSITY = 1 / 28_000;
+const MAX_PARTICLES = 60;
+const PARTICLE_RGB = "102, 192, 244";
 
 /**
  * @description
- * Lightweight ambient particle field, paused when hidden and frozen under reduced motion.
+ * Fixed ambient backdrop: soft glows plus a light canvas particle field. The canvas pauses while the tab is
+ * hidden and stays still when the visitor prefers reduced motion.
  *
- * @returns The background canvas.
+ * @returns The background layer.
  */
-export const ParticlesBackground: React.FC = () => {
+export const AmbientBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -38,30 +41,34 @@ export const ParticlesBackground: React.FC = () => {
     let height = 0;
     let particles: Array<TParticle> = [];
 
+    const seed = () => {
+      const count = Math.min(MAX_PARTICLES, Math.round(width * height * PARTICLE_DENSITY));
+
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: 0.8 + Math.random() * 1.6,
+        alpha: 0.15 + Math.random() * 0.35,
+      }));
+    };
+
     const resize = () => {
       width = canvas.clientWidth;
       height = canvas.clientHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-    };
-
-    const seed = () => {
-      particles = Array.from({ length: PARTICLE_COUNT }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        r: 1 + Math.random() * 1.5,
-      }));
+      seed();
     };
 
     const draw = () => {
       context.clearRect(0, 0, width, height);
-      context.fillStyle = `rgba(${PARTICLE_COLOR}, 0.3)`;
 
       for (const particle of particles) {
         context.beginPath();
+        context.fillStyle = `rgba(${PARTICLE_RGB}, ${particle.alpha})`;
         context.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
         context.fill();
       }
@@ -79,18 +86,14 @@ export const ParticlesBackground: React.FC = () => {
 
     const start = () => {
       cancelAnimationFrame(frame);
+      draw();
 
-      if (motionQuery.matches || document.hidden) {
-        draw();
-
-        return;
+      if (!motionQuery.matches && !document.hidden) {
+        frame = requestAnimationFrame(step);
       }
-
-      frame = requestAnimationFrame(step);
     };
 
     resize();
-    seed();
     start();
 
     const observer = new ResizeObserver(() => {
@@ -110,5 +113,11 @@ export const ParticlesBackground: React.FC = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 size-full pointer-events-none" />;
+  return (
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden ambient-gradient">
+      <div className="absolute -top-32 right-[-10%] size-[28rem] rounded-full bg-steam-blue/15 blur-3xl will-change-transform animate-float" />
+      <div className="absolute bottom-[-20%] left-[-10%] size-[32rem] rounded-full bg-steam-slate/20 blur-3xl will-change-transform animate-float [animation-delay:-4s]" />
+      <canvas ref={canvasRef} className="absolute inset-0 size-full" />
+    </div>
+  );
 };

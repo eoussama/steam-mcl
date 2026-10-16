@@ -8,9 +8,10 @@ import {
   applyTheme,
   getSystemTheme,
   readStoredTheme,
-  storeTheme,
+  resolveTheme,
   subscribeToSystemTheme,
   subscribeToTheme,
+  switchTheme,
 } from "../helpers";
 import { ThemeContext } from "./theme-context";
 
@@ -37,11 +38,13 @@ export const ThemeProvider: React.FC<TThemeProviderProps> = ({ children }) => {
   const resolvedTheme = theme === "system" ? systemTheme : theme;
 
   useEffect(() => {
-    applyTheme(resolvedTheme);
+    // Reads the live preference rather than `resolvedTheme`, which still holds the server snapshot while
+    // hydrating and would briefly undo the theme applied by the boot script.
+    applyTheme(resolveTheme(readStoredTheme()));
   }, [resolvedTheme]);
 
   const value = useMemo<TThemeContextType>(
-    () => ({ theme, setTheme: storeTheme, resolvedTheme }),
+    () => ({ theme, setTheme: switchTheme, resolvedTheme }),
     [theme, resolvedTheme],
   );
 

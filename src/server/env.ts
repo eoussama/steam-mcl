@@ -1,6 +1,6 @@
 import process from "node:process";
 
-import { z } from "zod";
+import { z } from "@/lib/zod";
 import "@tanstack/react-start/server-only";
 
 

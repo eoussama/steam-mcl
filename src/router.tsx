@@ -44,4 +44,11 @@ declare module "@tanstack/react-router" {
   interface Register {
     router: ReturnType<typeof getRouter>;
   }
+
+  interface HistoryState {
+    /**
+     * Set by "New search" so the home page focuses the search field.
+     */
+    focusSearch?: boolean;
+  }
 }

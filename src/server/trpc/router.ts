@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-
 import { parseProfileInput, STEAM_ID_PATTERN } from "@/lib/steam";
+
+import { z } from "@/lib/zod";
 
 import {
   getAppDlc,

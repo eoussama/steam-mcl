@@ -7,6 +7,7 @@ import type { TAppRouter } from "@/server/trpc/router";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { lazy, Suspense, useState } from "react";
 
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { APP_VERSION } from "@/lib/consts";
 import { ThemeProvider } from "@/lib/context";
 import { CACHE_MAX_AGE } from "@/lib/query/cache-times";
@@ -52,7 +53,9 @@ export const AppProviders: React.FC<TAppProvidersProps> = ({ queryClient, trpcCl
     >
       <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
         <ThemeProvider>
-          {children}
+          <TooltipProvider delay={300}>
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
       </TRPCProvider>
 

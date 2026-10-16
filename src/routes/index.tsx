@@ -1,9 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useLocation } from "@tanstack/react-router";
+import { Disc3, HardDriveDownload, Layers } from "lucide-react";
 
-import { Footer } from "@/components/Footer";
-import { ParticlesBackground } from "@/components/ParticlesBackground";
-import { SearchSection } from "@/components/SearchSection";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { Card, CardContent } from "@/components/ui/card";
+import { ProfileSearchForm } from "@/features/search/ProfileSearchForm";
 
 
 
@@ -11,51 +10,56 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+const HIGHLIGHTS = [
+  { icon: Disc3, title: "DLC & soundtracks", text: "Every add-on and OST for the games you own." },
+  { icon: Layers, title: "Franchises & editions", text: "Sequels, spin-offs, remasters and studio picks." },
+  { icon: HardDriveDownload, title: "Cached locally", text: "Results stay on your device, revisits are instant." },
+] as const;
+
 function Home() {
+  // "New search" asks for the field to be ready to type in.
+  const focusSearch = useLocation({ select: location => Boolean(location.state.focusSearch) });
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[var(--background)] via-[var(--background-secondary)] to-[var(--background-tertiary)] relative flex flex-col">
-      <ParticlesBackground />
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center gap-8 px-4 py-10 sm:py-16">
+      <section className="relative animate-rise">
+        <img
+          src="/logo.png"
+          alt=""
+          className="pointer-events-none absolute -top-6 right-0 size-28 opacity-25 drop-shadow-2xl animate-float sm:size-40 md:size-52 dark:opacity-60"
+        />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--steam-accent)]/5 to-transparent pointer-events-none" />
+        <h1 className="relative space-y-2">
+          <span className="block font-heading text-6xl font-black leading-none tracking-tight steam-title [view-transition-name:brand-title] sm:text-7xl md:text-8xl">
+            Steam
+          </span>
+          <span className="block text-xl font-bold tracking-tight sm:text-2xl md:text-3xl">
+            Missing Content Lookup
+          </span>
+        </h1>
 
-      <div className="absolute top-4 right-4 z-20 animate-fadeIn">
-        <ThemeToggle />
-      </div>
+        <p className="relative mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
+          Find the DLC, soundtracks, editions and franchise games missing from your Steam library.
+        </p>
+      </section>
 
-      <div className="flex-1 flex flex-col justify-center items-center px-4 relative z-10">
-        <div className="w-full max-w-2xl space-y-6 animate-fadeInUp">
-          <div className="relative">
-            <div className="absolute top-0 right-0 w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-logo pointer-events-none z-0">
-              <img
-                src="/logo.png"
-                alt=""
-                className="size-full object-contain drop-shadow-2xl animate-float"
-              />
+      <Card className="glass animate-rise rounded-2xl shadow-xl shadow-steam-navy/5 [animation-delay:80ms] [view-transition-name:search-card] dark:shadow-black/30">
+        <CardContent>
+          <ProfileSearchForm autoFocus={focusSearch} />
+        </CardContent>
+      </Card>
+
+      <ul className="grid animate-rise gap-3 [animation-delay:160ms] sm:grid-cols-3">
+        {HIGHLIGHTS.map(({ icon: Icon, title, text }) => (
+          <li key={title} className="flex gap-3 rounded-xl border border-border/60 bg-card/40 p-3">
+            <Icon className="mt-0.5 size-5 shrink-0 text-steam-blue" aria-hidden="true" />
+            <div>
+              <p className="text-sm font-semibold">{title}</p>
+              <p className="text-xs text-muted-foreground">{text}</p>
             </div>
-
-            <div className="relative z-10 text-left space-y-4">
-              <div className="space-y-2">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight tracking-tight steam-title">
-                  Steam
-                </h1>
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[var(--foreground)] to-[var(--foreground-secondary)] bg-clip-text text-transparent leading-tight">
-                  Missing Content Lookup
-                </h2>
-              </div>
-
-              <p className="text-sm sm:text-base md:text-lg text-[var(--foreground-muted)] leading-relaxed font-medium">
-                Discover DLC, soundtracks, editions and franchise games that are missing from your Steam library.
-              </p>
-            </div>
-          </div>
-
-          <div className="animate-fadeInUp" style={{ animationDelay: "100ms" }}>
-            <SearchSection />
-          </div>
-        </div>
-      </div>
-
-      <Footer />
-    </main>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

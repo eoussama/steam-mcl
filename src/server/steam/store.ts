@@ -56,6 +56,7 @@ export function toStoreItem(raw: TRawStoreItem): TStoreItem | null {
     headerImage: getAssetUrl(assets?.asset_url_format, assets?.header),
     capsuleImage: getAssetUrl(assets?.asset_url_format, assets?.small_capsule),
     price: raw.best_purchase_option?.formatted_final_price ?? null,
+    priceCents: raw.best_purchase_option?.final_price_in_cents ?? null,
     discountPercent: raw.best_purchase_option?.discount_pct ?? 0,
     isFree: raw.is_free ?? false,
     isComingSoon: raw.release?.is_coming_soon ?? false,
