@@ -8,6 +8,20 @@ trustPolicyExclude:
 
 shellEmulator: true
 
+# Patched versions of transitive dev dependencies whose parents pin a vulnerable range.
+overrides:
+  # GHSA-238p-pmpm-9mq7, through the ESLint markdown math extension.
+  micromark-extension-math>katex: ^0.18.2
+
+  # GHSA-q8mj-m7cp-5q26, GHSA-x5fp-wj9c-mxmx, GHSA-4mjr-xmp4-gh2g, through the Stryker dashboard client.
+  typed-rest-client>qs: ^6.16.0
+
 allowBuilds:
   "@tailwindcss/oxide": true
   esbuild: true
+
+auditConfig:
+  ignoreGhsas:
+    # braces has no patched release. It only runs inside the shadcn CLI on its own glob patterns, never on user input
+    # and never in the app.
+    - GHSA-vfj7-8cjw-p6xm
