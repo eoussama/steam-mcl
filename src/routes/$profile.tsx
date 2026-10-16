@@ -78,8 +78,8 @@ function ProfilePage() {
   // Items stream in while scanning, sorting them can wait for scrolling and typing.
   const items = useDeferredValue(analysis.items);
   const selection = useMemo(
-    () => selectResults(items.values(), library?.games ?? [], search, ownership.statusOf),
-    [items, library, search, ownership.statusOf],
+    () => selectResults(items.values(), library?.games ?? [], search, ownership),
+    [items, library, search, ownership],
   );
 
   const groupKeys = useMemo(
@@ -127,7 +127,7 @@ function ProfilePage() {
 
   const resetFilters = () => {
     setToolbarKey(key => key + 1);
-    updateSearch({ category: "all", q: "", view: "missing" }, { animate: true });
+    updateSearch({ category: "all", q: "", view: "missing", wishlist: false }, { animate: true });
   };
 
   const refreshLibrary = () => {
@@ -283,7 +283,7 @@ function ProfilePage() {
             )
           : <ProfileHeaderSkeleton />}
 
-        {showToolbar && <ResultsToolbar key={toolbarKey} search={search} counts={selection.counts} onChange={updateSearch} allCollapsed={allCollapsed} onToggleAll={toggleAllGroups} views={selection.views} />}
+        {showToolbar && <ResultsToolbar key={toolbarKey} search={search} counts={selection.counts} onChange={updateSearch} allCollapsed={allCollapsed} onToggleAll={toggleAllGroups} views={selection.views} wishlisted={selection.wishlisted} />}
       </div>
 
       {/* Keeps enough room to scroll so the bar stays compact when few results match. */}

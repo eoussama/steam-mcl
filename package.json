@@ -32,7 +32,9 @@
     "lint": "dx lint",
     "lint:fix": "dx fix",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "pnpm build && playwright test",
+    "test:mutation": "stryker run"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -64,6 +66,8 @@
   "devDependencies": {
     "@eoussama/dx": "^0.1.1",
     "@eslint-react/eslint-plugin": "^5.27.1",
+    "@playwright/test": "^1.64.1",
+    "@stryker-mutator/core": "^10.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query-devtools": "^5.104.3",
     "@tanstack/react-router-devtools": "^1.167.2",

@@ -41,3 +41,27 @@ describe("profileInputSchema", () => {
     expect(profileInputSchema.safeParse("not valid!").success).toBe(false);
   });
 });
+
+describe("parseProfileInput edge cases", () => {
+  it("only reads profile links on steamcommunity.com", () => {
+    expect(parseProfileInput("https://evil.example/steamcommunity.com/id/gaben")).toBeNull();
+  });
+
+  it("rejects input longer than 200 characters", () => {
+    const link = "https://steamcommunity.com/id/gaben?";
+
+    expect(parseProfileInput(link.padEnd(200, "x"))).toEqual({ kind: "vanity", vanity: "gaben" });
+    expect(parseProfileInput(link.padEnd(201, "x"))).toBeNull();
+    expect(parseProfileInput("   ")).toBeNull();
+  });
+});
+
+describe("profile input boundaries", () => {
+  it("treats a Steam ID with extra characters as a custom name", () => {
+    expect(parseProfileInput("76561197960287930x")).toEqual({ kind: "vanity", vanity: "76561197960287930x" });
+  });
+
+  it("asks for a profile when the input is empty", () => {
+    expect(profileInputSchema.safeParse("  ").error?.issues[0]?.message).toBe("Enter a Steam profile");
+  });
+});

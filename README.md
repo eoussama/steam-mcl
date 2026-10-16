@@ -26,8 +26,12 @@ by price or release date, and grouped by game. Filters live in the URL, so a vie
 
 Steam only shares the *games* of a profile publicly, so DLC and soundtracks you already own show up as missing. To fix
 that, use **Import what you own** in the profile menu. It reads your Steam store data
-(`store.steampowered.com/dynamicstore/userdata/`) when you paste it in. Any item can also be marked owned or hidden by
-hand.
+(`store.steampowered.com/dynamicstore/userdata/`) when you paste it in. The import also brings in:
+
+- your **wishlist**: wishlisted items get a badge and their own filter
+- the apps you **ignore on Steam**, which are hidden
+
+Any item can also be marked owned or hidden by hand.
 
 ## How it works
 
@@ -82,6 +86,20 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm lint` / `pnpm lint:fix` | Lints, or lints and fixes |
 | `pnpm typecheck` | Type checks |
 | `pnpm test` | Runs the unit tests |
+| `pnpm test:e2e` | Builds, then runs the end-to-end tests in Edge |
+| `pnpm test:mutation` | Runs mutation testing on the core logic |
+
+### Testing
+
+- **Unit tests** (Vitest) cover the analysis engine, classification, result selection, parsers and the Steam
+  clients.
+- **End-to-end tests** (Playwright) run against the production build:
+  - Steam is mocked at the network level, so they need no API key and never hit rate limits.
+  - They run in the installed Microsoft Edge by default; set `PLAYWRIGHT_CHANNEL` to use another browser, for example
+    `chrome`.
+- **Mutation tests** (Stryker) change the core logic in small ways and check that a unit test fails each time:
+  - The HTML report is written to `reports/mutation/index.html`.
+  - They use Stryker's command runner, because its Vitest runner cannot activate mutants on Vitest 5 yet.
 
 ## Environment
 
@@ -94,7 +112,9 @@ Open [http://localhost:3000](http://localhost:3000).
 1. Import the repository in Vercel.
 2. In **Settings → Build and Deployment**, set **Framework Preset** to **TanStack Start**, or **Other** if it is not
    listed. A project created back when this was a Next.js app still has the Next.js preset, which fails to build.
-3. Add `STEAM_KEY` under **Settings → Environment Variables**.
+3. Under **Settings → Environment Variables**, add:
+   - `STEAM_KEY`, marked **Sensitive**
+   - `ENABLE_EXPERIMENTAL_COREPACK` set to `1`, so Vercel builds with the pnpm version pinned in `package.json`
 4. Deploy. Nitro detects Vercel and outputs a ready to serve build, no `vercel.json` needed.
 
 Store lookups are served with `s-maxage`, so the Vercel CDN answers repeated lookups for every visitor without

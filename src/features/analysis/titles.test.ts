@@ -49,3 +49,26 @@ describe("isSupersetEditionTitle", () => {
     expect(isSupersetEditionTitle("Fallout 3")).toBe(false);
   });
 });
+
+describe("title edge cases", () => {
+  it("ignores case and accents", () => {
+    expect(isSameTitle("SKYRIM", "skyrim")).toBe(true);
+    expect(isSameTitle("Pokémon Café", "Pokemon Cafe")).toBe(true);
+  });
+
+  it("collapses the space left by a qualifier in the middle of a title", () => {
+    expect(normalizeTitle("Half GOTY Life")).toBe("half life");
+  });
+
+  it("does not mistake punctuation runs for an edition", () => {
+    expect(isEditionTitle("Half-Life: Alyx")).toBe(false);
+    expect(isEditionTitle("S.T.A.L.K.E.R. -- Shadow of Chernobyl")).toBe(false);
+  });
+});
+
+describe("title edge cases around punctuation", () => {
+  it("ignores punctuation around a title", () => {
+    expect(isEditionTitle("(Skyrim)")).toBe(false);
+    expect(normalizeTitle("  -Skyrim-  ")).toBe("skyrim");
+  });
+});

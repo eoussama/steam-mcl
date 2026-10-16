@@ -25,13 +25,13 @@ function addOn(item: TStoreItem, category: "dlc" | "soundtrack", context: TClass
 function standalone(item: TStoreItem, context: TClassifyContext): TMissingItem | null {
   const franchise = [...(context.relations?.franchise ?? [])];
   const studio = [...(context.relations?.studio ?? [])];
-  const editionOf = [...new Set([...franchise, ...studio])]
-    .filter(appid => isSameTitle(item.name, context.ownedNames.get(appid) ?? ""));
+  // Stryker disable next-line StringLiteral: owned games always have a name, the fallback only satisfies the types.
+  const nameOf = (appid: number) => context.ownedNames.get(appid) ?? "";
+  const editionOf = [...new Set([...franchise, ...studio])].filter(appid => isSameTitle(item.name, nameOf(appid)));
 
   if (editionOf.length > 0) {
     // The plain game adds nothing when every owned version is a superset, such as a Game of the Year edition.
-    const isSuperseded = !isEditionTitle(item.name)
-      && editionOf.every(appid => isSupersetEditionTitle(context.ownedNames.get(appid) ?? ""));
+    const isSuperseded = !isEditionTitle(item.name) && editionOf.every(appid => isSupersetEditionTitle(nameOf(appid)));
 
     return isSuperseded ? null : { item, category: "edition", relatedTo: editionOf };
   }

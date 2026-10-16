@@ -159,6 +159,8 @@ export const ProfileSearchForm: React.FC<TProfileSearchFormProps> = ({ autoFocus
                         variant="default"
                         size="sm"
                         disabled={isSubmitting}
+                        // The label is hidden on narrow screens.
+                        aria-label={isSubmitting ? "Looking up" : "Find"}
                         className="h-9 rounded-lg px-3"
                       >
                         {isSubmitting ? <Loader2 className="animate-spin" /> : <ArrowRight />}

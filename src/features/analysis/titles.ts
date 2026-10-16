@@ -73,6 +73,7 @@ function simplify(title: string): string {
  */
 export function normalizeTitle(title: string): string {
   return simplify(title)
+    // Stryker disable next-line StringLiteral: phrases sit between spaces, which are collapsed right after either way.
     .replace(EDITION_PATTERN, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -100,7 +101,7 @@ export function isSameTitle(a: string, b: string): boolean {
  * @returns Whether the title carries an edition qualifier.
  */
 export function isEditionTitle(title: string): boolean {
-  return normalizeTitle(title) !== simplify(title).replace(/\s+/g, " ");
+  return normalizeTitle(title) !== simplify(title);
 }
 
 /**

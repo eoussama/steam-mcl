@@ -10,9 +10,14 @@ import { CATEGORIES, CATEGORY_ORDER } from "./categories";
 
 
 
+export type TSelectionOwnership = {
+  statusOf: (appid: number) => TOwnershipStatus;
+  isWishlisted: (appid: number) => boolean;
+};
+
 export type TResultRow
   = | { kind: "group"; key: string; appid: number; name: string; count: number }
-    | { kind: "item"; key: string; entry: TMissingItem; description: string };
+    | { kind: "item"; key: string; entry: TMissingItem; description: string; isWishlisted: boolean };
 
 export type TResultsSelection = {
   rows: Array<TResultRow>;
@@ -21,10 +26,19 @@ export type TResultsSelection = {
    * Items per ownership status, for the name filter but any category.
    */
   views: Record<TOwnershipStatus, number>;
+  /**
+   * Wishlisted items in the current view, for the name filter but any category.
+   */
+  wishlisted: number;
   matched: number;
 };
 
 const NO_PRICE = Number.POSITIVE_INFINITY;
+
+const NO_OWNERSHIP: TSelectionOwnership = {
+  statusOf: () => "missing",
+  isWishlisted: () => false,
+};
 
 // One shared collator, `localeCompare` builds a new one on every call which is slow on large lists.
 const collator = new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
@@ -51,24 +65,39 @@ function priceOf(entry: TMissingItem): number {
 
 /**
  * @description
+ * Price for sorting by highest price, items without a price go last.
+ *
+ * @param entry - Missing item.
+ * @returns The price in cents, or -1 when unknown.
+ */
+function knownPriceOf(entry: TMissingItem): number {
+  const price = priceOf(entry);
+
+  return price === NO_PRICE ? -1 : price;
+}
+
+/**
+ * @description
  * Filters, sorts and optionally groups missing items for display.
  *
  * @param items - Missing items found by the analysis.
  * @param games - Games in the library, used for relevance and descriptions.
  * @param search - Active filters.
- * @param statusOf - Ownership status of an app, items are listed under the view matching their status.
+ * @param ownership - Ownership status and wishlist of each app, items are listed under the view matching their status.
  * @returns The display rows, per category and per status counts and the number of matching items.
  */
 export function selectResults(
   items: Iterable<TMissingItem>,
   games: ReadonlyArray<TOwnedGame>,
   search: TResultsSearch,
-  statusOf: (appid: number) => TOwnershipStatus = () => "missing",
+  ownership: TSelectionOwnership = NO_OWNERSHIP,
 ): TResultsSelection {
+  const { statusOf, isWishlisted } = ownership;
   const owned = new Map(games.map(game => [game.appid, game]));
   const query = search.q.trim().toLowerCase();
   const counts: TResultsSelection["counts"] = { all: 0, dlc: 0, soundtrack: 0, edition: 0, franchise: 0, studio: 0 };
   const views: TResultsSelection["views"] = { missing: 0, owned: 0, hidden: 0 };
+  let wishlisted = 0;
 
   const playtimeOf = (appid: number) => owned.get(appid)?.playtimeMinutes ?? 0;
   const primaryOf = (entry: TMissingItem) =>
@@ -90,6 +119,14 @@ export function selectResults(
       continue;
     }
 
+    const isOnWishlist = isWishlisted(entry.item.appid);
+
+    wishlisted += isOnWishlist ? 1 : 0;
+
+    if (search.wishlist && !isOnWishlist) {
+      continue;
+    }
+
     counts.all++;
     counts[entry.category]++;
 
@@ -107,8 +144,7 @@ export function selectResults(
         return priceOf(a) - priceOf(b) || byName(a.item.name, b.item.name);
 
       case "price-desc":
-        return (priceOf(b) === NO_PRICE ? -1 : priceOf(b)) - (priceOf(a) === NO_PRICE ? -1 : priceOf(a))
-          || byName(a.item.name, b.item.name);
+        return knownPriceOf(b) - knownPriceOf(a) || byName(a.item.name, b.item.name);
 
       case "release":
         return (b.item.releaseDate ?? 0) - (a.item.releaseDate ?? 0) || byName(a.item.name, b.item.name);
@@ -143,12 +179,13 @@ export function selectResults(
     key: `item-${entry.item.appid}`,
     entry,
     description: describe(entry),
+    isWishlisted: isWishlisted(entry.item.appid),
   });
 
   matching.sort(compare);
 
   if (!search.group) {
-    return { rows: matching.map(toRow), counts, views, matched: matching.length };
+    return { rows: matching.map(toRow), counts, views, wishlisted, matched: matching.length };
   }
 
   const groups = new Map<number, Array<TMissingItem>>();
@@ -159,12 +196,14 @@ export function selectResults(
     groups.set(appid, [...(groups.get(appid) ?? []), entry]);
   }
 
+  const groupName = (appid: number) => owned.get(appid)?.name ?? "Other games";
+
   const rows = [...groups]
-    .sort(([a], [b]) => playtimeOf(b) - playtimeOf(a) || byName(owned.get(a)?.name ?? "", owned.get(b)?.name ?? ""))
+    .sort(([a], [b]) => playtimeOf(b) - playtimeOf(a) || byName(groupName(a), groupName(b)))
     .flatMap(([appid, entries]): Array<TResultRow> => [
-      { kind: "group", key: `group-${appid}`, appid, name: owned.get(appid)?.name ?? "Other games", count: entries.length },
+      { kind: "group", key: `group-${appid}`, appid, name: groupName(appid), count: entries.length },
       ...entries.map(toRow),
     ]);
 
-  return { rows, counts, views, matched: matching.length };
+  return { rows, counts, views, wishlisted, matched: matching.length };
 }

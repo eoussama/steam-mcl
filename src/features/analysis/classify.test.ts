@@ -86,3 +86,31 @@ describe("classifyCandidate", () => {
     expect(classifyCandidate(makeStoreItem({ appid: 7 }), context())).toBeNull();
   });
 });
+
+describe("classifyCandidate edge cases", () => {
+  it("skips add-ons of games that are not owned", () => {
+    expect(classifyCandidate(makeStoreItem({ appid: 1, type: "dlc", parentAppid: 999 }), context())).toBeNull();
+  });
+
+  it("lists the plain game when one owned version is not a superset", () => {
+    const plain = makeStoreItem({ appid: 3, name: "Fallout 3" });
+    const owners = new Map([[10, "Fallout 3: Game of the Year Edition"], [11, "Fallout 3 HD"]]);
+
+    expect(classifyCandidate(plain, context({ owned: new Set([10, 11]), ownedNames: owners, relations: relations({ franchise: [10, 11] }) })))
+      .toMatchObject({ category: "edition", relatedTo: [10, 11] });
+  });
+
+  it.each(["episode", "software"] as const)("treats %s apps like games", (type) => {
+    const app = makeStoreItem({ appid: 4, name: "Something else", type });
+
+    expect(classifyCandidate(app, context({ relations: relations({ franchise: [SKYRIM] }) }))).toMatchObject({ category: "franchise" });
+  });
+});
+
+describe("classifyCandidate fallbacks", () => {
+  it("lists a game found only in a DLC list as DLC", () => {
+    const pack = makeStoreItem({ appid: 5, name: "Season Pass", type: "game" });
+
+    expect(classifyCandidate(pack, context({ relations: relations({ dlc: [SKYRIM] }) }))).toMatchObject({ category: "dlc", relatedTo: [SKYRIM] });
+  });
+});

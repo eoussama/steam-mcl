@@ -2,7 +2,7 @@ import type { TResultsSearch, TSortOption } from "./search-params";
 import type { TResultsSelection } from "./select-results";
 
 import { useDebouncedCallback } from "@tanstack/react-pacer";
-import { ArrowDownUp, CheckCheck, ChevronsDownUp, ChevronsUpDown, EyeOff, ListTree, Search, X } from "lucide-react";
+import { ArrowDownUp, CheckCheck, ChevronsDownUp, ChevronsUpDown, EyeOff, Heart, ListTree, Search, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,7 @@ type TResultsToolbarProps = {
   allCollapsed: boolean;
   onToggleAll: () => void;
   views: TResultsSelection["views"];
+  wishlisted: number;
 };
 
 const VIEW_TOGGLES = [
@@ -45,9 +46,10 @@ const SORT_ITEMS = SORT_OPTIONS.map(option => ({ value: option.value, label: opt
  * @param props.allCollapsed - Whether every group is collapsed.
  * @param props.onToggleAll - Collapses every group, or expands them all when they already are.
  * @param props.views - Item counts per ownership status, owned and hidden toggles show once they have items.
+ * @param props.wishlisted - Wishlisted items in the current view, the wishlist filter shows once there are some.
  * @returns The toolbar.
  */
-export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts, onChange, allCollapsed, onToggleAll, views }) => {
+export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts, onChange, allCollapsed, onToggleAll, views, wishlisted }) => {
   const [query, setQuery] = useState(search.q);
   const commitQuery = useDebouncedCallback((value: string) => onChange({ q: value }), { wait: 250 });
 
@@ -57,6 +59,7 @@ export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts,
   };
 
   const viewToggles = VIEW_TOGGLES.filter(toggle => views[toggle.value] > 0 || search.view === toggle.value);
+  const showWishlist = wishlisted > 0 || search.wishlist;
 
   const tabs = [
     { value: "all", label: "All", count: counts.all },
@@ -94,7 +97,27 @@ export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts,
           ))}
         </ToggleGroup>
 
-        {viewToggles.length > 0 && <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0 bg-border" />}
+        {(viewToggles.length > 0 || showWishlist) && <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0 bg-border" />}
+
+        {showWishlist && (
+          <Tooltip>
+            <TooltipTrigger
+              render={(
+                <Toggle
+                  pressed={search.wishlist}
+                  onPressedChange={wishlist => onChange({ wishlist }, { animate: true })}
+                  size="sm"
+                  className="h-8 shrink-0 gap-1.5 rounded-full border border-dashed border-rose-500/40 bg-card/40 px-3 text-muted-foreground data-pressed:border-solid data-pressed:border-rose-500/60 data-pressed:bg-rose-500/10 data-pressed:text-foreground"
+                />
+              )}
+            >
+              <Heart className={cn("text-rose-500", search.wishlist && "fill-current")} />
+              Wishlisted
+              <span className="rounded-full bg-foreground/10 px-1.5 text-[0.7rem] tabular-nums">{wishlisted}</span>
+            </TooltipTrigger>
+            <TooltipContent>{search.wishlist ? "Show everything" : "Only items on your wishlist"}</TooltipContent>
+          </Tooltip>
+        )}
 
         {viewToggles.map(toggle => (
           <Tooltip key={toggle.value}>

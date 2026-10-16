@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import type { TMissingItem } from "@/features/analysis";
 import type { TOwnershipStatus } from "@/features/ownership";
 
-import { Check, Eye, EyeOff, Undo2 } from "lucide-react";
+import { Check, Eye, EyeOff, Heart, Undo2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,6 +17,7 @@ import { CATEGORIES } from "./categories";
 type TResultCardProps = {
   entry: TMissingItem;
   description: string;
+  isWishlisted: boolean;
   status: TOwnershipStatus;
   onSetStatus: (appid: number, status: TOwnershipStatus) => void;
 };
@@ -73,11 +74,12 @@ const ACTIONS: Readonly<Record<TOwnershipStatus, ReadonlyArray<TCardAction>>> = 
  * @param props - Component props.
  * @param props.entry - Missing item.
  * @param props.description - Why the item is listed, such as "DLC for Skyrim".
+ * @param props.isWishlisted - Whether the item is on the imported wishlist.
  * @param props.status - Ownership status of the item, which decides the actions offered.
  * @param props.onSetStatus - Changes the ownership status of the item.
  * @returns The result card.
  */
-export const ResultCard: React.FC<TResultCardProps> = ({ entry, description, status, onSetStatus }) => {
+export const ResultCard: React.FC<TResultCardProps> = ({ entry, description, isWishlisted, status, onSetStatus }) => {
   const category = CATEGORIES[entry.category];
   const Icon = category.icon;
 
@@ -115,9 +117,17 @@ export const ResultCard: React.FC<TResultCardProps> = ({ entry, description, sta
           <p className="line-clamp-1 text-xs text-muted-foreground sm:text-sm">{description}</p>
 
           <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-            <span className={cn("inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset", category.tone)}>
-              <Icon className="size-3" aria-hidden="true" />
-              {category.label}
+            <span className="flex flex-wrap items-center gap-1.5">
+              <span className={cn("inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium ring-1 ring-inset", category.tone)}>
+                <Icon className="size-3" aria-hidden="true" />
+                {category.label}
+              </span>
+              {isWishlisted && (
+                <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/10 px-1.5 py-0.5 text-xs font-medium text-rose-600 ring-1 ring-rose-500/30 ring-inset dark:text-rose-300">
+                  <Heart className="size-3 fill-current" aria-hidden="true" />
+                  Wishlisted
+                </span>
+              )}
             </span>
             <PriceTag entry={entry} />
           </div>

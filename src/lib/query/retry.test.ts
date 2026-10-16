@@ -36,3 +36,15 @@ describe("getErrorCode", () => {
     expect(getErrorCode(new Error("x"))).toBeNull();
   });
 });
+
+describe("retry edge cases", () => {
+  it.each(["TOO_MANY_REQUESTS", "BAD_GATEWAY", "GATEWAY_TIMEOUT", "SERVICE_UNAVAILABLE", "TIMEOUT"])("retries %s", (code) => {
+    expect(shouldRetry(0, new TRPCClientError("failed", { result: { error: { message: "failed", code: -32000, data: { code } } } }))).toBe(true);
+  });
+
+  it("only reads codes from tRPC errors", () => {
+    expect(getErrorCode({ data: { code: "NOT_FOUND" } })).toBeNull();
+    expect(getErrorCode(new TRPCClientError("failed"))).toBeNull();
+    expect(getErrorCode(new TRPCClientError("failed", { result: { error: { message: "failed", code: -32000, data: { code: 404 } } } }))).toBeNull();
+  });
+});

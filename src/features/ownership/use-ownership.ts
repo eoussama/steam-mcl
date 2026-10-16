@@ -14,9 +14,13 @@ export type TOwnership = {
    */
   statusOf: (appid: number) => TOwnershipStatus;
   /**
+   * Whether an app is on the imported wishlist.
+   */
+  isWishlisted: (appid: number) => boolean;
+  /**
    * Summary of the imported userdata, null when nothing was imported.
    */
-  imported: { owned: number; ignored: number; importedAt: number } | null;
+  imported: { owned: number; ignored: number; wishlist: number; importedAt: number } | null;
   setStatus: (appid: number, status: TOwnershipStatus) => void;
   importUserData: (data: TUserData) => void;
   removeImport: () => void;
@@ -58,6 +62,12 @@ export function useOwnership(steamId: string | undefined): TOwnership {
     };
   }, [entry]);
 
+  const isWishlisted = useMemo(() => {
+    const wishlist = new Set(entry?.wishlist);
+
+    return (appid: number) => wishlist.has(appid);
+  }, [entry]);
+
   const statusOf = useMemo(() => {
     const manual = new Map(marks.map(mark => [mark.appid, mark.status]));
 
@@ -97,7 +107,7 @@ export function useOwnership(steamId: string | undefined): TOwnership {
       return;
     }
 
-    const value = { steamId, owned: data.owned, ignored: data.ignored, importedAt: Date.now() };
+    const value = { steamId, owned: data.owned, ignored: data.ignored, wishlist: data.wishlist, importedAt: Date.now() };
 
     if (importsCollection.has(steamId)) {
       importsCollection.update(steamId, (draft) => {
@@ -116,12 +126,14 @@ export function useOwnership(steamId: string | undefined): TOwnership {
   }, [steamId]);
 
   const imported = useMemo(
-    () => (entry ? { owned: entry.owned.length, ignored: entry.ignored.length, importedAt: entry.importedAt } : null),
+    () => (entry
+      ? { owned: entry.owned.length, ignored: entry.ignored.length, wishlist: entry.wishlist.length, importedAt: entry.importedAt }
+      : null),
     [entry],
   );
 
   return useMemo(
-    () => ({ statusOf, imported, setStatus, importUserData, removeImport }),
-    [statusOf, imported, setStatus, importUserData, removeImport],
+    () => ({ statusOf, isWishlisted, imported, setStatus, importUserData, removeImport }),
+    [statusOf, isWishlisted, imported, setStatus, importUserData, removeImport],
   );
 }

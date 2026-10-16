@@ -11,6 +11,10 @@ export default dx(
       ".vercel/**",
       ".nitro/**",
       ".tanstack/**",
+      ".stryker-tmp/**",
+      "reports/**",
+      "test-results/**",
+      "playwright-report/**",
     ],
   },
   {

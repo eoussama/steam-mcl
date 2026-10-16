@@ -143,7 +143,15 @@ export const ResultsList: React.FC<TResultsListProps> = ({ rows, collapsed, onTo
           >
             {row.kind === "group"
               ? <GroupHeading row={row} isCollapsed={collapsed.has(row.key)} onToggle={() => onToggleGroup(row.key)} />
-              : <ResultCard entry={row.entry} description={row.description} status={view} onSetStatus={onSetStatus} />}
+              : (
+                  <ResultCard
+                    entry={row.entry}
+                    description={row.description}
+                    isWishlisted={row.isWishlisted}
+                    status={view}
+                    onSetStatus={onSetStatus}
+                  />
+                )}
           </div>
         );
       })}

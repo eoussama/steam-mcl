@@ -21,3 +21,9 @@ describe("getCachePolicy", () => {
     expect(getCachePolicy(undefined, false)).toBe("no-store");
   });
 });
+
+describe("getCachePolicy edge cases", () => {
+  it("never caches a response without procedures", () => {
+    expect(getCachePolicy([], false)).toBe("no-store");
+  });
+});

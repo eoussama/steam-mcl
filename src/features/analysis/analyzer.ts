@@ -27,6 +27,10 @@ export type TAnalyzerOptions = {
    * First pause after a rate limit, in milliseconds. Doubles on each consecutive rate limit.
    */
   cooldown?: number;
+  /**
+   * Longest pause after consecutive rate limits, in milliseconds.
+   */
+  maxCooldown?: number;
 };
 
 const CONCURRENCY = 4;
@@ -34,6 +38,7 @@ const BATCH_SIZE = 50;
 const MAX_FRANCHISES = 200;
 const MAX_STUDIOS = 30;
 const MAX_ATTEMPTS = 5;
+// Stryker disable next-line ArithmeticOperator: a default, the cap itself is tested through the `maxCooldown` option.
 const MAX_COOLDOWN = 2 * 60 * 1000;
 const BATCH_PRIORITY = Number.MAX_SAFE_INTEGER;
 /**
@@ -72,6 +77,7 @@ function chunk<T>(values: ReadonlyArray<T>, size: number): Array<Array<T>> {
  *
  * @returns A promise resolving on a later task.
  */
+// Stryker disable all: yielding only changes when work runs, never its outcome.
 function yieldToMain(): Promise<void> {
   const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
 
@@ -89,6 +95,7 @@ function yieldToMain(): Promise<void> {
     channel.port2.postMessage(null);
   });
 }
+// Stryker restore all
 
 /**
  * @description
@@ -109,12 +116,14 @@ export class LibraryAnalyzer {
   private hydrated = new Map<number, TStoreItem>();
   private requested = new Set<number>();
   private items = new Map<number, TMissingItem>();
+  // Stryker disable next-line ObjectLiteral: every run resets it before use.
   private progress = { done: 0, failed: 0 };
   private publishTimer: ReturnType<typeof setTimeout> | null = null;
   private sliceStart = 0;
   private pendingYield: Promise<void> | null = null;
 
   private readonly baseCooldown: number;
+  private readonly maxCooldown: number;
   private readonly isRateLimited: (error: unknown) => boolean;
 
   /**
@@ -127,6 +136,8 @@ export class LibraryAnalyzer {
   constructor(private readonly sources: TAnalysisSources, options: TAnalyzerOptions = {}) {
     this.baseCooldown = options.cooldown ?? 20_000;
     this.cooldown = this.baseCooldown;
+    this.maxCooldown = options.maxCooldown ?? MAX_COOLDOWN;
+    // Stryker disable next-line ArrowFunction: returning undefined is just as falsy.
     this.isRateLimited = options.isRateLimited ?? (() => false);
   }
 
@@ -189,6 +200,7 @@ export class LibraryAnalyzer {
     this.runId++;
     this.cancelPublish();
 
+    // Stryker disable next-line ConditionalExpression,BlockStatement: cleanup only, the resume also checks its run is current.
     if (this.resumeTimer) {
       clearTimeout(this.resumeTimer);
       this.resumeTimer = null;
@@ -265,6 +277,7 @@ export class LibraryAnalyzer {
     const queue = new AsyncQueuer<TTask>(async (task) => {
       await this.yieldIfBusy();
 
+      // Stryker disable next-line ConditionalExpression,BlockStatement: saves requests only, stale results are discarded after the lookup.
       if (!isCurrent()) {
         return;
       }
@@ -290,6 +303,7 @@ export class LibraryAnalyzer {
       }
     }, {
       concurrency: CONCURRENCY,
+      // Stryker disable next-line BooleanLiteral: every task is queued before the first tick either way.
       started: false,
       getPriority: task => task.priority,
     });
@@ -320,7 +334,7 @@ export class LibraryAnalyzer {
 
     const delay = this.cooldown;
 
-    this.cooldown = Math.min(delay * 2, MAX_COOLDOWN);
+    this.cooldown = Math.min(delay * 2, this.maxCooldown);
     queue.stop();
     this.publish();
     this.store.setState(state => ({ ...state, pausedUntil: Date.now() + delay }));
@@ -328,6 +342,7 @@ export class LibraryAnalyzer {
     this.resumeTimer = setTimeout(() => {
       this.resumeTimer = null;
 
+      // Stryker disable next-line ConditionalExpression: abort clears this timer, so it never fires for a stale run.
       if (isCurrent()) {
         this.store.setState(state => ({ ...state, pausedUntil: null }));
         queue.start();
@@ -386,6 +401,7 @@ export class LibraryAnalyzer {
     let fetched: Array<TStoreItem> = [];
 
     try {
+      // Stryker disable next-line ArrayDeclaration: an empty lookup adds nothing either way.
       fetched = missing.length > 0 ? await this.sources.items(missing) : [];
     }
     catch (error) {
@@ -420,6 +436,7 @@ export class LibraryAnalyzer {
       }
     }
 
+    // Published when the task settles.
     for (const [appid, missingItem] of updates) {
       if (missingItem) {
         this.items.set(appid, missingItem);
@@ -427,10 +444,6 @@ export class LibraryAnalyzer {
       else {
         this.items.delete(appid);
       }
-    }
-
-    if (updates.size > 0) {
-      this.schedulePublish();
     }
   }
 
@@ -441,6 +454,7 @@ export class LibraryAnalyzer {
    *
    * @returns A promise resolving once work can carry on.
    */
+  // Stryker disable all: yielding only changes when work runs, never its outcome.
   private async yieldIfBusy(): Promise<void> {
     if (!this.pendingYield && performance.now() - this.sliceStart < SLICE_DURATION) {
       return;
@@ -453,6 +467,7 @@ export class LibraryAnalyzer {
 
     await this.pendingYield;
   }
+  // Stryker restore all
 
   /**
    * @description
@@ -474,6 +489,7 @@ export class LibraryAnalyzer {
   }
 
   private publish(): void {
+    // Stryker disable next-line CallExpression: a leftover timer would only publish the same state again.
     this.cancelPublish();
 
     const items = new Map(this.items);

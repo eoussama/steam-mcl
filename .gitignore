@@ -3,6 +3,10 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/reports/
+.stryker-tmp/
 
 # build output
 /.output/

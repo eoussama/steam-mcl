@@ -11,6 +11,10 @@ export type TUserData = {
    * Apps the account chose to ignore on the store.
    */
   ignored: Array<number>;
+  /**
+   * Apps on the account wishlist.
+   */
+  wishlist: Array<number>;
 };
 
 export const USERDATA_URL = "https://store.steampowered.com/dynamicstore/userdata/";
@@ -26,10 +30,24 @@ const appidSchema = z.number().int().positive();
  * Only the fields used are validated, the page carries many more. Ignored apps come as an object keyed by app id,
  * or an empty array when there are none.
  */
+const wishlistEntrySchema = z.union([appidSchema, z.object({ appid: appidSchema }).transform(entry => entry.appid)]);
+
 const userDataSchema = z.object({
   rgOwnedApps: z.array(appidSchema),
+  rgWishlist: z.array(wishlistEntrySchema).optional(),
   rgIgnoredApps: z.union([z.record(z.string().regex(/^\d+$/), z.unknown()), z.array(z.unknown())]).optional(),
 });
+
+/**
+ * @description
+ * Removes duplicates and sorts app ids.
+ *
+ * @param appids - App ids.
+ * @returns The unique app ids, ascending.
+ */
+function sortedUnique(appids: ReadonlyArray<number>): Array<number> {
+  return [...new Set(appids)].sort((a, b) => a - b);
+}
 
 /**
  *
@@ -55,6 +73,7 @@ export function parseUserData(text: string): TUserData {
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
 
+  // Stryker disable next-line EqualityOperator: "{" and "}" can never share an index.
   if (start === -1 || end < start) {
     throw new UserDataError("That does not look like the userdata page. Copy everything on it and paste it again.");
   }
@@ -74,7 +93,7 @@ export function parseUserData(text: string): TUserData {
     throw new UserDataError("That does not look like the userdata page. Copy everything on it and paste it again.");
   }
 
-  const { rgOwnedApps, rgIgnoredApps } = result.data;
+  const { rgOwnedApps, rgIgnoredApps, rgWishlist } = result.data;
 
   if (rgOwnedApps.length === 0) {
     throw new UserDataError("The page lists no owned apps, you are probably signed out. Sign in to the Steam store and reload it.");
@@ -83,7 +102,8 @@ export function parseUserData(text: string): TUserData {
   const ignored = Array.isArray(rgIgnoredApps) ? [] : Object.keys(rgIgnoredApps ?? {}).map(Number);
 
   return {
-    owned: [...new Set(rgOwnedApps)].sort((a, b) => a - b),
-    ignored: [...new Set(ignored)].sort((a, b) => a - b),
+    owned: sortedUnique(rgOwnedApps),
+    ignored: sortedUnique(ignored),
+    wishlist: sortedUnique(rgWishlist ?? []),
   };
 }

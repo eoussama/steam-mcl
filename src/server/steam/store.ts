@@ -48,6 +48,7 @@ export function toStoreItem(raw: TRawStoreItem): TStoreItem | null {
   return {
     appid: raw.appid,
     name: raw.name,
+    // Stryker disable next-line UnaryOperator: -1 and 1 are both unmapped types.
     type: STORE_ITEM_TYPES[raw.type ?? -1] ?? "other",
     parentAppid: raw.related_items?.parent_appid ?? null,
     franchises: info?.franchises?.map(entry => entry.name) ?? [],

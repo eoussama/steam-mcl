@@ -1,0 +1,40 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "command",
+  "commandRunner": {
+    "command": "node node_modules/vitest/vitest.mjs run --bail 1 --reporter dot"
+  },
+  "coverageAnalysis": "off",
+  "mutate": [
+    "src/features/analysis/analyzer.ts",
+    "src/features/analysis/classify.ts",
+    "src/features/analysis/titles.ts",
+    "src/features/ownership/userdata.ts",
+    "src/features/results/select-results.ts",
+    "src/lib/query/retry.ts",
+    "src/lib/steam/profile-input.ts",
+    "src/server/steam/search.ts",
+    "src/server/steam/store.ts",
+    "src/server/trpc/cache.ts"
+  ],
+  "reporters": [
+    "clear-text",
+    "progress",
+    "html",
+    "json"
+  ],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "jsonReporter": {
+    "fileName": "reports/mutation/mutation.json"
+  },
+  "timeoutMS": 20000,
+  "thresholds": {
+    "high": 95,
+    "low": 90,
+    "break": 90
+  },
+  "tempDirName": ".stryker-tmp",
+  "concurrency": 8
+}

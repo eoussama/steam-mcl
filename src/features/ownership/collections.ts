@@ -26,6 +26,7 @@ const importSchema = z.object({
   steamId: z.string(),
   owned: z.array(z.number().int().positive()),
   ignored: z.array(z.number().int().positive()),
+  wishlist: z.array(z.number().int().positive()).default([]),
   importedAt: z.number(),
 });
 

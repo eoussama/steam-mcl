@@ -58,9 +58,13 @@ const ImportPreview: React.FC<{ preview: TParseResult; profileName: string }> = 
       return preview.error;
     }
 
-    const { owned, ignored } = preview.data;
+    const { owned, ignored, wishlist } = preview.data;
+    const extras = [
+      wishlist.length > 0 && `${numberFormat.format(wishlist.length)} wishlisted`,
+      ignored.length > 0 && `${numberFormat.format(ignored.length)} ignored, which will be hidden`,
+    ].filter(Boolean);
 
-    return `Found ${numberFormat.format(owned.length)} owned apps${ignored.length > 0 ? ` and ${numberFormat.format(ignored.length)} ignored ones, which will be hidden` : ""}.`;
+    return `Found ${numberFormat.format(owned.length)} owned apps${extras.length > 0 ? `, ${extras.join(" and ")}` : ""}.`;
   }, [preview, profileName]);
 
   return <FieldDescription className={preview?.data ? "text-success" : undefined}>{message}</FieldDescription>;
