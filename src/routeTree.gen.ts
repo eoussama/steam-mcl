@@ -11,8 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileRouteImport } from './routes/$profile'
-import { Route as ApiMissingContentRouteImport } from './routes/api/missing-content'
-import { Route as ApiSteamPlayerRouteImport } from './routes/api/steam/player'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,54 +23,40 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/$profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMissingContentRoute = ApiMissingContentRouteImport.update({
-  id: '/api/missing-content',
-  path: '/api/missing-content',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiSteamPlayerRoute = ApiSteamPlayerRouteImport.update({
-  id: '/api/steam/player',
-  path: '/api/steam/player',
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$profile': typeof ProfileRoute
-  '/api/missing-content': typeof ApiMissingContentRoute
-  '/api/steam/player': typeof ApiSteamPlayerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$profile': typeof ProfileRoute
-  '/api/missing-content': typeof ApiMissingContentRoute
-  '/api/steam/player': typeof ApiSteamPlayerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$profile': typeof ProfileRoute
-  '/api/missing-content': typeof ApiMissingContentRoute
-  '/api/steam/player': typeof ApiSteamPlayerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$profile' | '/api/missing-content' | '/api/steam/player'
+  fullPaths: '/' | '/$profile' | '/api/trpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$profile' | '/api/missing-content' | '/api/steam/player'
-  id:
-    | '__root__'
-    | '/'
-    | '/$profile'
-    | '/api/missing-content'
-    | '/api/steam/player'
+  to: '/' | '/$profile' | '/api/trpc/$'
+  id: '__root__' | '/' | '/$profile' | '/api/trpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProfileRoute: typeof ProfileRoute
-  ApiMissingContentRoute: typeof ApiMissingContentRoute
-  ApiSteamPlayerRoute: typeof ApiSteamPlayerRoute
+  ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -90,18 +75,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/missing-content': {
-      id: '/api/missing-content'
-      path: '/api/missing-content'
-      fullPath: '/api/missing-content'
-      preLoaderRoute: typeof ApiMissingContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/steam/player': {
-      id: '/api/steam/player'
-      path: '/api/steam/player'
-      fullPath: '/api/steam/player'
-      preLoaderRoute: typeof ApiSteamPlayerRouteImport
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -110,18 +88,18 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProfileRoute: ProfileRoute,
-  ApiMissingContentRoute: ApiMissingContentRoute,
-  ApiSteamPlayerRoute: ApiSteamPlayerRoute,
+  ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
+import type { startInstance } from './start.ts'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

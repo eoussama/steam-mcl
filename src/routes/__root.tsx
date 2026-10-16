@@ -1,14 +1,16 @@
 import type { ReactNode } from "react";
 
-import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import type { TRouterContext } from "@/router";
 
-import { ClientWrapper } from "@/components/ClientWrapper";
+import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+
+import { AppProviders } from "@/components/AppProviders";
 
 import appCss from "@/styles/app.css?url";
 
 
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<TRouterContext>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -26,10 +28,12 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  const { queryClient, trpcClient } = Route.useRouteContext();
+
   return (
-    <ClientWrapper>
+    <AppProviders queryClient={queryClient} trpcClient={trpcClient}>
       <Outlet />
-    </ClientWrapper>
+    </AppProviders>
   );
 }
 

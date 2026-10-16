@@ -1,8 +1,22 @@
+import type { QueryClient } from "@tanstack/react-query";
+import type { TRPCClient } from "@trpc/client";
+
+import type { TAppRouter } from "@/server/trpc/router";
+
 import { createRouter } from "@tanstack/react-router";
+import { getGlobalStartContext } from "@tanstack/react-start";
+
+import { makeQueryClient } from "@/lib/query/client";
+import { makeTrpcClient } from "@/lib/trpc";
 
 import { routeTree } from "./routeTree.gen";
 
 
+
+export type TRouterContext = {
+  queryClient: QueryClient;
+  trpcClient: TRPCClient<TAppRouter>;
+};
 
 /**
  * @description
@@ -13,6 +27,13 @@ import { routeTree } from "./routeTree.gen";
 export function getRouter() {
   return createRouter({
     routeTree,
+    context: {
+      queryClient: makeQueryClient(),
+      trpcClient: makeTrpcClient(),
+    } satisfies TRouterContext,
+    ssr: {
+      nonce: getGlobalStartContext()?.nonce,
+    },
     scrollRestoration: true,
     defaultPreload: "intent",
     defaultViewTransition: true,

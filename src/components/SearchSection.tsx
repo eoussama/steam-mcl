@@ -1,8 +1,12 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AlertCircle, Loader2, Search, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { useSteamUserSearch } from "@/hooks/useSteam";
+import { getProfileSlug } from "@/features/profile/queries";
+import { STALE_TIMES } from "@/lib/query/cache-times";
+import { parseProfileInput } from "@/lib/steam";
+import { useTRPC } from "@/lib/trpc";
 
 import { ExternalLink } from "./ExternalLink";
 
@@ -16,26 +20,42 @@ import { ExternalLink } from "./ExternalLink";
  */
 export const SearchSection: React.FC = () => {
   const [steamProfile, setSteamProfile] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  const trpc = useTRPC();
   const navigate = useNavigate();
-  const { data, isLoading, error } = useSteamUserSearch(searchQuery);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (data?.player) {
-      void navigate({ to: "/$profile", params: { profile: searchQuery } });
-    }
-  }, [data, navigate, searchQuery]);
+  const search = useMutation({
+    mutationFn: (input: string) => queryClient.fetchQuery({
+      ...trpc.profile.resolve.queryOptions({ input }),
+      staleTime: STALE_TIMES.profile,
+    }),
+    onSuccess: (profile) => {
+      const slug = getProfileSlug(profile);
+
+      // Seed the canonical lookup so the profile page renders without refetching.
+      queryClient.setQueryData(trpc.profile.resolve.queryKey({ input: slug }), profile);
+      void navigate({ to: "/$profile", params: { profile: slug } });
+    },
+  });
+
+  const isLoading = search.isPending;
+  const isValid = parseProfileInput(steamProfile) !== null;
+  const error = steamProfile.trim() && !isValid
+    ? new Error("Enter a Steam ID64, a profile URL or a custom profile name")
+    : search.error;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSteamProfile(e.target.value);
+    search.reset();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (steamProfile.trim()) {
-      setSearchQuery(steamProfile.trim());
+
+    if (isValid) {
+      search.mutate(steamProfile.trim());
     }
   };
 
@@ -146,7 +166,7 @@ export const SearchSection: React.FC = () => {
             <div className="flex justify-center pt-2">
               <button
                 type="submit"
-                disabled={!steamProfile.trim() || isLoading}
+                disabled={!isValid || isLoading}
                 className="group relative px-8 py-3 bg-gradient-to-r from-[var(--steam-primary)] via-[var(--steam-secondary)] to-[var(--steam-primary)] text-white font-bold text-base rounded-xl shadow-xl transition-all duration-500 ease-out transform focus:outline-none focus:ring-3 focus:ring-[var(--steam-accent)]/50 focus:ring-offset-3 focus:ring-offset-[var(--card-background)] overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:shadow-[var(--steam-accent)]/40 enabled:hover:scale-105 enabled:hover:-translate-y-1 enabled:cursor-pointer"
                 aria-label="Search Steam profile"
               >
@@ -175,7 +195,7 @@ export const SearchSection: React.FC = () => {
               <div className="flex items-center space-x-2 text-red-400">
                 <AlertCircle size={16} />
                 <span className="text-sm font-medium">
-                  {error instanceof Error ? error.message : "Failed to fetch Steam data"}
+                  {error.message}
                 </span>
               </div>
             </div>
