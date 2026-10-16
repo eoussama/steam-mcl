@@ -2,7 +2,7 @@ import type { TResultsSearch, TSortOption } from "./search-params";
 import type { TResultsSelection } from "./select-results";
 
 import { useDebouncedCallback } from "@tanstack/react-pacer";
-import { ArrowDownUp, ChevronsDownUp, ChevronsUpDown, ListTree, Search, X } from "lucide-react";
+import { ArrowDownUp, CheckCheck, ChevronsDownUp, ChevronsUpDown, EyeOff, ListTree, Search, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,13 @@ type TResultsToolbarProps = {
   onChange: (patch: Partial<TResultsSearch>, options?: { animate?: boolean }) => void;
   allCollapsed: boolean;
   onToggleAll: () => void;
+  views: TResultsSelection["views"];
 };
+
+const VIEW_TOGGLES = [
+  { value: "owned", label: "Owned", icon: CheckCheck, hint: "Items you marked or imported as owned" },
+  { value: "hidden", label: "Hidden", icon: EyeOff, hint: "Items you hid, or ignore on Steam" },
+] as const;
 
 const SORT_ITEMS = SORT_OPTIONS.map(option => ({ value: option.value, label: option.label }));
 
@@ -38,9 +44,10 @@ const SORT_ITEMS = SORT_OPTIONS.map(option => ({ value: option.value, label: opt
  * @param props.onChange - Updates the filters.
  * @param props.allCollapsed - Whether every group is collapsed.
  * @param props.onToggleAll - Collapses every group, or expands them all when they already are.
+ * @param props.views - Item counts per ownership status, owned and hidden toggles show once they have items.
  * @returns The toolbar.
  */
-export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts, onChange, allCollapsed, onToggleAll }) => {
+export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts, onChange, allCollapsed, onToggleAll, views }) => {
   const [query, setQuery] = useState(search.q);
   const commitQuery = useDebouncedCallback((value: string) => onChange({ q: value }), { wait: 250 });
 
@@ -49,6 +56,8 @@ export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts,
     commitQuery(value);
   };
 
+  const viewToggles = VIEW_TOGGLES.filter(toggle => views[toggle.value] > 0 || search.view === toggle.value);
+
   const tabs = [
     { value: "all", label: "All", count: counts.all },
     ...CATEGORY_ORDER.map(category => ({ value: category, label: CATEGORIES[category].plural, count: counts[category] })),
@@ -56,7 +65,7 @@ export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts,
 
   return (
     <div className="space-y-3">
-      <div className="-mx-4 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
+      <div className="-mx-4 flex items-center gap-1 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
         <ToggleGroup
           value={[search.category]}
           onValueChange={(value) => {
@@ -84,6 +93,28 @@ export const ResultsToolbar: React.FC<TResultsToolbarProps> = ({ search, counts,
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
+
+        {viewToggles.length > 0 && <span aria-hidden="true" className="mx-1 h-5 w-px shrink-0 bg-border" />}
+
+        {viewToggles.map(toggle => (
+          <Tooltip key={toggle.value}>
+            <TooltipTrigger
+              render={(
+                <Toggle
+                  pressed={search.view === toggle.value}
+                  onPressedChange={pressed => onChange({ view: pressed ? toggle.value : "missing" }, { animate: true })}
+                  size="sm"
+                  className="h-8 shrink-0 gap-1.5 rounded-full border border-dashed border-border/80 bg-card/40 px-3 text-muted-foreground data-pressed:border-solid data-pressed:border-steam-blue/60 data-pressed:bg-steam-blue/15 data-pressed:text-foreground"
+                />
+              )}
+            >
+              <toggle.icon />
+              {toggle.label}
+              <span className="rounded-full bg-foreground/10 px-1.5 text-[0.7rem] tabular-nums">{views[toggle.value]}</span>
+            </TooltipTrigger>
+            <TooltipContent>{search.view === toggle.value ? "Back to missing items" : toggle.hint}</TooltipContent>
+          </Tooltip>
+        ))}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">

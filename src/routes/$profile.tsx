@@ -1,11 +1,14 @@
 import type { TResultsSearch } from "@/features/results/search-params";
 
 import { createFileRoute, stripSearchParams, useNavigate } from "@tanstack/react-router";
-import { AlertTriangle, RotateCw, UserX } from "lucide-react";
+import { AlertTriangle, Import, RotateCw, UserX, X } from "lucide-react";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { useLibraryAnalysis } from "@/features/analysis";
+import { useOwnership } from "@/features/ownership";
+import { ProfileActions } from "@/features/profile/ProfileActions";
 import { ProfileHeader, ProfileHeaderSkeleton } from "@/features/profile/ProfileHeader";
 import { getProfileSlug, useLibrary, useProfile } from "@/features/profile/queries";
 import { ResultsList } from "@/features/results/ResultsList";
@@ -13,6 +16,7 @@ import { NoMatchState, NothingMissingState, PrivateLibraryState, ResultsSkeleton
 import { ResultsToolbar } from "@/features/results/ResultsToolbar";
 import { RESULTS_SEARCH_DEFAULTS, resultsSearchSchema } from "@/features/results/search-params";
 import { selectResults } from "@/features/results/select-results";
+import { useLocalFlag } from "@/hooks/useLocalFlag";
 import { useScrolledPast } from "@/hooks/useScrolledPast";
 import { SITE_HEADER_HEIGHT } from "@/lib/consts";
 import { getErrorCode } from "@/lib/query/retry";
@@ -55,12 +59,15 @@ function ProfilePage() {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const isCompact = useScrolledPast(sentinelRef, SITE_HEADER_HEIGHT);
   const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(() => new Set());
+  const [importOpen, setImportOpen] = useState(false);
+  const [importHintDismissed, setImportHintDismissed] = useLocalFlag("steam-mcl:import-hint-dismissed");
 
   const profileQuery = useProfile(profileParam);
   const profile = profileQuery.data;
   const libraryQuery = useLibrary(profile?.steamId);
   const library = libraryQuery.data;
   const analysis = useLibraryAnalysis(library && !library.isPrivate ? library.games : undefined);
+  const ownership = useOwnership(profile?.steamId);
 
   useEffect(() => {
     if (profile && getProfileSlug(profile) !== profileParam) {
@@ -71,8 +78,8 @@ function ProfilePage() {
   // Items stream in while scanning, sorting them can wait for scrolling and typing.
   const items = useDeferredValue(analysis.items);
   const selection = useMemo(
-    () => selectResults(items.values(), library?.games ?? [], search),
-    [items, library, search],
+    () => selectResults(items.values(), library?.games ?? [], search, ownership.statusOf),
+    [items, library, search, ownership.statusOf],
   );
 
   const groupKeys = useMemo(
@@ -120,7 +127,12 @@ function ProfilePage() {
 
   const resetFilters = () => {
     setToolbarKey(key => key + 1);
-    updateSearch({ category: "all", q: "" }, { animate: true });
+    updateSearch({ category: "all", q: "", view: "missing" }, { animate: true });
+  };
+
+  const refreshLibrary = () => {
+    void profileQuery.refetch();
+    void libraryQuery.refetch();
   };
 
   const queryError = profileQuery.error ?? libraryQuery.error;
@@ -153,6 +165,7 @@ function ProfilePage() {
   const isScanning = analysis.phase === "library" || analysis.phase === "scanning";
   const hasItems = analysis.items.size > 0;
   const showToolbar = Boolean(library && !library.isPrivate && hasItems);
+  const showImportHint = search.view === "missing" && !ownership.imported && !importHintDismissed && analysis.phase === "done";
 
   const renderResults = () => {
     if (library?.isPrivate) {
@@ -186,8 +199,35 @@ function ProfilePage() {
 
     return (
       <div className="space-y-4">
+        {showImportHint && (
+          <Alert className="glass border-steam-blue/30 animate-in fade-in-0 slide-in-from-top-1">
+            <Import className="text-steam-blue" />
+            <AlertTitle>Own some of these already?</AlertTitle>
+            <AlertDescription>
+              Steam keeps the DLC and soundtracks you own private, so they show up here. Import what your account owns to
+              set them aside.
+            </AlertDescription>
+            <AlertAction className="flex gap-1">
+              <Button size="sm" onClick={() => setImportOpen(true)}>Import</Button>
+              <Button variant="ghost" size="icon-sm" aria-label="Dismiss" onClick={() => setImportHintDismissed(true)}>
+                <X />
+              </Button>
+            </AlertAction>
+          </Alert>
+        )}
+
         <div className="[view-transition-name:results]">
-          {selection.matched === 0 ? <NoMatchState onReset={resetFilters} /> : <ResultsList rows={selection.rows} collapsed={collapsed} onToggleGroup={toggleGroup} />}
+          {selection.matched === 0
+            ? <NoMatchState onReset={resetFilters} />
+            : (
+                <ResultsList
+                  rows={selection.rows}
+                  collapsed={collapsed}
+                  onToggleGroup={toggleGroup}
+                  view={search.view}
+                  onSetStatus={ownership.setStatus}
+                />
+              )}
         </div>
 
         {analysis.failed > 0 && analysis.phase === "done" && (
@@ -221,10 +261,29 @@ function ProfilePage() {
         )}
       >
         {profile
-          ? <ProfileHeader profile={profile} library={library} analysis={analysis} compact={isCompact} />
+          ? (
+              <ProfileHeader
+                profile={profile}
+                library={library}
+                analysis={analysis}
+                compact={isCompact}
+                missingCount={selection.views.missing}
+                actions={(
+                  <ProfileActions
+                    profileName={profile.name}
+                    ownership={ownership}
+                    isRefreshing={libraryQuery.isFetching || profileQuery.isFetching}
+                    onRefresh={refreshLibrary}
+                    compact={isCompact}
+                    importOpen={importOpen}
+                    onImportOpenChange={setImportOpen}
+                  />
+                )}
+              />
+            )
           : <ProfileHeaderSkeleton />}
 
-        {showToolbar && <ResultsToolbar key={toolbarKey} search={search} counts={selection.counts} onChange={updateSearch} allCollapsed={allCollapsed} onToggleAll={toggleAllGroups} />}
+        {showToolbar && <ResultsToolbar key={toolbarKey} search={search} counts={selection.counts} onChange={updateSearch} allCollapsed={allCollapsed} onToggleAll={toggleAllGroups} views={selection.views} />}
       </div>
 
       {/* Keeps enough room to scroll so the bar stays compact when few results match. */}

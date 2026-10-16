@@ -1,6 +1,7 @@
 import type { TResultsSearch } from "./search-params";
 
 import type { TMissingCategory, TMissingItem } from "@/features/analysis";
+import type { TOwnershipStatus } from "@/features/ownership";
 import type { TOwnedGame } from "@/lib/steam";
 
 import { isSameTitle } from "@/features/analysis/titles";
@@ -16,10 +17,18 @@ export type TResultRow
 export type TResultsSelection = {
   rows: Array<TResultRow>;
   counts: Record<TMissingCategory | "all", number>;
+  /**
+   * Items per ownership status, for the name filter but any category.
+   */
+  views: Record<TOwnershipStatus, number>;
   matched: number;
 };
 
 const NO_PRICE = Number.POSITIVE_INFINITY;
+
+// One shared collator, `localeCompare` builds a new one on every call which is slow on large lists.
+const collator = new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
+const byName = (a: string, b: string) => collator.compare(a, b);
 
 /**
  * How much each kind of relation counts towards relevance: add-ons of a game you play beat studio picks.
@@ -47,16 +56,19 @@ function priceOf(entry: TMissingItem): number {
  * @param items - Missing items found by the analysis.
  * @param games - Games in the library, used for relevance and descriptions.
  * @param search - Active filters.
- * @returns The display rows, per category counts and the number of matching items.
+ * @param statusOf - Ownership status of an app, items are listed under the view matching their status.
+ * @returns The display rows, per category and per status counts and the number of matching items.
  */
 export function selectResults(
   items: Iterable<TMissingItem>,
   games: ReadonlyArray<TOwnedGame>,
   search: TResultsSearch,
+  statusOf: (appid: number) => TOwnershipStatus = () => "missing",
 ): TResultsSelection {
   const owned = new Map(games.map(game => [game.appid, game]));
   const query = search.q.trim().toLowerCase();
   const counts: TResultsSelection["counts"] = { all: 0, dlc: 0, soundtrack: 0, edition: 0, franchise: 0, studio: 0 };
+  const views: TResultsSelection["views"] = { missing: 0, owned: 0, hidden: 0 };
 
   const playtimeOf = (appid: number) => owned.get(appid)?.playtimeMinutes ?? 0;
   const primaryOf = (entry: TMissingItem) =>
@@ -67,6 +79,14 @@ export function selectResults(
 
   for (const entry of items) {
     if (query && !entry.item.name.toLowerCase().includes(query)) {
+      continue;
+    }
+
+    const status = statusOf(entry.item.appid);
+
+    views[status]++;
+
+    if (status !== search.view) {
       continue;
     }
 
@@ -81,22 +101,22 @@ export function selectResults(
   const compare = (a: TMissingItem, b: TMissingItem): number => {
     switch (search.sort) {
       case "name":
-        return a.item.name.localeCompare(b.item.name);
+        return byName(a.item.name, b.item.name);
 
       case "price-asc":
-        return priceOf(a) - priceOf(b) || a.item.name.localeCompare(b.item.name);
+        return priceOf(a) - priceOf(b) || byName(a.item.name, b.item.name);
 
       case "price-desc":
         return (priceOf(b) === NO_PRICE ? -1 : priceOf(b)) - (priceOf(a) === NO_PRICE ? -1 : priceOf(a))
-          || a.item.name.localeCompare(b.item.name);
+          || byName(a.item.name, b.item.name);
 
       case "release":
-        return (b.item.releaseDate ?? 0) - (a.item.releaseDate ?? 0) || a.item.name.localeCompare(b.item.name);
+        return (b.item.releaseDate ?? 0) - (a.item.releaseDate ?? 0) || byName(a.item.name, b.item.name);
 
       default:
         return relevanceOf(b) - relevanceOf(a)
           || CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category)
-          || a.item.name.localeCompare(b.item.name);
+          || byName(a.item.name, b.item.name);
     }
   };
 
@@ -128,7 +148,7 @@ export function selectResults(
   matching.sort(compare);
 
   if (!search.group) {
-    return { rows: matching.map(toRow), counts, matched: matching.length };
+    return { rows: matching.map(toRow), counts, views, matched: matching.length };
   }
 
   const groups = new Map<number, Array<TMissingItem>>();
@@ -140,11 +160,11 @@ export function selectResults(
   }
 
   const rows = [...groups]
-    .sort(([a], [b]) => playtimeOf(b) - playtimeOf(a) || (owned.get(a)?.name ?? "").localeCompare(owned.get(b)?.name ?? ""))
+    .sort(([a], [b]) => playtimeOf(b) - playtimeOf(a) || byName(owned.get(a)?.name ?? "", owned.get(b)?.name ?? ""))
     .flatMap(([appid, entries]): Array<TResultRow> => [
       { kind: "group", key: `group-${appid}`, appid, name: owned.get(appid)?.name ?? "Other games", count: entries.length },
       ...entries.map(toRow),
     ]);
 
-  return { rows, counts, matched: matching.length };
+  return { rows, counts, views, matched: matching.length };
 }

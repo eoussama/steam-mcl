@@ -1,3 +1,4 @@
+import type { QueryClient } from "@tanstack/react-query";
 import type { Persister } from "@tanstack/react-query-persist-client";
 
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
@@ -24,4 +25,16 @@ export function makePersister(): Persister {
       removeItem: key => del(key),
     },
   });
+}
+
+/**
+ * @description
+ * Drops every cached response, in memory and on disk. Local marks and imports are kept.
+ *
+ * @param queryClient - Query client to empty.
+ * @returns A promise resolving once the stored cache is deleted.
+ */
+export async function clearCachedData(queryClient: QueryClient): Promise<void> {
+  queryClient.clear();
+  await del(CACHE_KEY);
 }

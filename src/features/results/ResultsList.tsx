@@ -1,5 +1,7 @@
 import type { TResultRow } from "./select-results";
 
+import type { TOwnershipStatus } from "@/features/ownership";
+
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 import { ChevronDown, Gamepad2 } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -14,6 +16,8 @@ type TResultsListProps = {
   rows: ReadonlyArray<TResultRow>;
   collapsed: ReadonlySet<string>;
   onToggleGroup: (key: string) => void;
+  view: TOwnershipStatus;
+  onSetStatus: (appid: number, status: TOwnershipStatus) => void;
 };
 
 type TGroupRow = Extract<TResultRow, { kind: "group" }>;
@@ -85,9 +89,11 @@ const GroupHeading: React.FC<{ row: TGroupRow; isCollapsed: boolean; onToggle: (
  * @param props.rows - Group headers and items to display.
  * @param props.collapsed - Keys of the collapsed groups.
  * @param props.onToggleGroup - Collapses or expands a group.
+ * @param props.view - Ownership status of the listed items.
+ * @param props.onSetStatus - Changes the ownership status of an item.
  * @returns The list.
  */
-export const ResultsList: React.FC<TResultsListProps> = ({ rows, collapsed, onToggleGroup }) => {
+export const ResultsList: React.FC<TResultsListProps> = ({ rows, collapsed, onToggleGroup, view, onSetStatus }) => {
   const listRef = useRef<HTMLDivElement>(null);
   const [scrollMargin, setScrollMargin] = useState(0);
 
@@ -137,7 +143,7 @@ export const ResultsList: React.FC<TResultsListProps> = ({ rows, collapsed, onTo
           >
             {row.kind === "group"
               ? <GroupHeading row={row} isCollapsed={collapsed.has(row.key)} onToggle={() => onToggleGroup(row.key)} />
-              : <ResultCard entry={row.entry} description={row.description} />}
+              : <ResultCard entry={row.entry} description={row.description} status={view} onSetStatus={onSetStatus} />}
           </div>
         );
       })}

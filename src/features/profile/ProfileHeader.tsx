@@ -19,6 +19,11 @@ type TProfileHeaderProps = {
   library: TLibrary | undefined;
   analysis: TAnalysisState;
   compact?: boolean;
+  /**
+   * Items still missing once owned and hidden ones are set aside.
+   */
+  missingCount: number;
+  actions?: React.ReactNode;
 };
 
 const EASE = "duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]";
@@ -77,9 +82,11 @@ const Collapse: React.FC<{ open: boolean; className?: string; children: React.Re
  * @param props.library - Owned games, undefined while loading.
  * @param props.analysis - Analysis state.
  * @param props.compact - Whether to show the condensed single row form.
+ * @param props.missingCount - Items still missing once owned and hidden ones are set aside.
+ * @param props.actions - Extra actions shown after the main buttons.
  * @returns The profile header.
  */
-export const ProfileHeader: React.FC<TProfileHeaderProps> = ({ profile, library, analysis, compact = false }) => {
+export const ProfileHeader: React.FC<TProfileHeaderProps> = ({ profile, library, analysis, compact = false, missingCount, actions }) => {
   const status = getStatus(library, analysis);
   const progress = analysis.total > 0 ? Math.round((analysis.done / analysis.total) * 100) : 0;
   const labelClass = cn("overflow-hidden whitespace-nowrap transition-[max-width,margin,opacity]", EASE, compact ? "ml-0 max-w-0 opacity-0" : "ml-1.5 max-w-32");
@@ -134,14 +141,14 @@ export const ProfileHeader: React.FC<TProfileHeaderProps> = ({ profile, library,
               {analysis.items.size > 0 && (
                 <span className="inline-flex items-center gap-1.5">
                   <PackageSearch className="size-[1.15em] text-steam-blue" aria-hidden="true" />
-                  <strong className="tabular-nums">{analysis.items.size}</strong>
+                  <strong className="tabular-nums">{missingCount}</strong>
                   <span className={cn(compact && "sr-only sm:not-sr-only")}>missing items</span>
                 </span>
               )}
             </div>
           </div>
 
-          <div className={cn("flex gap-2", !compact && "w-full sm:w-auto")}>
+          <div className={cn("flex gap-2", !compact && "w-full sm:w-auto sm:self-start")}>
             {/* The labels fold away in the compact form, the tooltips stand in for them. */}
             <Tooltip disabled={!compact}>
               <TooltipTrigger
@@ -174,6 +181,7 @@ export const ProfileHeader: React.FC<TProfileHeaderProps> = ({ profile, library,
               </TooltipTrigger>
               <TooltipContent side="bottom">Look up another profile</TooltipContent>
             </Tooltip>
+            {actions}
           </div>
         </div>
 

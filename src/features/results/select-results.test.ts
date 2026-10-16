@@ -105,3 +105,20 @@ describe("selectResults relevance", () => {
     expect(row?.kind === "item" && row.description).toBe("From the studio behind Grand Theft Auto: San Andreas");
   });
 });
+
+describe("selectResults ownership", () => {
+  const statusOf = (appid: number) => (appid === 12 ? "owned" : appid === 13 ? "hidden" : "missing");
+
+  it("lists each item under the view matching its status", () => {
+    expect(appids(selectResults(ITEMS, GAMES, search(), statusOf))).toEqual([11, 10]);
+    expect(appids(selectResults(ITEMS, GAMES, search({ view: "owned" }), statusOf))).toEqual([12]);
+    expect(appids(selectResults(ITEMS, GAMES, search({ view: "hidden" }), statusOf))).toEqual([13]);
+  });
+
+  it("counts every status, and categories in the current view only", () => {
+    const selection = selectResults(ITEMS, GAMES, search(), statusOf);
+
+    expect(selection.views).toEqual({ missing: 2, owned: 1, hidden: 1 });
+    expect(selection.counts.all).toBe(2);
+  });
+});

@@ -4,69 +4,119 @@
 <h1 align=center>Steam Missing Content Lookup</h1>
 
 <p align=center>
-Easily lookup missing DLC, Sequels, Prequels, Spin-Offs, and related content from your Steam library.
+Find the DLC, soundtracks, editions and franchise games missing from your Steam library.
 </p>
 
 ---
 
-## Getting Started
+## What it finds
+
+Enter a Steam profile and the app lists everything related to its games that it does not own:
+
+| Category | What it is |
+|---|---|
+| **DLC** | Add-ons of games in the library |
+| **Soundtracks** | Official soundtracks of those games |
+| **Editions** | Other editions, such as a Definitive or Game of the Year edition |
+| **Franchise** | Other games of the same franchise |
+| **Studios** | Other games by the developers of your most played games |
+
+Results are ordered by how much you play the game they relate to. They can be filtered by category and name, sorted
+by price or release date, and grouped by game. Filters live in the URL, so a view can be shared.
+
+Steam only shares the *games* of a profile publicly, so DLC and soundtracks you already own show up as missing. To fix
+that, use **Import what you own** in the profile menu. It reads your Steam store data
+(`store.steampowered.com/dynamicstore/userdata/`) when you paste it in. Any item can also be marked owned or hidden by
+hand.
+
+## How it works
+
+- **Profile and library** come from the Steam Web API through the server, which keeps the API key private.
+- **Related content** comes from public Steam store endpoints: DLC lists, store search by franchise and developer,
+  and item details in batches.
+- **The analysis runs in your browser.** Lookups are queued by playtime, so results appear within seconds and fill in
+  as the scan goes on. When Steam rate limits, the queue pauses and resumes on its own.
+- **Everything is cached:**
+  - on your device in IndexedDB for up to 7 days
+  - on the Vercel CDN, shared by all visitors, for 1 day
+
+  A first scan of a large library takes a few minutes, revisits are instant.
+- **Your marks and imports** stay in your browser's local storage and sync across tabs. They are never uploaded.
+
+## Stack
+
+- [TanStack Start](https://tanstack.com/start) with Router, Query, Form, Virtual, Pacer, Store and DB, on Vite and Nitro
+- [tRPC](https://trpc.io) for the API, with Zod validation
+- [shadcn/ui](https://ui.shadcn.com) on [Base UI](https://base-ui.com), Tailwind CSS v4
+- [@eoussama/core](https://www.npmjs.com/package/@eoussama/core) utilities and
+  [@eoussama/dx](https://www.npmjs.com/package/@eoussama/dx) linting
+- Vitest
+
+## Getting started
 
 ### Prerequisites
 
-- Node.js 18+ 
-- pnpm (recommended) or npm
+- Node.js 22.18+ or 24+
+- [pnpm](https://pnpm.io) 12
+- A [Steam Web API key](https://steamcommunity.com/dev/apikey)
 
-### Installation
+### Setup
 
-1. Clone the repository:
 ```bash
 git clone https://github.com/eoussama/steam-mcl.git
 cd steam-mcl
-```
-
-2. Install dependencies:
-```bash
 pnpm install
-```
-
-3. Run the development server:
-```bash
+cp .env.example .env   # then set STEAM_KEY
 pnpm dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Usage
-
-1. Enter your Steam profile information in the search field
-2. Supported input formats:
-   - Steam profile name (e.g., "eoussama")
-   - Steam ID64
-   - Steam nickname
-   - Profile URL
-   - Profile permalink
-3. Click the search button to find missing content
-
-## Development
+Open [http://localhost:3000](http://localhost:3000).
 
 ### Scripts
 
-- `pnpm dev` - Start development server
-- `pnpm build` - Build for production
-- `pnpm start` - Start production server
-- `pnpm lint` - Run ESLint
+| Script | Does |
+|---|---|
+| `pnpm dev` | Starts the dev server on port 3000 |
+| `pnpm build` | Builds for production |
+| `pnpm start` | Serves the production build, reading `.env` |
+| `pnpm lint` / `pnpm lint:fix` | Lints, or lints and fixes |
+| `pnpm typecheck` | Type checks |
+| `pnpm test` | Runs the unit tests |
+
+## Environment
+
+| Variable | Required | Description |
+|---|---|---|
+| `STEAM_KEY` | Yes | Steam Web API key, 32 hexadecimal characters. Server side only, never sent to the browser. |
+
+## Deploying to Vercel
+
+1. Import the repository in Vercel.
+2. In **Settings → Build and Deployment**, set **Framework Preset** to **TanStack Start**, or **Other** if it is not
+   listed. A project created back when this was a Next.js app still has the Next.js preset, which fails to build.
+3. Add `STEAM_KEY` under **Settings → Environment Variables**.
+4. Deploy. Nitro detects Vercel and outputs a ready to serve build, no `vercel.json` needed.
+
+Store lookups are served with `s-maxage`, so the Vercel CDN answers repeated lookups for every visitor without
+calling Steam.
+
+## Privacy
+
+- The server only calls Steam and keeps nothing.
+- Pasted store data is read in your browser, and only app IDs are kept, in local storage.
+- Security headers include a nonce based Content Security Policy.
 
 ## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
+3. Commit your changes: `git commit -m 'feat: add amazing feature'`
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License, see the [LICENSE](LICENSE) file for details.
 
 ---
 

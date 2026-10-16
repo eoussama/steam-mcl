@@ -36,6 +36,14 @@ const MAX_STUDIOS = 30;
 const MAX_ATTEMPTS = 5;
 const MAX_COOLDOWN = 2 * 60 * 1000;
 const BATCH_PRIORITY = Number.MAX_SAFE_INTEGER;
+/**
+ * Longest stretch of work before handing the main thread back, in milliseconds.
+ */
+const SLICE_DURATION = 10;
+/**
+ * Shortest interval between two published states while scanning, in milliseconds.
+ */
+const PUBLISH_INTERVAL = 150;
 
 export const INITIAL_ANALYSIS_STATE: TAnalysisState = {
   phase: "idle",
@@ -59,6 +67,31 @@ function chunk<T>(values: ReadonlyArray<T>, size: number): Array<Array<T>> {
 
 /**
  * @description
+ * Lets the browser render and handle input before carrying on. Cached lookups resolve as microtasks, so without
+ * this a fully cached run would hold the main thread until it completes.
+ *
+ * @returns A promise resolving on a later task.
+ */
+function yieldToMain(): Promise<void> {
+  const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
+
+  if (typeof scheduler?.yield === "function") {
+    return scheduler.yield();
+  }
+
+  return new Promise((resolve) => {
+    const channel = new MessageChannel();
+
+    channel.port1.onmessage = () => {
+      channel.port1.close();
+      resolve();
+    };
+    channel.port2.postMessage(null);
+  });
+}
+
+/**
+ * @description
  * Finds the content missing from a Steam library. Work is split into prioritized tasks, most played games first,
  * and results are published to `store` as they arrive so the UI can render progressively.
  */
@@ -75,6 +108,11 @@ export class LibraryAnalyzer {
   private relations = new Map<number, TCandidateRelations>();
   private hydrated = new Map<number, TStoreItem>();
   private requested = new Set<number>();
+  private items = new Map<number, TMissingItem>();
+  private progress = { done: 0, failed: 0 };
+  private publishTimer: ReturnType<typeof setTimeout> | null = null;
+  private sliceStart = 0;
+  private pendingYield: Promise<void> | null = null;
 
   private readonly baseCooldown: number;
   private readonly isRateLimited: (error: unknown) => boolean;
@@ -110,6 +148,8 @@ export class LibraryAnalyzer {
     this.relations = new Map();
     this.hydrated = new Map();
     this.requested = new Set();
+    this.items = new Map();
+    this.progress = { done: 0, failed: 0 };
     this.cooldown = this.baseCooldown;
     this.store.setState(() => ({ ...INITIAL_ANALYSIS_STATE, items: new Map(), phase: "library" }));
 
@@ -129,11 +169,13 @@ export class LibraryAnalyzer {
       }
 
       if (isCurrent()) {
+        this.publish();
         this.store.setState(state => ({ ...state, phase: "done" }));
       }
     }
     catch (error) {
       if (isCurrent()) {
+        this.publish();
         this.store.setState(state => ({ ...state, phase: "done", error: toError(error).message }));
       }
     }
@@ -145,6 +187,7 @@ export class LibraryAnalyzer {
    */
   abort(): void {
     this.runId++;
+    this.cancelPublish();
 
     if (this.resumeTimer) {
       clearTimeout(this.resumeTimer);
@@ -209,11 +252,9 @@ export class LibraryAnalyzer {
       remaining--;
 
       if (isCurrent()) {
-        this.store.setState(state => ({
-          ...state,
-          done: state.total - remaining,
-          failed: state.failed + (failed ? 1 : 0),
-        }));
+        this.progress.done++;
+        this.progress.failed += failed ? 1 : 0;
+        this.schedulePublish();
       }
 
       if (remaining === 0) {
@@ -222,6 +263,12 @@ export class LibraryAnalyzer {
     };
 
     const queue = new AsyncQueuer<TTask>(async (task) => {
+      await this.yieldIfBusy();
+
+      if (!isCurrent()) {
+        return;
+      }
+
       try {
         await this.execute(task, isCurrent);
         this.cooldown = this.baseCooldown;
@@ -275,6 +322,7 @@ export class LibraryAnalyzer {
 
     this.cooldown = Math.min(delay * 2, MAX_COOLDOWN);
     queue.stop();
+    this.publish();
     this.store.setState(state => ({ ...state, pausedUntil: Date.now() + delay }));
 
     this.resumeTimer = setTimeout(() => {
@@ -372,21 +420,65 @@ export class LibraryAnalyzer {
       }
     }
 
-    if (updates.size > 0) {
-      this.store.setState((state) => {
-        const items = new Map(state.items);
-
-        for (const [appid, missingItem] of updates) {
-          if (missingItem) {
-            items.set(appid, missingItem);
-          }
-          else {
-            items.delete(appid);
-          }
-        }
-
-        return { ...state, items };
-      });
+    for (const [appid, missingItem] of updates) {
+      if (missingItem) {
+        this.items.set(appid, missingItem);
+      }
+      else {
+        this.items.delete(appid);
+      }
     }
+
+    if (updates.size > 0) {
+      this.schedulePublish();
+    }
+  }
+
+  /**
+   * @description
+   * Hands the main thread back once the current slice of work is used up. Concurrent tasks share one yield so
+   * they resume in the order they were started.
+   *
+   * @returns A promise resolving once work can carry on.
+   */
+  private async yieldIfBusy(): Promise<void> {
+    if (!this.pendingYield && performance.now() - this.sliceStart < SLICE_DURATION) {
+      return;
+    }
+
+    this.pendingYield ??= yieldToMain().then(() => {
+      this.sliceStart = performance.now();
+      this.pendingYield = null;
+    });
+
+    await this.pendingYield;
+  }
+
+  /**
+   * @description
+   * Publishes the working state at most every `PUBLISH_INTERVAL`, so a burst of cached lookups renders once
+   * rather than once per lookup.
+   */
+  private schedulePublish(): void {
+    this.publishTimer ??= setTimeout(() => {
+      this.publishTimer = null;
+      this.publish();
+    }, PUBLISH_INTERVAL);
+  }
+
+  private cancelPublish(): void {
+    if (this.publishTimer) {
+      clearTimeout(this.publishTimer);
+      this.publishTimer = null;
+    }
+  }
+
+  private publish(): void {
+    this.cancelPublish();
+
+    const items = new Map(this.items);
+    const { done, failed } = this.progress;
+
+    this.store.setState(state => ({ ...state, items, done, failed }));
   }
 }

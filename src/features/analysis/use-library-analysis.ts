@@ -14,6 +14,19 @@ import { createAnalysisSources } from "./sources";
 
 
 
+/**
+ * @description
+ * Waits for the page transition in progress, if any. Its morph needs the main thread on every frame, and a cached
+ * analysis starting alongside it would stall it on its first, blurry frames.
+ *
+ * @returns A promise resolving once no view transition is running.
+ */
+function afterViewTransition(): Promise<void> {
+  const transition = (document as { activeViewTransition?: ViewTransition | null }).activeViewTransition;
+
+  return transition ? transition.finished.then(() => undefined, () => undefined) : Promise.resolve();
+}
+
 export type TLibraryAnalysis = TAnalysisState & {
   /**
    * Runs the analysis again, reusing every cached lookup.
@@ -46,9 +59,18 @@ export function useLibraryAnalysis(games: ReadonlyArray<TOwnedGame> | undefined)
       return;
     }
 
-    void analyzer.run(games);
+    let isCancelled = false;
 
-    return () => analyzer.abort();
+    void afterViewTransition().then(() => {
+      if (!isCancelled) {
+        void analyzer.run(games);
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+      analyzer.abort();
+    };
   }, [analyzer, games]);
 
   const restart = useCallback(() => {

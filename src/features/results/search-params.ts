@@ -17,6 +17,7 @@ export const RESULTS_SEARCH_DEFAULTS = {
   q: "",
   sort: "relevance",
   group: false,
+  view: "missing",
 } as const;
 
 /**
@@ -28,6 +29,7 @@ export const resultsSearchSchema = z.object({
   q: z.string().max(100).default("").catch(""),
   sort: z.enum(["relevance", "name", "price-asc", "price-desc", "release"]).default("relevance").catch("relevance"),
   group: z.boolean().default(false).catch(false),
+  view: z.enum(["missing", "owned", "hidden"]).default("missing").catch("missing"),
 });
 
 export type TResultsSearch = z.infer<typeof resultsSearchSchema>;
