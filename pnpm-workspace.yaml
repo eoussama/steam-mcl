@@ -1,0 +1,13 @@
+minimumReleaseAgeExcludePrune: true
+
+trustPolicy: no-downgrade
+
+# semver@6.3.1 (pulled in by @babel/core through the TanStack Start build plugin) predates npm provenance.
+trustPolicyExclude:
+  - semver@6.3.1
+
+shellEmulator: true
+
+allowBuilds:
+  "@tailwindcss/oxide": true
+  esbuild: true

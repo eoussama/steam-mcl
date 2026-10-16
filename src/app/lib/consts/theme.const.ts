@@ -1,1 +1,0 @@
-export const THEME_KEY = "steam-mcl-theme";

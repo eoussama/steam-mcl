@@ -1,5 +1,5 @@
 <p align=center>
-   <img width=200 src="public/logo-large.png">
+   <img width=200 alt="Steam MCL logo" src="public/logo-large.png">
 </p>
 <h1 align=center>Steam Missing Content Lookup</h1>
 
