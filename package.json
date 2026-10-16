@@ -34,7 +34,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "pnpm build && playwright test",
-    "test:mutation": "stryker run"
+    "test:mutation": "stryker run",
+    "check": "pnpm audit && pnpm lint && pnpm typecheck && pnpm build && pnpm test && playwright test"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

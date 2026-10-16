@@ -88,6 +88,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `pnpm test` | Runs the unit tests |
 | `pnpm test:e2e` | Builds, then runs the end-to-end tests in Edge |
 | `pnpm test:mutation` | Runs mutation testing on the core logic |
+| `pnpm check` | Audits dependencies, lints, type checks, builds, then runs the unit and end-to-end tests |
 
 ### Testing
 
